@@ -8,7 +8,7 @@ export default function Home() {
           Intelligent systems <em className="italic">meet human design.</em>
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-secondary">
-          I design the human side of AI systems — so the products
+          I design the human side of AI systems, so the products
           organizations build earn trust instead of losing it.
         </p>
       </section>
