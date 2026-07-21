@@ -92,6 +92,75 @@ a {
   outline-offset: 3px;
 }
 
+/*
+  Custom dot cursor. The native cursor is only hidden once the from-scratch
+  cursor component has confirmed a fine pointer and no reduced-motion request
+  and added .custom-cursor-active — so touch and reduced-motion users keep the
+  native cursor. Text inputs always keep the native caret.
+*/
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none;
+}
+
+.custom-cursor-active input,
+.custom-cursor-active textarea,
+.custom-cursor-active select,
+.custom-cursor-active [contenteditable="true"] {
+  cursor: auto;
+}
+
+/*
+  A positioning anchor (follows the pointer instantly, no transition) carrying
+  two visual layers. State changes animate transform/opacity only — GPU-friendly,
+  no per-frame layout — so the dot stays crisp and precise.
+*/
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 0.12s ease;
+}
+
+.cc-dot,
+.cc-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 9999px;
+}
+
+.cc-dot {
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  background: var(--fg);
+  transition: opacity 0.15s ease;
+}
+
+.cc-ring {
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border: 1px solid var(--accent);
+  opacity: 0;
+  transform: scale(0.5);
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.custom-cursor[data-grow="true"] .cc-ring {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.custom-cursor[data-grow="true"] .cc-dot {
+  opacity: 0;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

@@ -3,7 +3,10 @@ import type { WorkItem } from "@/lib/work";
 
 export default function WorkCard({ item }: { item: WorkItem }) {
   return (
-    <article className="group border border-border rounded-lg overflow-hidden bg-bg-raised transition-colors hover:border-border-strong">
+    <article
+      data-cursor="grow"
+      className="group border border-border rounded-lg overflow-hidden bg-bg-raised transition-colors hover:border-border-strong"
+    >
       <div className="relative flex aspect-video items-center justify-center border-b border-border bg-surface">
         <span className="font-mono text-xs uppercase tracking-[0.1em] text-fg-muted">
           Visual pending

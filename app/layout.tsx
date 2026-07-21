@@ -3,6 +3,7 @@ import { Newsreader, Source_Sans_3, JetBrains_Mono } from "next/font/google";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ThemeScript from "@/components/ThemeScript";
+import CustomCursor from "@/components/CustomCursor";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -46,6 +47,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ThemeScript />
+        <CustomCursor />
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
