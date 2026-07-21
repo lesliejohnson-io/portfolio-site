@@ -126,10 +126,21 @@ Modeled on the reference site's colophon, but every claim in it must be true of 
 
 Rules: do not name fonts, tools, or inspirations that weren't actually used (the reference site's Caslon Ionic / Century Old Style / Red Hat Mono are Emily Campbell's licensed choices, not ours — pick and license Leslie's own). If a line isn't true of this site, it doesn't go in the colophon. The colophon is a craftsmanship signature; it only works if it's honest.
 
-## Implementation notes (Day 1 build)
+## Implementation notes / status
 
-- The `/mnt/skills/public/frontend-design/SKILL.md` path referenced above does not exist in this Windows environment — it was not available to consult during the Day 1 build.
-- The About colophon currently omits the cursor and day/night toggle lines since neither exists yet — add them back in once those Day 2 features ship, per the "if a line isn't true, it doesn't go in" rule.
-- GA4 / Vercel Analytics wiring was not added on Day 1 (not listed in the Day 1 scope) — pick this up in Day 2/3.
-- ECSI's grid-card thumbnail has no supplied image asset yet; it currently renders a styled "Visual pending" placeholder instead of a fabricated screenshot.
-- `content/work/ecsi.mdx` holds the full case study body already (frontmatter drives the Day 1 grid card), but the Natoli-structure case study page/template (ProjectSummary, StatCallout, BeforeAfter, PersonaCard, VisualSlot) is Day 2 scope and not yet built — `/work/ecsi` is not yet a real route.
+**Environment**
+- The `/mnt/skills/public/frontend-design/SKILL.md` path referenced above does not exist in this Windows environment — it was not available to consult.
+
+**Day 1 — done** (scaffold, color system, fonts, layout shell + email affordance, Home hero + ECSI grid card, About with photo + colophon). Not deployed to Vercel yet — the Vercel connector needs interactive OAuth that couldn't be completed from the build session; import the existing GitHub repo (lesliejohnson-io/portfolio-site) in the Vercel dashboard to finish this.
+
+**Day 2 — done (buildable scope):**
+- ECSI case study template built. `/work/[slug]` is a real, statically-generated route (`/work/ecsi`). The Natoli components (ProjectSummary, StatCallout, PersonaCard, BeforeAfter, VisualSlot) are mapped onto the markdown blockquote/`*[Visual: …]*` conventions in the content files — the content is rendered, not rewritten. Future case studies authored in the same convention render for free. `remark-breaks` preserves authored line structure inside multi-line blockquotes.
+- Day/night toggle: built from scratch (no next-themes). Two designed palettes on CSS custom properties, pre-hydration theme script (no FOUC), always-visible nav toggle, system-default then localStorage. Both palettes verified WCAG AA. Also fixed a pre-existing light `fg-muted` AA miss (#767b84 → #5f646c).
+- Custom dot cursor: built from scratch. Fine-pointer only, disabled under reduced-motion, native caret over text inputs, transform/opacity-only animation.
+- Colophon updated to truthfully credit the toggle and cursor as built from scratch.
+- **Blocked on content:** Field Guide, Common Project, Paloma AI case studies — their MDX hasn't been handed off, so no cards/pages exist for them yet (no stubs, per the hard rule). Drop each finished `content/work/<slug>.mdx` in (frontmatter: slug, order, name, tag, title, who, what, result) and it joins the grid + gets a page automatically.
+
+**Still open (Day 2/3):**
+- GA4 (`G-SFHY66M9X7` via `@next/third-parties`) + the two custom events (`email_copy`, `email_click`) and Vercel Analytics — not wired yet.
+- ECSI grid card + in-page visuals render styled "Visual pending" placeholders; no image assets supplied yet (no fabricated screenshots).
+- Responsive + accessibility pass, OG/meta/social images, domain cutover — Day 3.
