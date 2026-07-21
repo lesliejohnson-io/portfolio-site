@@ -1,5 +1,6 @@
 import Link from "next/link";
 import EmailAffordance from "@/components/EmailAffordance";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Nav() {
   return (
@@ -26,6 +27,7 @@ export default function Nav() {
             About
           </Link>
           <EmailAffordance />
+          <ThemeToggle />
         </nav>
       </div>
     </header>

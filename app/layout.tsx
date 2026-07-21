@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Newsreader, Source_Sans_3, JetBrains_Mono } from "next/font/google";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import ThemeScript from "@/components/ThemeScript";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -40,9 +41,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${newsreader.variable} ${sourceSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <ThemeScript />
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />

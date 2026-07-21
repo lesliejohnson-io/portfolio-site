@@ -23,7 +23,8 @@ export default function AboutPage() {
         <p className="mt-3 text-sm leading-relaxed text-fg-secondary">
           Built with Next.js and Tailwind CSS. Text is set in Newsreader,
           Source Sans 3, and JetBrains Mono. Case studies are authored in
-          Markdown. Designed and coded in conversation with Claude.
+          Markdown. The day/night toggle was built from scratch. Designed and
+          coded in conversation with Claude.
         </p>
       </footer>
     </article>

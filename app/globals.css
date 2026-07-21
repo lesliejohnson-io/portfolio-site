@@ -12,13 +12,37 @@
   --surface: #f2f1ed;
   --fg: #16181c;
   --fg-secondary: #4b4f57;
-  --fg-muted: #767b84;
+  --fg-muted: #5f646c;
   --border: #dedcd6;
   --border-strong: #b9b6ac;
   --accent: #2451e0;
   --accent-fg: #ffffff;
   --error: #c4302b;
   --error-fg: #ffffff;
+  color-scheme: light;
+}
+
+/*
+  Dark theme — a second designed palette, not an inversion. Warm near-black
+  base with a warm off-white foreground; the accent and the error-only red
+  are re-tuned for AA contrast on dark. Both themes are verified to satisfy
+  WCAG AA. Applied when the (from-scratch) theme script sets data-theme="dark"
+  on <html> before paint.
+*/
+:root[data-theme="dark"] {
+  --bg: #16181c;
+  --bg-raised: #1e2126;
+  --surface: #23262c;
+  --fg: #f4f3ef;
+  --fg-secondary: #b7bbc2;
+  --fg-muted: #8b9099;
+  --border: #2e3238;
+  --border-strong: #454a52;
+  --accent: #88a9ff;
+  --accent-fg: #0b0d10;
+  --error: #f0736d;
+  --error-fg: #16181c;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -42,10 +66,6 @@
 
 * {
   border-color: var(--border);
-}
-
-html {
-  color-scheme: light;
 }
 
 body {
