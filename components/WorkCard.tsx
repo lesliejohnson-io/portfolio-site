@@ -15,27 +15,15 @@ export default function WorkCard({ item }: { item: WorkItem }) {
       </div>
 
       <div className="p-6">
-        <div className="flex items-baseline justify-between gap-4">
-          <h3 className="font-serif text-2xl text-fg">{item.name}</h3>
-        </div>
-        <p className="mt-1 font-mono text-xs uppercase tracking-[0.06em] text-fg-muted">
-          {item.tag}
-        </p>
+        <h3 className="font-serif text-xl leading-snug text-fg">
+          {item.name},{" "}
+          <span className="text-fg-secondary">{item.tag}</span>
+        </h3>
 
-        <dl className="mt-5 space-y-2 font-mono text-xs leading-relaxed text-fg-secondary">
-          <div>
-            <dt className="inline font-semibold text-fg">WHO: </dt>
-            <dd className="inline">{item.who}</dd>
-          </div>
-          <div>
-            <dt className="inline font-semibold text-fg">WHAT: </dt>
-            <dd className="inline">{item.what}</dd>
-          </div>
-          <div>
-            <dt className="inline font-semibold text-fg">RESULT: </dt>
-            <dd className="inline">{item.result}</dd>
-          </div>
-        </dl>
+        <p className="mt-4 font-mono text-xs leading-relaxed text-fg-secondary">
+          <span className="font-semibold text-fg">RESULT: </span>
+          {item.result}
+        </p>
 
         <Link
           href={`/work/${item.slug}`}
