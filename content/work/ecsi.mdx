@@ -1,0 +1,112 @@
+---
+slug: "ecsi"
+order: 1
+name: "ECSI"
+tag: "Student Loan Payments Platform"
+title: "Cutting Payment Abandonment 84% by Rebuilding ECSI's Payment System"
+who: "ECSI, a Global Payments company (student loan servicing for universities and borrowers)"
+what: "UX audit, authentication redesign, payment flow restructuring, token-based design system"
+result: "84% decrease in payment abandonment · 62% reduction in call center volume"
+---
+
+> **PROJECT SUMMARY**
+> I helped cut payment abandonment by 84% and call center volume by 62% by rebuilding ECSI's payment system: replacing a mailed-ID login with 2FA, moving payment account setup out of the payment flow and into onboarding, and building a token-based design system that ended UI drift across three product surfaces.
+
+## Two numbers first
+
+> **84%** — decrease in payment abandonment, measured via funnel analytics, six months post-launch vs. six months pre-launch, against a 68% baseline
+>
+> **62%** — reduction in total call center volume over the same comparison
+
+Here's how we got there — and what it cost to get there.
+
+## The problem: a payment funnel losing 68% of its users
+
+ECSI services student loan payments for universities and their borrowers. In a payment interface, confusion is never a minor usability issue. Every user who can't log in or gives up mid-payment becomes a missed payment or a support call — money lost twice.
+
+And the funnel was losing 68% of the users who entered it. Funnel analytics showed them leaking out at two points: the front door, and the payment moment itself. Downstream, the call center's dominant categories were exactly what you'd predict — login lockouts and payment status questions.
+
+## My role: sole designer, three surfaces, no design team behind me
+
+I was the only product designer at ECSI, responsible for the Student Portal, the Client Portal, and onboarding. That meant I couldn't just design the fixes — I had to build the case for them with engineering, compliance, and product leadership, and win arguments in rooms where design had historically been treated as decoration. The work below happened through those partnerships: engineering ran the security audits, compliance stress-tested the authentication change, and product leadership backed a rebuild over a patch.
+
+## The constraints: a financial institution's rules, a legacy codebase, one designer
+
+Changing anything in a payments product means clearing compliance. Changing *authentication* in a payments product is the hardest version of that. Add a legacy codebase with no single source of truth for UI, and no other designers to share the load — every fix had to be one I could both justify to regulators-minded stakeholders and see through implementation.
+
+---
+
+## Failure #1: Valid users locked out by a piece of paper
+
+Logging in required a unique ID that had been physically mailed to users once — separate from their email and password. Users with perfectly valid credentials were locked out because they'd lost a number. This was 2019: banks were texting verification codes while ECSI was asking borrowers to find a letter.
+
+> **Alex — Student Borrower** *(representative composite based on observed user behavior)*
+> Wants to pay the monthly bill quickly, set up autopay, confirm it went through.
+> Instead: locked out over a lost mailed ID, re-entering routing numbers every month, error messages with no path to fix them.
+> *In effect: "I have the money in my account, but the system won't let me give it to you because I lost a letter you sent me a year ago."*
+
+### The fix: kill the ID, prove 2FA to compliance
+
+The options were to improve ID recovery — a better version of the same problem — or eliminate the ID entirely: email, password, and a second factor, since everything needed to verify identity was already stored on ECSI's side.
+
+Compliance and engineering both pushed back. A mailed physical credential *felt* safer than it was, and changing authentication at a financial institution is notoriously difficult. So instead of arguing from user experience, I framed the mailed ID as a business and security vulnerability, and partnered with engineering to run a formal security review and audit of the 2FA approach. It passed. The user's burden dropped from "find a piece of paper" to "read a code off your phone" — with no reduction in actual security.
+
+> **Before:** Search for a mailed ID. Lost paper = locked out.
+> **After:** Email, password, verification code — the mental model every user already has.
+
+---
+
+## Failure #2: A wall of inputs inside every single payment
+
+Users who got in faced bank name, routing number, account number, verification re-entry — or the full card sequence — inside *every* payment attempt, with no inline error recovery. A mistyped digit produced a generic "Error – check entries" with no indication of which entry. Card declines surfaced only at the end, after the user had done everything else right.
+
+*[Visual: The Legacy Payment Flow — before task flow diagram]*
+
+### The fix: move the error-prone work out of the payment moment entirely
+
+Rather than redesign the form in place, I removed the task from the payment moment: users add and validate a payment account before their account goes live — during onboarding, where people expect setup work — and the account is re-validated at every login. The payment flow becomes confirm-and-pay. Nothing left to mistype.
+
+The onboarding gate added real friction, and I designed for that cost instead of denying it: users without a bank account could designate a guaranteed guest payor, guest payments stayed an always-available path, and autopay opt-in let users exit the payment funnel permanently. One moment of expected setup friction, traded for frictionless payments for the life of the account.
+
+> **Before:** Routing and account entry inside every transaction, no error recovery.
+> **After:** Setup at onboarding. Recurring payments reduced to one confirmation.
+
+*[Visual: Confirm-and-Pay mobile screen — token-based UI, no data entry fields]*
+
+---
+
+## The root cause: fixes that would drift right back
+
+These weren't two separate problems. While auditing the mobile payments experience, I found the cause underneath both: the mobile version was pulling outdated CSS files. The fragmentation across surfaces wasn't design taste — it was a verifiable engineering fact.
+
+This is the pattern I default to: when two things break in the same window, I look for the one root cause before I fix either symptom.
+
+The system had been built mobile-first in a literal, flawed sense — desktop inherited a stacked mobile layout stretched across a wide canvas — and with no single source of truth, every surface drifted independently. Drift produced an active nav tab rendered in red (the universal error color, on a payments screen) and a decorative hero image pushing the due date, minimum due, and balance down the viewport.
+
+*[Visual: UI Audit — annotated mobile before-screen, "Unmanaged CSS Drift"]*
+
+### The fix: rebuild on tokens, make drift impossible
+
+Patching surface by surface was a losing battle — every fix would drift again, including the two above. I took the findings to engineering and product leadership: the usability crisis was an architectural crisis. We rebuilt on a token-based design system — one definitive source for color, typography, and spacing that every surface consumed. Consistency stopped being a manual QA task and became an architectural guarantee. The red tab didn't just get fixed; it became impossible to reintroduce.
+
+The rebuild spanned all three surfaces. The Student Portal went from a payment destination users fought toward to the borrower's financial home — what's due and when, balances, interest rates per loan, payment history, with payments as a section inside. The Client Portal gave university clients financial dashboards drawing from the same system.
+
+*[Visual: Design Tokens in Action — one token cascading across all three surfaces]*
+
+---
+
+## The results: 84% and 62%, measured six months out
+
+Comparing the six months before launch to the six months after:
+
+**Payment abandonment fell 84%**, via funnel analytics on the redesigned Student Portal, against the 68% baseline. The two leak points the redesign targeted — failed logins and failed payment entry — were where the funnel had been losing users.
+
+**Call center volume fell 62%**, measured as total volume. The dominant pre-launch call categories — login lockouts and payment status questions — were precisely what the 2FA change and the redesigned Student Portal addressed.
+
+*[Visual: Performance Dashboard — abandonment and call volume decline post-launch]*
+
+## What I'd do differently: measure who the gate turned away
+
+The onboarding gate worked for the users who completed it — but I never measured who it turned away. Requiring a validated payment account or guest payor before the account went live almost certainly lost some users at the front door, and because they never became active accounts, they don't appear in the abandonment funnel the 84% is measured against. Next time, I'd instrument onboarding drop-off from day one — so I could weigh users saved at the payment moment against users lost at setup, instead of only being able to prove one side of the trade.
+
+*[Visual: Final Student Portal dashboard — "The New Financial Home"]*
