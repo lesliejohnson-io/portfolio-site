@@ -38,7 +38,11 @@ export default function EmailAffordance({
     try {
       await navigator.clipboard.writeText(EMAIL);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      // Show the "Copied" confirmation, then close the popover after 1s.
+      setTimeout(() => {
+        setOpen(false);
+        setCopied(false);
+      }, 1000);
     } catch {
       // Clipboard API unavailable — the mailto link below still works.
     }
