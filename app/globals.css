@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/*
+  Color system — CSS custom properties only, never hardcode hex in components.
+  Light values only for Day 1 (see CLAUDE.md build order). Near-monochrome base
+  with one accent. Red is reserved exclusively for warning/error semantics —
+  never used decoratively.
+*/
+:root {
+  --bg: #fafaf8;
+  --bg-raised: #ffffff;
+  --surface: #f2f1ed;
+  --fg: #16181c;
+  --fg-secondary: #4b4f57;
+  --fg-muted: #767b84;
+  --border: #dedcd6;
+  --border-strong: #b9b6ac;
+  --accent: #2451e0;
+  --accent-fg: #ffffff;
+  --error: #c4302b;
+  --error-fg: #ffffff;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-muted: var(--fg-muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-error: var(--error);
+  --color-error-fg: var(--error-fg);
+
+  --font-serif: var(--font-newsreader);
+  --font-sans: var(--font-source-sans);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* "What I Bring" pillars — numbered, scannable visual treatment. */
+.pillars {
+  display: grid;
+  gap: 2rem;
+  margin-block: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .pillars {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+.pillars p {
+  margin: 0;
+  color: var(--fg-secondary);
+}
+
+.pillars p strong {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  margin-bottom: 0.625rem;
+}
+
+/* Minimal typographic rhythm for rendered MDX prose (About, case studies). */
+.prose-about h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.prose-about h2 {
+  font-size: 1.375rem;
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-about p {
+  margin-bottom: 1.25rem;
+  line-height: 1.75;
+  color: var(--fg-secondary);
+}
+
+.prose-about strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.prose-about em {
+  font-style: italic;
+}
