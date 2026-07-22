@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 
 const EMAIL = "leslie@lesliejohnson.io";
 const MAILTO = `mailto:${EMAIL}?subject=Portfolio%20Inquiry`;
@@ -37,6 +38,7 @@ export default function EmailAffordance({
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(EMAIL);
+      sendGAEvent("event", "email_copy");
       setCopied(true);
       // Show the "Copied" confirmation, then close the popover after 1s.
       setTimeout(() => {
@@ -88,6 +90,7 @@ export default function EmailAffordance({
           <a
             role="menuitem"
             href={MAILTO}
+            onClick={() => sendGAEvent("event", "email_click")}
             className="block rounded-md px-3 py-2 font-mono text-xs text-fg hover:bg-surface"
           >
             Send me an email

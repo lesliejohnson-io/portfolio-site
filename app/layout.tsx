@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Newsreader, Source_Sans_3, JetBrains_Mono } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ThemeScript from "@/components/ThemeScript";
@@ -51,7 +53,9 @@ export default function RootLayout({
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Analytics />
       </body>
+      <GoogleAnalytics gaId="G-SFHY66M9X7" />
     </html>
   );
 }

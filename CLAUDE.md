@@ -155,7 +155,10 @@ Paloma AI is not on this list — status unclear, not currently being built. CHA
   - Its closing "One note on framing and evidence" (excluded from the page, addressed to Leslie) explicitly instructed two checks: source or soften a "millions of TBI caregivers" market figure (doesn't appear anywhere in this draft, nothing to change), and keep the "almost no apps built for the caregiver" claim qualitative rather than a hard zero. The draft was inconsistent on the second one — softened "No one built for the person beside them" (H3) and "In every existing product…" (body) to match the "almost no one"/qualitative phrasing already used correctly elsewhere in the same draft, so a single counterexample can't dent the argument.
 - **Blocked on content:** none currently — all five roadmap case studies have content and are live.
 
-**Still open (Day 2/3):**
-- GA4 (`G-SFHY66M9X7` via `@next/third-parties`) + the two custom events (`email_copy`, `email_click`) and Vercel Analytics — not wired yet.
+**Day 3 — in progress:**
+- GA4 wired up: `<GoogleAnalytics gaId="G-SFHY66M9X7" />` (`@next/third-parties/google`) as a sibling of `<body>` in the root layout, per the official placement pattern. The two custom events fire from `EmailAffordance` (shared by nav and footer, so both surfaces are covered): `email_copy` after a successful clipboard write, `email_click` on the mailto link's `onClick`. Verified in-browser: `window.dataLayer` receives both `["event", "email_copy"]` and `["event", "email_click"]` on interaction.
+- Vercel Analytics wired up in code (`@vercel/analytics/next`, `<Analytics />` in the root layout; `window.va` confirmed present). **Still needs a dashboard step from Leslie** — Project → Analytics tab → Enable in Vercel — before it actually starts collecting; the code alone doesn't turn it on.
+
+**Still open (Day 3):**
 - ECSI grid card + in-page visuals render styled "Visual pending" placeholders; no image assets supplied yet (no fabricated screenshots).
 - Responsive + accessibility pass, OG/meta/social images, domain cutover — Day 3.
