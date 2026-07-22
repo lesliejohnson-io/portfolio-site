@@ -1,10 +1,7 @@
 import React from "react";
 import type { MDXRemoteProps } from "next-mdx-remote/rsc";
-import {
-  CaseStudyBlockquote,
-  VisualSlot,
-  extractText,
-} from "@/components/mdx/CaseStudyBlocks";
+import { CaseStudyBlockquote, extractText } from "@/components/mdx/CaseStudyBlocks";
+import { VisualSlot } from "@/components/mdx/VisualSlot";
 
 /**
  * Paragraphs whose entire content is a `*[Visual: …]*` marker become a

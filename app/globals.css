@@ -345,6 +345,60 @@ a {
   color: var(--fg-secondary);
 }
 
+/*
+  Layout: the case study page is now as wide as the nav (max-w-5xl). Body
+  text stays capped at a comfortable reading measure; visuals float into the
+  extra width that opens up, sitting beside whichever paragraph introduces
+  them (per Natoli rule 7) instead of breaking the reading column. Headings
+  clear any still-floating visual so a new section always starts fresh.
+*/
+.prose-case > *:not(figure) {
+  max-width: 68ch;
+}
+
+.prose-case figure {
+  float: right;
+  width: 320px;
+  max-width: 42%;
+  margin: 0.25rem 0 1.5rem 2rem;
+}
+
+.prose-case h2 {
+  clear: both;
+}
+
+@media (max-width: 767px) {
+  .prose-case figure {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 2rem 0;
+  }
+}
+
+/*
+  Visual reveal: slides up + fades in the first time it scrolls into view,
+  fades back out on the way past — re-triggerable, so scrolling back up
+  brings it back. Disabled under reduced-motion (VisualSlot renders visible
+  and static in that case, so this transition never runs).
+*/
+.visual-slot {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.visual-slot[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visual-slot {
+    transition: none;
+  }
+}
+
 /* Subtle reveal on stat callouts (allowed motion), disabled for reduced-motion. */
 @keyframes stat-rise {
   from {

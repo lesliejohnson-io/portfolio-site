@@ -31,7 +31,7 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
   const { meta, content } = study;
 
   return (
-    <article className="mx-auto max-w-[70ch] px-6 py-16 sm:py-20">
+    <article className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
       <Link
         href="/#work"
         className="font-mono text-xs uppercase tracking-[0.06em] text-fg-secondary hover:text-accent"

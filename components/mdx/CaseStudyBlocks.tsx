@@ -156,22 +156,6 @@ function BeforeAfter({ text }: { text: string }) {
   );
 }
 
-export function VisualSlot({ caption }: { caption: string }) {
-  return (
-    <figure className="my-8 flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border-strong bg-surface px-6 py-12 text-center">
-      <span
-        aria-hidden="true"
-        className="font-mono text-[11px] uppercase tracking-[0.1em] text-fg-muted"
-      >
-        Visual pending
-      </span>
-      <figcaption className="max-w-md text-sm leading-relaxed text-fg-secondary">
-        {caption}
-      </figcaption>
-    </figure>
-  );
-}
-
 /**
  * Routes an authored blockquote to the right Natoli component based on the
  * conventions above. Order matters: PersonaCard and BeforeAfter are checked
