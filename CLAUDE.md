@@ -145,7 +145,7 @@ Rules: do not name fonts, tools, or inspirations that weren't actually used (the
 2. Common Project — **live** (`content/work/common-project.mdx`)
 3. Client Portal — **live** (`content/work/client-portal.mdx`) — separate case study from ECSI, same client (ECSI, a Global Payments company), different product surface
 4. Synapse — **live** (`content/work/synapse.mdx`) (previously out of scope; now included per direct instruction)
-5. Student Portal (+ design system) — filled by the existing **ECSI** case study (`content/work/ecsi.mdx`, order: 5). Its name/tag/title/content were left exactly as previously built and approved ("Global Payments, Mobile-First Loan Payments Platform") rather than renamed to "Student Portal" — renaming would mean inventing new card copy neither written nor approved yet. Flagged for Leslie to confirm; provide the exact new name/tag/title if a rename to match this slot's label is wanted.
+5. Student Portal (+ design system) — filled by the existing **ECSI** case study (`content/work/ecsi.mdx`, order: 5). Kept as "Global Payments, Mobile-First Loan Payments Platform" rather than renamed to "Student Portal" — Leslie confirmed to leave it as-is for now (2026-07-22).
 
 Paloma AI is not on this list — status unclear, not currently being built. CHAD-01 remains out of scope (not mentioned in the new order).
 
