@@ -34,7 +34,7 @@ No password-gated case studies. Every case study on the site is fully public —
 
 - `content/about.mdx` ← final copy exists (about-page.md). Do not edit the prose.
 - `content/work/ecsi.mdx` ← final copy exists (ecsi-case-study.md). Includes its own Who/What/Result card copy at top — that block renders on the Work grid, not the study page.
-- **Launch scope is exactly four case studies: ECSI, Field Guide, Common Project, Paloma AI.** No stubs, no "coming soon" cards, no fifth project (CHAD-01 and Synapse are out of scope for this launch — do not reference or scaffold them). If a case study's content isn't finished when the build reaches it, it is not added to the grid until it is — the grid only ever shows complete, real cards.
+- ~~**Launch scope is exactly four case studies: ECSI, Field Guide, Common Project, Paloma AI.** No stubs, no "coming soon" cards, no fifth project (CHAD-01 and Synapse are out of scope for this launch — do not reference or scaffold them).~~ **Superseded during Day 2** — see the case study roadmap in Implementation notes below for the current lineup and order (Synapse is now in scope; Paloma AI is not currently on the list). The "no stubs, only complete real cards" rule still applies regardless of which projects are in scope.
 - `content/work/field-guide.mdx`, `common-project.mdx`, `paloma-ai.mdx` ← content pending, to be supplied the same way ECSI was (final MDX handed off when ready).
 - Homepage copy: see Home below.
 
@@ -138,7 +138,18 @@ Rules: do not name fonts, tools, or inspirations that weren't actually used (the
 - Day/night toggle: built from scratch (no next-themes). Two designed palettes on CSS custom properties, pre-hydration theme script (no FOUC), always-visible nav toggle, system-default then localStorage. Both palettes verified WCAG AA. Also fixed a pre-existing light `fg-muted` AA miss (#767b84 → #5f646c).
 - Custom dot cursor: built from scratch. Fine-pointer only, disabled under reduced-motion, native caret over text inputs, transform/opacity-only animation.
 - Colophon updated to truthfully credit the toggle and cursor as built from scratch.
-- **Blocked on content:** Field Guide, Common Project, Paloma AI case studies — their MDX hasn't been handed off, so no cards/pages exist for them yet (no stubs, per the hard rule). Drop each finished `content/work/<slug>.mdx` in (frontmatter: slug, order, name, tag, title, who, what, result) and it joins the grid + gets a page automatically.
+- Common Project case study added (`content/work/common-project.mdx`). It has no hard metric, so the data model was extended rather than force-fit: `WorkItem.result` is now optional, plus new `summary` (descriptive card blurb, used when there's no result to lead with) and `role` (byline under name/tag on the case study page) fields. `remark-gfm` added for its "Key decisions and trade-offs" table; table/list styling added to `.prose-case`, verified in both themes.
+
+**Case study roadmap (current order — set 2026-07-22, supersedes the Day 1 four-project scope):**
+1. Field Guide — no content yet
+2. Common Project — **live** (`content/work/common-project.mdx`)
+3. Client Portal — no content yet (new case study, separate from ECSI)
+4. Synapse — no content yet (previously out of scope; now included per direct instruction)
+5. Student Portal (+ design system) — filled by the existing **ECSI** case study (`content/work/ecsi.mdx`, order: 5). Its name/tag/title/content were left exactly as previously built and approved ("Global Payments, Mobile-First Loan Payments Platform") rather than renamed to "Student Portal" — renaming would mean inventing new card copy neither written nor approved yet. Flagged for Leslie to confirm; provide the exact new name/tag/title if a rename to match this slot's label is wanted.
+
+Paloma AI is not on this list — status unclear, not currently being built. CHAD-01 remains out of scope (not mentioned in the new order).
+
+- **Blocked on content:** Field Guide, Client Portal, Synapse — no MDX handed off yet, so no cards/pages exist for them (no stubs, per the hard rule). Drop each finished `content/work/<slug>.mdx` in (frontmatter: slug, order, name, tag, title, who, what, result — result and role/summary optional) and it joins the grid + gets a page automatically.
 
 **Still open (Day 2/3):**
 - GA4 (`G-SFHY66M9X7` via `@next/third-parties`) + the two custom events (`email_copy`, `email_click`) and Vercel Analytics — not wired yet.
