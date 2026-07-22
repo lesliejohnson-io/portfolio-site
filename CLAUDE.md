@@ -141,7 +141,7 @@ Rules: do not name fonts, tools, or inspirations that weren't actually used (the
 - Common Project case study added (`content/work/common-project.mdx`). It has no hard metric, so the data model was extended rather than force-fit: `WorkItem.result` is now optional, plus new `summary` (descriptive card blurb, used when there's no result to lead with) and `role` (byline under name/tag on the case study page) fields. `remark-gfm` added for its "Key decisions and trade-offs" table; table/list styling added to `.prose-case`, verified in both themes.
 
 **Case study roadmap (current order — set 2026-07-22, supersedes the Day 1 four-project scope):**
-1. Field Guide — no content yet
+1. Field Guide — **live** (`content/work/field-guide.mdx`)
 2. Common Project — **live** (`content/work/common-project.mdx`)
 3. Client Portal — no content yet (new case study, separate from ECSI)
 4. Synapse — no content yet (previously out of scope; now included per direct instruction)
@@ -149,7 +149,8 @@ Rules: do not name fonts, tools, or inspirations that weren't actually used (the
 
 Paloma AI is not on this list — status unclear, not currently being built. CHAD-01 remains out of scope (not mentioned in the new order).
 
-- **Blocked on content:** Field Guide, Client Portal, Synapse — no MDX handed off yet, so no cards/pages exist for them (no stubs, per the hard rule). Drop each finished `content/work/<slug>.mdx` in (frontmatter: slug, order, name, tag, title, who, what, result — result and role/summary optional) and it joins the grid + gets a page automatically.
+- Field Guide case study added (`content/work/field-guide.mdx`, order: 1). Same treatment as Common Project: no hard metric, so `summary` drives the card. Header line splits the source's single "descriptor · institution · role" line across the two existing header slots (`tag` = descriptor, `role` = "institution · role"), rather than adding a third frontmatter field. Two GFM tables (question rewrites, key decisions) render via the existing table CSS. Its "One honest flag before this goes near a screener" section (Leslie's own note that some figures in an earlier draft looked fabricated/inconsistent) is excluded from the page for the same reason as Common Project's "One note on evidence" — it's addressed to Leslie, not case-study prose. The version handed off is already clean of the specific numbers that note warns about.
+- **Blocked on content:** Client Portal, Synapse — no MDX handed off yet, so no cards/pages exist for them (no stubs, per the hard rule). Drop each finished `content/work/<slug>.mdx` in (frontmatter: slug, order, name, tag, title, who, what, result — result and role/summary optional) and it joins the grid + gets a page automatically.
 
 **Still open (Day 2/3):**
 - GA4 (`G-SFHY66M9X7` via `@next/third-parties`) + the two custom events (`email_copy`, `email_click`) and Vercel Analytics — not wired yet.
