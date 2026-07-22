@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkBreaks from "remark-breaks";
+import remarkGfm from "remark-gfm";
 import { getCaseStudy, getCaseStudySlugs } from "@/lib/case-study";
 import { caseStudyComponents } from "@/components/mdx/caseStudyComponents";
 
@@ -18,7 +19,7 @@ export async function generateMetadata(
   if (!study) return {};
   return {
     title: `${study.meta.title} — Leslie Johnson`,
-    description: study.meta.result,
+    description: study.meta.result ?? study.meta.summary,
   };
 }
 
@@ -42,6 +43,11 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
         <p className="font-mono text-xs uppercase tracking-[0.08em] text-fg-muted">
           {meta.name} · {meta.tag}
         </p>
+        {meta.role && (
+          <p className="mt-1 font-mono text-xs uppercase tracking-[0.08em] text-fg-muted">
+            {meta.role}
+          </p>
+        )}
         <h1 className="mt-4 font-serif text-3xl leading-tight text-fg sm:text-4xl">
           {meta.title}
         </h1>
@@ -51,7 +57,7 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
         <MDXRemote
           source={content}
           components={caseStudyComponents}
-          options={{ mdxOptions: { remarkPlugins: [remarkBreaks] } }}
+          options={{ mdxOptions: { remarkPlugins: [remarkBreaks, remarkGfm] } }}
         />
       </div>
     </article>

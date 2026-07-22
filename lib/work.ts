@@ -7,10 +7,14 @@ export type WorkItem = {
   order: number;
   name: string;
   tag: string;
+  role?: string;
   title: string;
   who: string;
   what: string;
-  result: string;
+  /** A hard-metric result line, e.g. "84% decrease in…" — shown as a RESULT: row. */
+  result?: string;
+  /** A one-line descriptive card blurb, used when there's no hard metric to lead with. */
+  summary?: string;
 };
 
 const WORK_DIR = path.join(process.cwd(), "content", "work");

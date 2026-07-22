@@ -1,0 +1,118 @@
+---
+slug: "common-project"
+order: 3
+name: "Common Project"
+tag: "Executive and solutions-focused coaching"
+role: "Lead AI Product Designer (design, system architecture, NLP pipeline)"
+title: "Letting coaches stay present: a real-time NLP canvas that captures a session as it's spoken"
+who: "Executive and solutions-focused coaches, and, downstream, the AI systems that need structured conversational state rather than raw transcripts"
+what: "A real-time NLP web app built on the Zoom API that extracts client phrases as they're spoken, maps them spatially on a conversation quadrant, and lets the coach override any placement"
+summary: "I designed and built a real-time NLP canvas that maps a coaching conversation as it's spoken, so the coach captures every meaningful shift without ever looking away from the client, and overrides the AI whenever it's wrong."
+---
+
+{/*
+  The source handoff separated grid-card copy ("Front-page card") and a
+  closing framing note ("One note on evidence") from the case study itself.
+  The card copy became the `summary` field above; the framing note was
+  written to Leslie about how to talk about the work, not case-study prose,
+  so it isn't rendered here. Everything else below is unchanged.
+*/}
+
+> **PROJECT SUMMARY**
+> Coaches used to choose between staying present and capturing what mattered. I designed and built a real-time NLP system that extracts client phrases live and maps them on a conversation quadrant, with the coach able to override any classification. It let coaches keep their attention on the client, and it turned a coaching aid into structured conversational state that downstream AI can actually use.
+
+## At a glance
+
+- **Who:** Executive and solutions-focused coaches, and, downstream, the AI systems that need structured conversational state rather than raw transcripts
+- **What:** A real-time NLP web app built on the Zoom API that extracts client phrases as they're spoken, maps them spatially on a conversation quadrant, and lets the coach override any placement
+- **Result:** Coaches stayed fully present instead of choosing between note-taking and attention, and the system produced structured conversational state, not just a transcript
+- **Status:** Working prototype, validated in coach testing. Extraction, mapping, and coach override are live; the learning loop is designed and in active testing; the conversation-direction heatmap is designed and next to build.
+
+*[Visual: The live canvas (hero) — client phrases mapped across the four quadrants mid-session. This is the product in one image.]*
+
+## The problem
+
+### The coach hears everything. The system captured nothing.
+
+In a live session, a coach had to make a bad trade: take notes and miss the moment, or stay present and lose the pattern. The moments that slipped past were the ones that mattered most. The instant a client moves from struggle language to solution language is the whole opportunity in solutions-focused coaching, and it is exactly the moment note-taking causes a coach to miss.
+
+I had felt this myself. In solutions-focused training I was taught to plot client phrases on a graph to track where a conversation was heading, but the cognitive load of doing that by hand broke presence with the client. The tool was supposed to help me listen. Instead it pulled me out of the room.
+
+So the real question wasn't "how do I transcribe a session better." It was "how do I make what matters visible in real time, without asking the coach to look away."
+
+*[Visual: The shift, visualized — a phrase moving from below the line (struggle) to above it (solution). This is the exact moment the tool exists to catch.]*
+
+## The users, and what they needed
+
+### Built for the coach who can't afford to look away
+
+The user is a coach mid-session, running on full attention with none to spare. They needed three things:
+
+- **Capture without cost.** A way to record meaningful client language without breaking eye contact or presence.
+- **Trust in what they saw.** Classifications they could audit and override, not a black box telling them what a client meant.
+- **A glance, not a study.** Something they could orient to in about two seconds and then return to the person in front of them.
+
+## My role
+
+### Lead AI product designer, and the person who built it
+
+I owned system architecture, UX, behavioral design, and the NLP pipeline. This wasn't a design handed to engineering. I built it, on the Zoom API, so it met coaches inside the workflow they already used.
+
+The intellectual foundation is the Dialogic Orientation Quadrant, developed by Haesun Moon, PhD. I adapted her model for real-time NLP extraction: struggles below the line, strengths above, past on the left, preferred future on the right. Her framework maps the conversation; my contribution was making it read itself in real time.
+
+*[Visual: The quadrant model — the Dialogic Orientation Quadrant, adapted for real-time NLP extraction, showing the intellectual foundation.]*
+
+## The work
+
+### The core tension: an AI that reads people has to earn the right to be wrong
+
+Classifying a person's words in a live, quasi-therapeutic setting is high-risk. A confident wrong call doesn't just annoy the user, it breaks the trust the whole tool depends on. That tension shaped every real decision, and it resolved into four principles.
+
+### Human authority is preserved
+
+The coach sees every classification and can move any phrase to a different quadrant with a tap. The system proposes, the coach decides. This is the constraint that makes an AI tool usable in a human moment.
+
+### Deterministic over opaque
+
+Every extracted phrase carries a visible confidence score and an auditable classification path. No black-box summaries. A coach can always trace why something surfaced, and reject it if it doesn't feel right.
+
+*[Visual: A phrase with its confidence score and override control — proof of the human-authority and deterministic principles in one shot.]*
+
+### Only surface what clears the bar
+
+Only phrases above a confidence threshold appear on the map. Everything else stays in a list layer for review rather than cluttering the canvas with low-confidence guesses. This is what keeps a real-time map both trustworthy and glanceable.
+
+### Structured memory over transcript storage
+
+The system stores what mattered: extracted phrases, classifications, confidence scores, and how often a phrase recurs across sessions. What persists is meaning, not a wall of text. That persistence is what turns a session aid into conversational state.
+
+### The correction is the training signal
+
+Override isn't just a safety rail here, it's how the system gets better. When a coach recategorizes a phrase, or highlights something in the transcript the system missed, that correction feeds back as signal. The human staying in authority is the same act that improves the model. This closes the human-in-the-loop story into an actual loop: the coach corrects, the system learns.
+
+This part is designed and partially built. The extraction, mapping, and override are live; the learning loop is the piece I'm actively testing, comparing approaches to see which one improves classification without eroding the coach's trust in the map. I'd rather test which direction is right than ship a guess.
+
+### Showing where the conversation is heading
+
+The canvas shows where phrases landed. The next layer shows where the conversation is going. As a session develops, the system recalculates the conversation's center of gravity and surfaces it as a soft heat zone on the quadrant, so a coach can tell at a glance whether the dialogue is drifting from struggle toward preferred future, the exact movement solutions-focused coaching exists to create.
+
+I designed it to hold the same two constraints the rest of the tool runs on. It stays deliberately quiet, a single soft gradient rather than a busy heat display, because ambient awareness only helps if it doesn't pull the coach off the client. And it sits on top of the auditable phrase data, not in place of it: the individual phrases stay the source of truth, and the center-of-gravity readout is just an ambient view of where they're clustering right now.
+
+This layer is conceptual, and it's next on my build list.
+
+## Key decisions and trade-offs
+
+| Decision | Why | Result |
+| --- | --- | --- |
+| Coach overrides any placement | An AI in a therapeutic context must defer to human judgment | Trustworthy enough to use live, with a real client |
+| Confidence threshold gates the map | A real-time canvas can't afford confident-wrong classifications | Map stays legible in two seconds; low-confidence stays reviewable |
+| Store structured state, not transcripts | What matters is meaning in context, not verbatim speech | Conversational state persists between sessions and feeds downstream AI |
+| Built on the Zoom API | Coaches already work there | Zero new tooling for the user to adopt |
+
+## The reflection
+
+### The real product wasn't transcription. It was structured meaning with a human in charge.
+
+A transcript records what was said. Conversational state captures what mattered, in what context, with what frequency. Common Project is the layer that converts one into the other, and it does it without taking the decision away from the human. That combination, machine surfaces meaning, human keeps authority, is the thing I care about most in AI product design, and it's the through-line in everything I build.
+
+The quieter realization came after: what started as a coaching aid was really infrastructure. A system that understands not just what was said but what it meant, with an audit trail and a human override, is exactly what downstream AI needs to be trusted. The coaching canvas was the first surface. The structured-state layer underneath is the reusable part.

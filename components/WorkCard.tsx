@@ -20,10 +20,16 @@ export default function WorkCard({ item }: { item: WorkItem }) {
           <span className="text-fg-secondary">{item.tag}</span>
         </h3>
 
-        <p className="mt-4 font-mono text-xs leading-relaxed text-fg-secondary">
-          <span className="font-semibold text-fg">RESULT: </span>
-          {item.result}
-        </p>
+        {item.result ? (
+          <p className="mt-4 font-mono text-xs leading-relaxed text-fg-secondary">
+            <span className="font-semibold text-fg">RESULT: </span>
+            {item.result}
+          </p>
+        ) : item.summary ? (
+          <p className="mt-4 text-sm leading-relaxed text-fg-secondary">
+            {item.summary}
+          </p>
+        ) : null}
 
         <Link
           href={`/work/${item.slug}`}
