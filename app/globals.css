@@ -379,6 +379,67 @@ a {
   }
 }
 
+/*
+  Work grid card stack. Structure is always rendered the same way — a CSS
+  grid of sticky items — and responsiveness/motion preference are handled
+  entirely by these media queries swapping `position: sticky` for a plain
+  flowed list, rather than a client-side layout branch. That avoids a
+  flash-of-wrong-layout on load, matching the pre-hydration approach already
+  used for the theme script.
+*/
+.work-stack {
+  display: grid;
+  align-items: start;
+  row-gap: 40px;
+}
+
+.work-stack-item {
+  position: sticky;
+  top: 0;
+  padding-top: var(--stack-offset, 0px);
+  z-index: var(--stack-z, 1);
+}
+
+.work-stack-face {
+  transform-origin: top center;
+  box-shadow: 0 25px 50px -18px rgba(0, 0, 0, 0.35);
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 767px) {
+  .work-stack {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.5rem;
+  }
+
+  .work-stack-item {
+    position: static;
+    padding-top: 0;
+  }
+
+  .work-stack-face {
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-stack {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.5rem;
+  }
+
+  .work-stack-item {
+    position: static;
+    padding-top: 0;
+  }
+
+  .work-stack-face {
+    box-shadow: none;
+  }
+}
+
 /* Subtle reveal on stat callouts (allowed motion), disabled for reduced-motion. */
 @keyframes stat-rise {
   from {
