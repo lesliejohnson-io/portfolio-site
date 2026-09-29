@@ -15,10 +15,30 @@
   --fg-muted: #5f646c;
   --border: #dedcd6;
   --border-strong: #b9b6ac;
-  --accent: #2451e0;
+  /*
+    Teal accent. #00bfa6 is the chosen colour and is used as-is in dark mode,
+    but on this near-white background it only reaches 2.23:1 -- half the 4.5:1
+    AA needs for link text. This is the same hue (172 deg), darkened to the
+    lightest value that clears AA on both --bg (5.03:1) and --surface
+    (4.65:1) -- accent text sits on the grey surface too (footer, pills).
+  */
+  --accent: #007a6a;
   --accent-fg: #ffffff;
   --error: #c4302b;
   --error-fg: #ffffff;
+  /*
+    Letterbox mat behind portrait video in the landscape row frames. Set once
+    and NOT redefined per theme on purpose: a video's mat should stay the same
+    dark surround in both themes, the way a cinema mat does, rather than
+    flipping to a pale background and blowing out the clip.
+  */
+  --video-mat: #111111;
+  /*
+    Accent-tinted chip background, mixed from the accent so it tracks both
+    themes. Held at 8%: accent text on the tint only clears AA on the light
+    palette up to about that, and a stronger tint fails at pill text sizes.
+  */
+  --accent-soft: color-mix(in srgb, var(--accent) 8%, var(--bg));
   color-scheme: light;
 }
 
@@ -38,7 +58,7 @@
   --fg-muted: #8b9099;
   --border: #2e3238;
   --border-strong: #454a52;
-  --accent: #88a9ff;
+  --accent: #00bfa6;
   --accent-fg: #0b0d10;
   --error: #f0736d;
   --error-fg: #16181c;
@@ -58,6 +78,8 @@
   --color-accent-fg: var(--accent-fg);
   --color-error: var(--error);
   --color-error-fg: var(--error-fg);
+  --color-video-mat: var(--video-mat);
+  --color-accent-soft: var(--accent-soft);
 
   --font-serif: var(--font-newsreader);
   /*
@@ -232,8 +254,20 @@
   color: var(--fg-secondary);
 }
 
+/*
+  Case study headings use the display face, matching the work rows and the
+  page title. Body copy inside .prose-case stays in the sans text face.
+*/
+.prose-case h2,
+.prose-case h3,
+.prose-case h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
 .prose-case h2 {
   font-size: 1.5rem;
+  font-weight: 700;
   line-height: 1.25;
   margin-top: 3rem;
   margin-bottom: 1rem;
@@ -449,4 +483,161 @@
   .reveal {
     transition: none;
   }
+}
+
+/*
+  Logo strip. The supplied artwork is white on transparent, which would vanish
+  on the light theme, so light mode inverts it to near-black and dark mode
+  leaves it as-is. Both sit at a low opacity so partner marks read as
+  supporting evidence under the title, not as a second headline.
+*/
+.logo-strip img {
+  opacity: 0.55;
+  filter: invert(1);
+}
+
+:root[data-theme="dark"] .logo-strip img {
+  opacity: 0.6;
+  filter: none;
+}
+
+/*
+  Case study body, CASE_STUDY_LAYOUT.md template. A single reading column with
+  visuals inline at full column width — no floats, unlike .prose-case — and
+  large Archivo section headings with generous space above them.
+*/
+.prose-v2 {
+  font-size: 1.125rem;
+  line-height: 1.65;
+  color: var(--fg);
+}
+
+.prose-v2 h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.25rem;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 5rem 0 1.25rem;
+  color: var(--fg);
+}
+
+.prose-v2 h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 2.5rem 0 0.875rem;
+  color: var(--fg);
+}
+
+.prose-v2 h2 + h3 {
+  margin-top: 0;
+}
+
+.prose-v2 p {
+  margin: 0 0 1rem;
+}
+
+.prose-v2 strong {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/*
+  Tailwind's preflight sets `list-style: none` on ul/ol, so markers have to be
+  restored explicitly or markdown lists render as bare indented lines.
+*/
+.prose-v2 ul,
+.prose-v2 ol {
+  margin: 0 0 1rem;
+  padding-left: 1.375rem;
+}
+
+.prose-v2 ul {
+  list-style: disc;
+}
+
+.prose-v2 ol {
+  list-style: decimal;
+}
+
+.prose-v2 li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.25rem;
+}
+
+.prose-v2 li::marker {
+  color: var(--fg-muted);
+}
+
+.prose-v2 a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Visuals sit inline, filling the reading column. */
+.prose-v2 figure {
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.5rem 0 2rem;
+  min-height: 22rem;
+}
+
+.prose-v2 table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.prose-v2 th,
+.prose-v2 td {
+  border: 1px solid var(--border);
+  padding: 0.875rem 1rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose-v2 th {
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-secondary);
+}
+
+.prose-v2 td:first-child {
+  color: var(--fg-secondary);
+}
+
+@media (max-width: 640px) {
+  .prose-v2 h2 {
+    font-size: 1.875rem;
+    margin-top: 3.5rem;
+  }
+}
+
+/*
+  Case study heading reveal. Scoped to `.reveal-ready`, which ScrollReveal adds
+  on mount and skips under prefers-reduced-motion — so with no JavaScript, or
+  with reduced motion requested, nothing is ever hidden.
+*/
+.reveal-ready h2,
+.reveal-ready h3 {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+}
+
+.reveal-ready h2[data-revealed="true"],
+.reveal-ready h3[data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0);
 }

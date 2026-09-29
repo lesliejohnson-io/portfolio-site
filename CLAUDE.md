@@ -72,18 +72,9 @@ Near-monochrome warm off-white base with one blue accent, defined as CSS custom 
 - Custom dot cursor: fine pointers only, off under reduced motion.
 - Everything respects `prefers-reduced-motion`. No scroll-jacking, no parallax.
 
-## Case study template (Joe Natoli method, unchanged)
+## Case study template 
+@CASE_STUDY_LAYOUT.md
 
-1. Outcome-led title, never a bare project name.
-2. Two-step disclosure: the row on home/work is step one; the page is step two.
-3. ProjectSummary (TL;DR) at the very top.
-4. Outcome numbers (StatCallout) right after the summary.
-5. Short bursts, heavy subheads. Subheads are claims, not labels.
-6. Section order: outcome/problem → users and needs → role → constraints → the story → impact restated.
-7. Images as evidence, modest size, next to the claim they support.
-8. Conversational voice.
-
-MDX components: StatCallout, ProjectSummary, BeforeAfter, PersonaCard (always keeps its "representative composite" label), VisualSlot (renders a styled placeholder until an asset exists).
 
 ## Hard rules
 

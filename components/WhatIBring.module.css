@@ -24,7 +24,7 @@
   --panel-faint:     var(--fg-muted);          /* #5f646c */
   --panel-line:      var(--border);            /* #dedcd6 */
   --panel-line-soft: rgba(22, 24, 28, 0.04);  /* faint graticule on light bg */
-  --panel-signal:    var(--accent);            /* #2451e0 */
+  --panel-signal:    var(--accent);            /* #00806f */
   --panel-signal-hi: var(--accent);
 
   margin-block: 2rem;
@@ -41,8 +41,8 @@
   --panel-faint:     var(--fg-muted);                /* #8b9099 */
   --panel-line:      var(--border);                  /* #2e3238 */
   --panel-line-soft: rgba(244, 243, 239, 0.04);
-  --panel-signal:    #00bfa6;                        /* teal for HMI feel */
-  --panel-signal-hi: #23e6cd;
+  --panel-signal:    var(--accent);                  /* #00bfa6 */
+  --panel-signal-hi: var(--accent);
 }
 
 /* ── Section heading ── */

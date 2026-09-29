@@ -40,7 +40,7 @@ function ProjectSummary({ children }: { children: React.ReactNode }) {
   const full = extractText(children).trim();
   const body = full.replace(/^PROJECT SUMMARY\s*/i, "").trim();
   return (
-    <aside className="my-10 rounded-lg border border-border bg-surface p-6 sm:p-8">
+    <aside className="my-10">
       <p className="font-mono text-xs font-semibold uppercase tracking-[0.1em] text-accent">
         Project Summary
       </p>

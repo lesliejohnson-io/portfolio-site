@@ -16,11 +16,11 @@ export default function Home() {
         <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-[-0.02em] text-fg sm:text-6xl">
           Intelligent systems
           <br />
-          <em className="italic">meet human design.</em>
+          meet <span className="text-accent">human design.</span>
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-secondary">
-          I turn complex machine behavior into interfaces people can read,
-          trust, and act on.
+          I turn complex systems into interfaces people can read, trust, and
+          act on.
         </p>
       </section>
 

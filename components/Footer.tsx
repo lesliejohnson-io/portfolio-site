@@ -1,38 +1,38 @@
-import Link from "next/link";
 import EmailAffordance from "@/components/EmailAffordance";
+import { GitHubIcon, LinkedInIcon } from "@/components/SocialIcons";
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border">
+    <footer className="bg-surface">
       <div className="container-wide flex flex-col gap-6 py-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <Link href="/" className="font-display text-base font-medium text-fg">
-              Leslie Johnson
-            </Link>
-            <p className="mt-1 font-mono text-xs uppercase tracking-[0.06em] text-fg-muted">
-              Intelligent Systems Meet Human Design
+            <p className="font-mono text-xs tracking-[0.06em] text-fg-muted">
+              Intelligent Systems Meet{" "}
+              <span className="text-accent">Human Design</span>
             </p>
           </div>
 
-          <div className="flex items-center gap-5 font-mono text-xs uppercase tracking-[0.06em] text-fg-secondary">
+          <div className="flex items-center gap-1 text-fg-secondary">
             <a
               href="https://linkedin.com/in/lesliejohnsonn"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-accent"
+              aria-label="LinkedIn (opens in a new tab)"
+              className="rounded-full p-2 transition-colors hover:text-accent"
             >
-              LinkedIn
+              <LinkedInIcon className="h-5 w-5" />
             </a>
             <a
               href="https://github.com/lesliejohnson-io"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-accent"
+              aria-label="GitHub (opens in a new tab)"
+              className="rounded-full p-2 transition-colors hover:text-accent"
             >
-              GitHub
+              <GitHubIcon className="h-5 w-5" />
             </a>
             <EmailAffordance />
           </div>

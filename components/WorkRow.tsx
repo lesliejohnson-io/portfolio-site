@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import WorkRowVisual from "@/components/WorkRowVisual";
 import type { WorkItem } from "@/lib/work";
 
 /**
@@ -7,11 +8,32 @@ import type { WorkItem } from "@/lib/work";
  * (7 of 12), separated from its neighbours by a hairline rule, stacking to
  * one column on mobile.
  *
- * The whole row is clickable via the "stretched link" pattern — the "Full
- * case study" anchor carries an absolutely positioned ::after covering the
- * row. That keeps the row a single tab stop with a real, readable link name,
+ * The whole row is clickable via the "stretched link" pattern — the "Case
+ * study" anchor carries an absolutely positioned ::after covering the row.
+ * That keeps the row a single tab stop with a real, readable link name,
  * rather than nesting interactive elements or wrapping everything in an <a>.
  */
+
+/**
+ * Sets `highlight` in the accent colour wherever it appears in `title`.
+ * Falls back to the plain title when there's no highlight or no match, so
+ * content drives the emphasis and a mismatch is never a visible error.
+ */
+function renderTitle(title: string, highlight?: string) {
+  if (!highlight) return title;
+  const at = title.toLowerCase().indexOf(highlight.toLowerCase());
+  if (at === -1) return title;
+  return (
+    <>
+      {title.slice(0, at)}
+      <span className="text-accent">
+        {title.slice(at, at + highlight.length)}
+      </span>
+      {title.slice(at + highlight.length)}
+    </>
+  );
+}
+
 export default function WorkRow({ item }: { item: WorkItem }) {
   return (
     <article
@@ -19,17 +41,16 @@ export default function WorkRow({ item }: { item: WorkItem }) {
       className="group relative grid grid-cols-1 items-center gap-8 border-t border-border py-12 md:grid-cols-12 md:gap-12 md:py-16"
     >
       <div className="md:col-span-5">
-        <p className="font-mono text-xs uppercase tracking-[0.08em] text-fg-muted">
-          {item.name}
-          <span className="mx-2 text-border-strong" aria-hidden="true">
-            /
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-xs uppercase tracking-[0.08em] text-fg-muted">
+          <span>{item.name}</span>
+          <span className="rounded-full border border-border bg-surface px-2.5 py-1 text-fg-secondary">
+            {item.tag}
           </span>
-          {item.tag}
         </p>
 
         <Reveal>
           <h3 className="font-display mt-4 text-2xl font-bold leading-snug tracking-[-0.01em] text-fg transition-colors group-hover:text-accent sm:text-3xl">
-            {item.title}
+            {renderTitle(item.title, item.titleHighlight)}
           </h3>
         </Reveal>
 
@@ -48,7 +69,7 @@ export default function WorkRow({ item }: { item: WorkItem }) {
           href={`/work/${item.slug}`}
           className="mt-6 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.06em] text-accent after:absolute after:inset-0 after:content-['']"
         >
-          Full case study
+          Case study
           <span
             aria-hidden="true"
             className="transition-transform group-hover:translate-x-0.5"
@@ -59,15 +80,7 @@ export default function WorkRow({ item }: { item: WorkItem }) {
       </div>
 
       <div className="md:col-span-7">
-        <div className="relative flex aspect-video items-center justify-center rounded-lg border border-border bg-surface transition-colors group-hover:border-border-strong">
-          <span className="font-mono text-xs uppercase tracking-[0.1em] text-fg-muted">
-            Visual pending
-          </span>
-          <span
-            className="absolute left-4 top-4 h-2 w-2 rounded-full bg-accent"
-            aria-hidden="true"
-          />
-        </div>
+        <WorkRowVisual visual={item.visual} />
       </div>
     </article>
   );

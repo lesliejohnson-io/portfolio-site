@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logomark from "@/components/Logomark";
 import NavContact from "@/components/NavContact";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -15,8 +16,9 @@ export default function Nav() {
       <div className="container-wide flex flex-wrap items-center justify-between gap-y-3 py-4">
         <Link
           href="/"
-          className="font-display text-lg font-medium tracking-tight text-fg hover:text-accent"
+          className="font-display flex items-center gap-2.5 text-lg font-medium tracking-tight text-fg transition-colors hover:text-accent"
         >
+          <Logomark className="h-5 w-auto shrink-0" />
           Leslie Johnson
         </Link>
 
