@@ -6,10 +6,10 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-10">
+      <div className="container-wide flex flex-col gap-6 py-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <Link href="/" className="font-serif text-base text-fg">
+            <Link href="/" className="font-display text-base font-medium text-fg">
               Leslie Johnson
             </Link>
             <p className="mt-1 font-mono text-xs uppercase tracking-[0.06em] text-fg-muted">

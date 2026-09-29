@@ -15,6 +15,8 @@ export type WorkItem = {
   result?: string;
   /** A one-line descriptive card blurb, used when there's no hard metric to lead with. */
   summary?: string;
+  /** Shown in the "Selected case studies" set on the home page. */
+  featured?: boolean;
 };
 
 const WORK_DIR = path.join(process.cwd(), "content", "work");
@@ -29,4 +31,13 @@ export function getWorkItems(): WorkItem[] {
   });
 
   return items.sort((a, b) => a.order - b.order);
+}
+
+/**
+ * The home page's "Selected case studies" set. Driven by `featured: true` in
+ * each file's frontmatter, so changing what's featured is a content edit — no
+ * hardcoded slug list in the components.
+ */
+export function getFeaturedWorkItems(): WorkItem[] {
+  return getWorkItems().filter((item) => item.featured);
 }

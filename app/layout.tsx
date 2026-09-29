@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Newsreader, Source_Sans_3, JetBrains_Mono } from "next/font/google";
+import {
+  Archivo,
+  Newsreader,
+  Source_Sans_3,
+  JetBrains_Mono,
+} from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import Nav from "@/components/Nav";
@@ -7,6 +12,18 @@ import Footer from "@/components/Footer";
 import ThemeScript from "@/components/ThemeScript";
 import CustomCursor from "@/components/CustomCursor";
 import "./globals.css";
+
+/*
+  Headline face. Loaded as a variable font, so one file covers every weight
+  from 400 to 900 instead of shipping a separate file per weight. Italic is
+  included for the hero's emphasized second line.
+*/
+const archivo = Archivo({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-archivo",
+  display: "swap",
+});
 
 const newsreader = Newsreader({
   subsets: ["latin"],
@@ -45,7 +62,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${newsreader.variable} ${sourceSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${archivo.variable} ${newsreader.variable} ${sourceSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <ThemeScript />

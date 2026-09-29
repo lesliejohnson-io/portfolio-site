@@ -60,31 +60,46 @@
   --color-error-fg: var(--error-fg);
 
   --font-serif: var(--font-newsreader);
+  /*
+    Headline font token — Archivo, chosen September 2026. Every headline
+    flows through this one line, so changing the face later means loading it
+    in layout.tsx and repointing here; no component changes.
+  */
+  --font-display: var(--font-archivo);
   --font-sans: var(--font-source-sans);
   --font-mono: var(--font-jetbrains-mono);
 }
 
-* {
-  border-color: var(--border);
-}
+/*
+  Element defaults live in Tailwind's `base` layer on purpose. Tailwind v4
+  puts its utilities in cascade layers, and an UNLAYERED rule beats a layered
+  one no matter how weak its selector — so a bare `a { color: inherit }` here
+  would silently override every `text-accent`, and `h1 { font-family: serif }`
+  would override `font-display`. Inside @layer base, utilities win as expected.
+*/
+@layer base {
+  * {
+    border-color: var(--border);
+  }
 
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-sans);
-}
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+  }
 
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
 
-a {
-  color: inherit;
+  a {
+    color: inherit;
+  }
 }
 
 :focus-visible {
@@ -398,5 +413,40 @@ a {
 @media (prefers-reduced-motion: reduce) {
   .stat-reveal {
     animation: none;
+  }
+}
+
+/*
+  Wide container — the redesign's page measure. Used by nav, footer, home,
+  work, and resources. Case study and About pages keep their narrower reading
+  layout for now. Side padding scales with the viewport so the wide margins
+  hold on large screens without pinching on small ones.
+*/
+.container-wide {
+  margin-inline: auto;
+  max-width: 1440px;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+}
+
+/*
+  Headline reveal — the site's one signature motion. Each case study title
+  slides up and fades in once as its row enters the viewport, then stays put
+  (unlike .visual-slot, which re-triggers). Reveal.tsx renders children
+  visible and static under reduced-motion, so this transition never runs there.
+*/
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+}
+
+.reveal[data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: none;
   }
 }

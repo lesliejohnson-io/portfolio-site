@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Hide the Next.js dev tools badge in the corner. This is development-only
+  // UI that never shipped to production; compile and runtime errors still show.
+  devIndicators: false,
 };
 
 export default nextConfig;

@@ -1,23 +1,48 @@
-import WorkGrid from "@/components/WorkGrid";
+import Link from "next/link";
+import WorkRow from "@/components/WorkRow";
+import { getFeaturedWorkItems } from "@/lib/work";
 
 export default function Home() {
+  const items = getFeaturedWorkItems();
+
   return (
-    <>
-      <section className="mx-auto max-w-4xl px-6 py-24 sm:py-32">
-        <h1
-          style={{ fontWeight: 400 }}
-          className="font-serif text-5xl leading-[1.05] text-fg sm:text-7xl"
-        >
+    <div className="container-wide">
+      {/*
+        Compact hero — headline plus one supporting line only, kept short so
+        the first case study row is visible on a ~1440x900 laptop screen
+        without scrolling.
+      */}
+      <section className="max-w-4xl pb-12 pt-16 sm:pb-16 sm:pt-20">
+        <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-[-0.02em] text-fg sm:text-6xl">
           Intelligent systems
           <br />
           <em className="italic">meet human design.</em>
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-secondary">
-          I turn complex machine behavior into interfaces people can read, trust, and act on.
+          I turn complex machine behavior into interfaces people can read,
+          trust, and act on.
         </p>
       </section>
 
-      <WorkGrid />
-    </>
+      <section id="work" className="pb-24">
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 className="font-mono text-xs uppercase tracking-[0.08em] text-fg-muted">
+            Selected case studies
+          </h2>
+          <Link
+            href="/work"
+            className="font-mono text-xs uppercase tracking-[0.06em] text-accent hover:underline"
+          >
+            All work →
+          </Link>
+        </div>
+
+        <div className="mt-2">
+          {items.map((item) => (
+            <WorkRow key={item.slug} item={item} />
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
