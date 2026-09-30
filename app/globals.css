@@ -641,3 +641,28 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+
+/*
+  Brand marks on Working Library cards. Supplied artwork is dark on
+  transparent, so it is inverted on the dark theme — same approach as the
+  case study logo strip. Desaturated and held below full opacity so a row of
+  marks reads as reference, not as a client logo wall.
+*/
+.resource-mark {
+  filter: grayscale(1);
+  opacity: 0.75;
+}
+
+:root[data-theme="dark"] .resource-mark {
+  filter: grayscale(1) invert(1);
+  opacity: 0.8;
+}
+
+/*
+  Full-width demo card. CSS multi-column spans all columns or none, which is
+  what this wants: the card breaks the flow and runs the page measure.
+*/
+.demo-span {
+  column-span: all;
+}

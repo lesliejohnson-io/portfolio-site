@@ -46,10 +46,12 @@ export default function StatRow({
         <div key={stat.label} className="flex flex-col gap-1.5">
           <dt className="sr-only">{stat.label}</dt>
           <dd className="contents">
-            <span className="font-display text-3xl font-bold leading-none text-fg">
+            <span className="font-display text-4xl font-bold leading-none text-fg sm:text-5xl">
               <StatValue value={stat.value} />
             </span>
-            <span className="text-sm text-fg-secondary">{stat.label}</span>
+            <span className="text-sm font-semibold text-fg-secondary">
+              {stat.label}
+            </span>
             {showCaptions && stat.caption && (
               <span className="mt-1 text-xs leading-relaxed text-fg-muted">
                 {stat.caption}
