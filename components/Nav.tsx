@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logomark from "@/components/Logomark";
 import NavContact from "@/components/NavContact";
+import MobileNav from "@/components/MobileNav";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const LINKS = [
@@ -10,10 +11,22 @@ const LINKS = [
   { href: "/resources", label: "Resources" },
 ];
 
+/*
+  Glass: a translucent bar with a saturating blur, so content scrolling
+  underneath stays faintly visible and tinted rather than hidden. The blur
+  comes from Tailwind's utility — a raw `backdrop-filter` in globals.css is
+  stripped by Lightning CSS and silently does nothing.
+*/
 export default function Nav() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-bg/90 backdrop-blur">
-      <div className="container-wide flex flex-wrap items-center justify-between gap-y-3 py-4">
+    <header className="sticky top-2 z-30 mt-2">
+      {/*
+        container-wide supplies the page margin; the negative inline margin
+        pushes the bar 4px past it on each side, so the pill sits just proud of
+        the content below rather than flush with it.
+      */}
+      <div className="container-wide">
+        <div className="-mx-1 flex items-center justify-between rounded-full border border-border/60 bg-bg/60 px-6 py-3 backdrop-blur-xl backdrop-saturate-150">
         <Link
           href="/"
           className="font-display flex items-center gap-2.5 text-lg font-medium tracking-tight text-fg transition-colors hover:text-accent"
@@ -24,7 +37,7 @@ export default function Nav() {
 
         <nav
           aria-label="Main"
-          className="flex flex-wrap items-center gap-x-6 gap-y-3"
+          className="hidden items-center gap-x-6 md:flex"
         >
           {LINKS.map((link) => (
             <Link
@@ -38,6 +51,13 @@ export default function Nav() {
           <NavContact />
           <ThemeToggle />
         </nav>
+
+        {/* Below md the links live in the slide-in panel. */}
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
+          <MobileNav links={LINKS} />
+        </div>
+        </div>
       </div>
     </header>
   );
