@@ -38,19 +38,61 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Project structure
 
 ```
-app/                 Routes: home, /work, /work/[slug], /about, /resources
-components/          UI components
-  case-study/        Case study page sections (hero, stats, related studies)
-  mdx/               Components available inside MDX content
-content/
-  about.mdx          About page
-  work/*.mdx         One file per case study
-lib/
-  work.ts            Case study content model and loaders
-  resources.ts       Working Library entries
-public/
-  work/<slug>/       Case study media and partner logos
-  resources/         Working Library images and media
+portfolio-site/
+├── README.md
+├── CLAUDE.md                  # site spec for Claude Code
+├── CASE_STUDY_LAYOUT.md       # case study page template
+├── AGENTS.md
+├── app/
+│   ├── layout.tsx             # fonts, theme, analytics
+│   ├── globals.css            # design tokens
+│   ├── page.tsx               # home
+│   ├── about/
+│   │   └── page.tsx
+│   ├── resources/
+│   │   └── page.tsx           # Working Library
+│   └── work/
+│       ├── page.tsx           # all case studies
+│       └── [slug]/
+│           └── page.tsx       # case study page
+├── components/
+│   ├── Nav.tsx
+│   ├── MobileNav.tsx
+│   ├── Footer.tsx
+│   ├── WorkRow.tsx
+│   ├── WorkRowVisual.tsx
+│   ├── ResourceCard.tsx
+│   ├── DemoCard.tsx
+│   ├── ...                    # demos, theme, cursor, shared UI
+│   ├── case-study/
+│   │   ├── CaseStudyHero.tsx
+│   │   ├── StatRow.tsx
+│   │   ├── StatValue.tsx
+│   │   ├── RelatedStudies.tsx
+│   │   └── ScrollReveal.tsx
+│   └── mdx/
+│       ├── caseStudyComponents.tsx
+│       ├── CaseStudyBlocks.tsx
+│       ├── VisualSlot.tsx
+│       └── AboutPhoto.tsx
+├── content/
+│   ├── about.mdx
+│   └── work/
+│       ├── field-guide.mdx
+│       ├── common-project.mdx
+│       ├── client-portal.mdx
+│       ├── synapse.mdx
+│       └── ecsi.mdx
+├── lib/
+│   ├── work.ts                # case study content model
+│   ├── case-study.ts
+│   └── resources.ts           # Working Library entries
+└── public/
+    ├── images/
+    ├── resources/             # library card media
+    └── work/
+        ├── field-guide/
+        └── synapse/
 ```
 
 ## Editing content
