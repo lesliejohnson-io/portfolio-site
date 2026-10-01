@@ -1,7 +1,11 @@
 # lesliejohnson.io
 
-**Live site:** [lesliejohnson.io](https://lesliejohnson.io)
-
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+![MDX](https://img.shields.io/badge/content-MDX-1B1F24?style=flat-square&logo=mdx&logoColor=white)
+![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-000000?style=flat-square&logo=vercel&logoColor=white)
+[![Live site](https://img.shields.io/badge/live-lesliejohnson.io-2451E0?style=flat-square)](https://lesliejohnson.io)
 ## How it's built
 
 Designed and specified by Leslie, built with [Claude Code](https://claude.com/claude-code) working from the specs in this repo:
