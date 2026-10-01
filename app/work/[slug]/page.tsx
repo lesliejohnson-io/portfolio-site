@@ -52,20 +52,51 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
     return (
       <>
         <article>
-          <header className="container-wide pt-12 sm:pt-16">
+          {/*
+            The pill and headline sit at the body measure, sharing the same
+            left and right margins as every paragraph below them. The logo
+            strip and hero still run the full page column.
+          */}
+          <header className="mx-auto max-w-[680px] px-6 pt-12 sm:pt-16">
             {meta.category && (
               <p className="mb-5">
-                <span className="inline-block rounded-full bg-accent-soft px-3 py-1.5 font-mono text-xs tracking-[0.06em] text-accent">
+                <span className="inline-block rounded-full bg-accent-soft px-3 py-1.5 font-mono text-xs uppercase tracking-[0.06em] text-accent">
                   {meta.category}
                 </span>
               </p>
             )}
-            {/* Three of the page's four columns; full width on small screens. */}
-            <h1 className="font-display text-4xl font-bold leading-[1.04] tracking-[-0.02em] text-fg sm:max-w-[75%] sm:text-[3.5rem]">
-              {meta.title}
+            {/*
+              A title written as more than one sentence breaks at the sentence,
+              not wherever the measure happens to run out — otherwise a line
+              can end on a dangling number. Each sentence is its own block, so
+              a long one still wraps normally inside itself. A single-sentence
+              title is unaffected.
+            */}
+            <h1 className="font-display text-4xl font-bold leading-[1.04] tracking-[-0.02em] text-fg sm:text-[3.375rem]">
+              {meta.title
+                .split(/(?<=\.)\s+/)
+                .map((sentence) => (
+                  <span key={sentence} className="block">
+                    {sentence}
+                  </span>
+                ))}
             </h1>
-            {meta.logos && <LogoStrip logos={meta.logos} />}
+
+            {/* Only for work still in progress; most studies omit it. */}
+            {meta.status && (
+              <p className="mt-5 leading-relaxed text-fg-secondary">
+                <strong className="font-semibold text-fg">Status:</strong>{" "}
+                {meta.status}
+              </p>
+            )}
           </header>
+
+          {/* The marks run the full container, one row, directly above the hero. */}
+          {meta.logos && (
+            <div className="container-wide mt-10">
+              <LogoStrip logos={meta.logos} />
+            </div>
+          )}
 
           <div className="container-wide mt-10">
             <CaseStudyHero

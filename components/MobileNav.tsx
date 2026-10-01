@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import NavContact from "@/components/NavContact";
+import MenuStatus from "@/components/MenuStatus";
+import { GitHubIcon, LinkedInIcon } from "@/components/SocialIcons";
 
 /**
  * Small-screen menu: a full-height panel that slides in from the left.
@@ -157,8 +159,30 @@ export default function MobileNav({
                 ))}
               </nav>
 
-              <div className="mt-auto pt-8">
-                <NavContact />
+              <MenuStatus active={open} />
+
+              <div className="mt-auto flex flex-col items-start gap-5 pt-8">
+                <div className="flex items-center gap-1 text-fg-secondary">
+                  <a
+                    href="https://linkedin.com/in/lesliejohnsonn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn (opens in a new tab)"
+                    className="rounded-full p-2 transition-colors hover:text-accent"
+                  >
+                    <LinkedInIcon className="h-5 w-5" />
+                  </a>
+                  <a
+                    href="https://github.com/lesliejohnson-io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="GitHub (opens in a new tab)"
+                    className="rounded-full p-2 transition-colors hover:text-accent"
+                  >
+                    <GitHubIcon className="h-5 w-5" />
+                  </a>
+                </div>
+                <NavContact toastPlacement="above" />
               </div>
             </div>
           </>,

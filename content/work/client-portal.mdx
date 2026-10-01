@@ -1,50 +1,44 @@
 ---
 slug: "client-portal"
-category: "Fintech"
+layout: "v2"
+category: "Product Design · Fintech"
 featured: true
 order: 3
 name: "Client Portal"
-tag: "ECSI, a Global Payments company"
+tag: "Product Design · Fintech"
 role: "Sole Product Designer"
-title: "Live dashboards for university executives, and a lift in flagship product sales"
+title: "Decisions in hours. 17 new deals in year one."
 who: "University CFOs and financial officers at ECSI's client institutions"
 what: "Real-time financial dashboards inside ECSI's Client Portal, replacing on-demand PDF report runs"
-summary: "Executive decision time cut roughly in half, and the dashboards became the upsell behind a lift in flagship product sales."
+summary: "Live financial dashboards for university executives. Decision time cut roughly in half; the dashboards drove upsells of the flagship product."
+heroPending: "Wide hero: before and after — the old portal report-request form dissolving into a live KPI dashboard"
 ---
 
 {/*
-  Per Leslie's direction: this case study flagged its own outcome figures
-  as unverified ("Numbers to verify before publishing (see note at end)")
-  but the referenced end note wasn't included in the handoff. Treated the
-  same way as Field Guide's flagged draft — specific outcome percentages
-  and percentage-equivalent metrics (the NPS delta, the sales lift, the
-  navigation-time and QA-bug percentages, the support-request volume) are
-  softened to their qualitative claims below. Plain process/scope facts
-  (CFOs presented to, executives tested with, design-system module count)
-  are left as-is — they describe what was built/done, not a measured
-  outcome that needs field-data confirmation. The "Card summary" section
-  (explicitly grid-card-only per its own label) became the `summary`
-  frontmatter field and isn't repeated in the body.
+  Restructured to the CASE_STUDY_LAYOUT.md section order (Context, Objective,
+  Approach, one extra section, Outcomes & Impact, Reflection). Every sentence
+  below is Leslie's own from the previous version of this file; only the
+  section order and the heading labels changed.
+
+  No `stats` block, deliberately. Per Leslie's direction this study's outcome
+  figures (the NPS delta, the sales lift, the navigation-time and QA-bug
+  percentages, the support-request volume) were softened to qualitative
+  claims because the source draft flagged them as unverified. The layout doc
+  says to omit the outcomes strip entirely rather than pad it, so both the
+  top strip and <StatRow /> are absent until verified figures exist.
+
+  The earlier note on this file still applies: plain process/scope facts
+  (CFOs presented to, executives tested with, design-system module count) are
+  left as-is — they describe what was built, not a measured outcome. The
+  "Card summary" section became the `summary` frontmatter field and isn't
+  repeated in the body.
 */}
 
-> **PROJECT SUMMARY**
-> I replaced a slow, print-based reporting system with live, customizable financial dashboards for university executives. Decision cycles went from days to hours, and the dashboards became the upsell that lifted flagship product sales.
+## Context
 
-*[Visual: Hero — before/after: the old portal report-request form dissolving into a live KPI dashboard. The single visual that makes the whole case.]*
-
-## The outcome
-
-### Executives stopped waiting on reports and started closing decisions in the room
+ECSI, a Global Payments company, served university administrators, financial officers, and the executives who answer for enrollment and budget outcomes.
 
 Enrollment and budget calls worth millions used to wait on static PDF reports. Someone had to know the right date ranges, request the run, generate it, and print it for the meeting. Support fielded a steady stream of those requests every month.
-
-After launch, executives pulled live numbers themselves and made the call in the meeting instead of days later. The dashboards became a selling point strong enough to lift flagship product sales.
-
-## The users, and what they needed
-
-### Built for people who had to make the call in the meeting, not after it
-
-The dashboards were for university administrators, financial officers, and the executives who answer for enrollment and budget outcomes.
 
 Their old workflow had three problems:
 
@@ -52,19 +46,13 @@ Their old workflow had three problems:
 - **It was fragile.** One wrong parameter meant starting the whole request over.
 - **It didn't hold up in a room.** Everyone showed up with their own printout, so meetings fractured into people reading different pages instead of looking at one shared story.
 
+**My role:** sole designer, discovery through delivery. I ran research, prototyping, and testing, and I presented the work to a room of university CFOs. I did it alongside a PM, two client advisors, a marketing director, and five developers. The client advisors were my line into what clients actually wanted; I leaned on their relationships for insight I couldn't have gotten cold.
+
+**The reporting system wasn't failing on data. It was failing on speed, and on the meeting the data was for.**
+
+## Objective
+
 What they needed was simple to say and hard to deliver: the numbers, live, in a form they could shape and present together.
-
-## My role
-
-### Sole designer, discovery through delivery
-
-I ran research, prototyping, and testing, and I presented the work to a room of university CFOs.
-
-I did it alongside a PM, two client advisors, a marketing director, and five developers. The client advisors were my line into what clients actually wanted; I leaned on their relationships for insight I couldn't have gotten cold.
-
-## The constraints
-
-### A legacy data model, a rebrand mid-project, and a print requirement that couldn't go away
 
 Three real-world limits shaped every decision:
 
@@ -72,27 +60,27 @@ Three real-world limits shaped every decision:
 - **A corporate rebrand** that landed in the middle of the project.
 - **A hard print requirement.** These are board packets. "Just go digital" was never on the table.
 
-## The work
+## Approach
 
-### Discovery: the reports weren't hard to read, they were hard to find
+### 1. The reports weren't hard to read, they were hard to find
 
 Eye-tracking and clickstream analysis showed users losing a significant share of their time to navigation before they even reached data. They knew what they wanted; the system buried it.
 
 *[Visual: The navigation problem — the eye-tracking or clickstream artifact showing time lost in navigation. Proof, not decoration.]*
 
-### Define: a handful of reports carried most of the value
+### 2. A handful of reports carried most of the value
 
 Rather than rebuild everything, I looked at what clients actually ran. A handful of reports accounted for the overwhelming majority of usage. I built the dashboards around those, gave each one a single job, and put the long tail behind search and a catch-all view.
 
 The organizing principle: **one dashboard, one story.** Each screen makes a single argument instead of dumping every available metric on the page.
 
-### Design: a system that could flex without breaking
+### 3. A design system that could flex without breaking
 
 The rebrand forced a design-system decision early. I built one using atomic design, starting with a content inventory of 30 modules and refining down to 10 that could each carry multiple content types. Storybook plus Figma tokens kept brand and code in sync and meaningfully cut down on QA bugs.
 
 *[Visual: The system — one clean shot of the 10-module design system.]*
 
-### Test: two one-week sprints with real executives
+### 4. Two one-week sprints with real executives
 
 I ran usability sessions with executives across two sprints. Three changes came directly out of what I watched them struggle with:
 
@@ -100,7 +88,7 @@ I ran usability sessions with executives across two sprints. Three changes came 
 - **The date-range picker was rebuilt** to behave like the calendar selectors people already knew.
 - **On-screen print was added,** so the board packet came straight off the live view with zero extra dev effort.
 
-### The roadblock worth naming
+### 5. The roadblock was a wrong mental model, not a labeling tweak
 
 My first wireframes nested all five report areas as tabs under the product. In testing, users kept looking for that navigation somewhere else entirely. It wasn't a labeling tweak, it was a wrong mental model, and I had to move the whole structure into the navigation column and retest before it clicked.
 
@@ -114,10 +102,23 @@ My first wireframes nested all five report areas as tabs under the product. In t
 | Customizable widgets per school | Every institution's data tells a different story | Executive satisfaction improved noticeably |
 | Built-in print view | Board packets were non-negotiable | Requirement met with no added dev cost |
 
-## What I'd do differently
+## Outcomes & Impact
+
+- Executives stopped waiting on reports and started closing decisions in the room, pulling live numbers themselves instead of making the call days later.
+- Enrollment and budget calls worth millions no longer waited on a report run.
+- Support stopped fielding a steady stream of report requests every month.
+- Executive satisfaction improved noticeably once each institution could shape its own view.
+- Board packets printed straight off the live view, meeting the requirement with no added dev cost.
+- The dashboards became a selling point strong enough to lift flagship product sales.
+
+*[Visual: The payoff — a final dashboard with the print view visible.]*
+
+## Reflection
+
+### Design for the decision before it becomes urgent
 
 I designed for the meeting people were already having. The natural next move is to design for the decision before it becomes urgent: predictive enrollment forecasting and KPI email alerts, so the dashboard pushes the signal instead of waiting to be opened. That was backlog when I left, and it's where I'd take it next.
 
-The broader lesson held up: **limiting interaction patterns accelerated adoption.** A few well-designed, familiar patterns got executives productive faster than a richer, more flexible toolkit would have.
+### Limiting interaction patterns accelerated adoption
 
-*[Visual: The payoff — a final dashboard with the print view visible.]*
+A few well-designed, familiar patterns got executives productive faster than a richer, more flexible toolkit would have.

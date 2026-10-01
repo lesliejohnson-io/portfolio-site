@@ -67,8 +67,9 @@ Near-monochrome warm off-white base with one blue accent, defined as CSS custom 
 
 ## Motion
 
-- **Headline reveal** (`components/Reveal.tsx`): each case study title slides up and fades in once as its row enters the viewport. This is the site's one signature motion. Don't add entrance animations to other sections.
+- **Headline reveal** (`components/Reveal.tsx`): each case study title slides up and fades in once as its row enters the viewport. This is the site's signature motion.
 - Existing: VisualSlot reveal and stat callout reveal on case study pages.
+- **The products should feel alive.** Product visuals are allowed to move, not just reveal — the work is about systems in motion, and a static screenshot undersells it.
 - Custom dot cursor: fine pointers only, off under reduced motion.
 - Everything respects `prefers-reduced-motion`. No scroll-jacking, no parallax.
 

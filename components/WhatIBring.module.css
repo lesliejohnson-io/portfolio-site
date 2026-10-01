@@ -12,7 +12,7 @@
   beat .prose-about h2 / .prose-about p (0-1-1) without needing !important.
 
   Font vars come from layout.tsx (next/font/google):
-    --font-newsreader, --font-source-sans, --font-jetbrains-mono
+    --font-display, --font-source-sans, --font-jetbrains-mono
 */
 
 /* ── Light-mode tokens (default) ── */
@@ -48,12 +48,12 @@
 /* ── Section heading ── */
 /* Scoped .bring .title to beat .prose-about h2 (specificity 0-2-0 vs 0-1-1) */
 .bring .title {
-  font-family: var(--font-newsreader), Georgia, serif;
-  font-weight: 400;
-  font-size: clamp(28px, 4.5vw, 44px);
-  letter-spacing: -0.01em;
-  line-height: 1;
-  margin: 0 0 28px 0;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin: 0 0 1.25rem 0;
   max-width: none;
   color: var(--fg);
 }
@@ -180,7 +180,7 @@
 
 /* Scoped to beat .prose-about h2 */
 .bring .statement {
-  font-family: var(--font-newsreader), Georgia, serif;
+  font-family: var(--font-display), system-ui, sans-serif;
   font-size: clamp(19px, 2.4vw, 23px);
   font-weight: 500;
   line-height: 1.25;

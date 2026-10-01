@@ -1,63 +1,27 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { sendGAEvent } from "@next/third-parties/google";
+import { CONTACT_EMAIL, useCopyEmail } from "@/lib/useCopyEmail";
 
-const EMAIL = "leslie@lesliejohnson.io";
-const MAILTO = `mailto:${EMAIL}?subject=Portfolio%20Inquiry`;
-
+/**
+ * One-click copy of the contact address.
+ *
+ * The button used to open a menu offering "Copy email" and "Send me an email".
+ * It now does the copying itself — the mail option lives on the nav's Contact
+ * button, so the menu was a step in front of the only thing left to do here.
+ */
 export default function EmailAffordance({
   className = "",
 }: {
   className?: string;
 }) {
-  const [open, setOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-
-    function onPointerDown(e: MouseEvent) {
-      if (!containerRef.current?.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-
-    document.addEventListener("mousedown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
-
-  async function handleCopy() {
-    try {
-      await navigator.clipboard.writeText(EMAIL);
-      sendGAEvent("event", "email_copy");
-      setCopied(true);
-      // Show the "Copied" confirmation, then close the popover after 1s.
-      setTimeout(() => {
-        setOpen(false);
-        setCopied(false);
-      }, 1000);
-    } catch {
-      // Clipboard API unavailable — the mailto link below still works.
-    }
-  }
+  const { copied, copy } = useCopyEmail("footer");
 
   return (
-    <div ref={containerRef} className={`relative ${className}`}>
+    <div className={`relative ${className}`}>
       <button
         type="button"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-label="Contact via email"
-        onClick={() => setOpen((v) => !v)}
+        aria-label={`Copy email address, ${CONTACT_EMAIL}`}
+        onClick={copy}
         className="flex items-center justify-center rounded-full p-2 text-fg-secondary transition-colors hover:text-accent"
       >
         <svg
@@ -66,7 +30,7 @@ export default function EmailAffordance({
           fill="none"
           stroke="currentColor"
           strokeWidth="1.5"
-          className="h-5 w-5"
+          className="h-[22px] w-[22px]"
           aria-hidden="true"
         >
           <rect x="3" y="5" width="18" height="14" rx="2" />
@@ -74,27 +38,18 @@ export default function EmailAffordance({
         </svg>
       </button>
 
-      {open && (
+      {/*
+        Anchored above the button rather than fixed to the viewport: the
+        affordance lives in the footer, so a toast below it would open off the
+        bottom of the page. role="status" announces it once to screen readers
+        without stealing focus.
+      */}
+      {copied && (
         <div
-          role="menu"
-          className="absolute right-0 top-full z-20 mt-2 w-56 rounded-lg border border-border bg-bg-raised p-1.5 shadow-lg"
+          role="status"
+          className="pointer-events-none absolute bottom-full right-0 z-30 mb-2 whitespace-nowrap rounded-md bg-accent px-3 py-2 font-mono text-xs text-accent-fg shadow-lg"
         >
-          <button
-            type="button"
-            role="menuitem"
-            onClick={handleCopy}
-            className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left font-mono text-xs text-fg hover:bg-surface"
-          >
-            <span>{copied ? "Copied" : "Copy email"}</span>
-          </button>
-          <a
-            role="menuitem"
-            href={MAILTO}
-            onClick={() => sendGAEvent("event", "email_click")}
-            className="block rounded-md px-3 py-2 font-mono text-xs text-fg hover:bg-surface"
-          >
-            Send me an email
-          </a>
+          Email copied!
         </div>
       )}
     </div>

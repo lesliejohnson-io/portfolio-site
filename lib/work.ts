@@ -38,6 +38,11 @@ export type WorkItem = {
    * keeps the original layout, so studies migrate one at a time.
    */
   layout?: "v2";
+  /**
+   * A short note on where the work stands, shown directly under the title.
+   * Only for studies still in progress — omit it and nothing renders.
+   */
+  status?: string;
   /** Pill label above the title, e.g. "Health Research". One per study. */
   category?: string;
   /** Wide hero directly under the header. Image, or .mp4/.webm for a clip. */
@@ -60,6 +65,13 @@ export type WorkLogo = {
   src: string;
   /** The organisation's name. Used as the mark's alt text. */
   alt: string;
+  /**
+   * Optional size multiplier for this mark alone, e.g. 0.85. Supplied artwork
+   * has different amounts of padding baked in, so marks that fill their canvas
+   * read larger than ones that don't even at the same box size. This evens
+   * them up as a content edit rather than a per-study rule in the component.
+   */
+  scale?: number;
 };
 
 /**

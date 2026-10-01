@@ -81,13 +81,13 @@
   --color-video-mat: var(--video-mat);
   --color-accent-soft: var(--accent-soft);
 
-  --font-serif: var(--font-newsreader);
   /*
     Headline font token — Archivo, chosen September 2026. Every headline
     flows through this one line, so changing the face later means loading it
     in layout.tsx and repointing here; no component changes.
   */
   --font-display: var(--font-archivo);
+  --font-serif: var(--font-newsreader);
   --font-sans: var(--font-source-sans);
   --font-mono: var(--font-jetbrains-mono);
 }
@@ -114,7 +114,7 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-serif);
+    font-family: var(--font-display);
     font-weight: 500;
     letter-spacing: -0.01em;
   }
@@ -217,25 +217,94 @@
   max-w-5xl so visuals (photo, WhatIBring panel) can fill the full width while
   body copy stays at a readable measure.
 */
+/*
+  About page. Everything sits in a 680px reading column except the photo
+  strip, which runs the full page width so the three stills read as one band.
+*/
 .prose-about h1 {
-  font-size: 2rem;
-  line-height: 1.2;
-  margin-bottom: 0.5rem;
-  max-width: 68ch;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+  /* Sits in the reading column, like everything but the photo strip. */
+  margin-inline: auto;
+  max-width: 680px;
+  /* Even out the ragged edge now that the break is automatic. */
+  text-wrap: balance;
+}
+
+.prose-about h2,
+.prose-about h3,
+.prose-about p,
+.prose-about ul,
+.prose-about ol,
+.prose-about section {
+  margin-inline: auto;
+  max-width: 680px;
+}
+
+/*
+  12px margin and 4px of vertical padding around the portrait, so it sits
+  close to the text instead of in its own band. The inline margin stays `auto`
+  because the prose container is wider than the reading column — a literal
+  12px there would pull the image out of the column it is aligned to.
+*/
+.prose-about .about-portrait {
+  margin: 12px auto;
+  padding-block: 4px;
+  max-width: 680px;
 }
 
 .prose-about h2 {
-  font-size: 1.375rem;
-  margin-top: 3rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin-top: 4rem;
   margin-bottom: 1.25rem;
-  max-width: 68ch;
 }
 
 .prose-about p {
   margin-bottom: 1.25rem;
   line-height: 1.75;
   color: var(--fg-secondary);
-  max-width: 68ch;
+}
+
+/*
+  Lists on About follow the case study body's conventions, so a bulleted list
+  reads the same wherever it appears. The About page had no list until the
+  named interaction patterns arrived, which is why these rules are new.
+*/
+.prose-about ul,
+.prose-about ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.375rem;
+  line-height: 1.75;
+  color: var(--fg-secondary);
+}
+
+.prose-about ul {
+  list-style: disc;
+}
+
+.prose-about ol {
+  list-style: decimal;
+}
+
+/*
+  Tighter leading inside a bullet than in a paragraph, with the gap between
+  items kept — so each item reads as one block and the separation between
+  items does the work the leading used to.
+*/
+.prose-about li {
+  margin-bottom: 0.75rem;
+  padding-left: 0.25rem;
+  line-height: 1.5;
+}
+
+.prose-about li::marker {
+  color: var(--fg-muted);
 }
 
 .prose-about strong {
@@ -621,6 +690,24 @@
   .prose-v2 h2 {
     font-size: 1.875rem;
     margin-top: 3.5rem;
+  }
+
+  /*
+    A three-column table can't shrink below its min-content width, so on a
+    phone it scrolls on its own axis instead of pushing the whole page
+    sideways. `display: block` is what makes the table itself the scroll
+    container; the row groups inside still lay out as a table.
+  */
+  .prose-v2 table {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .prose-v2 th,
+  .prose-v2 td {
+    padding: 0.75rem;
   }
 }
 

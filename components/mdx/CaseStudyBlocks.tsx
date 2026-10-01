@@ -1,7 +1,7 @@
 import React from "react";
 
 /**
- * The case study content files (e.g. content/work/ecsi.mdx) are authored in
+ * The case study content files (e.g. content/work/common-project.mdx) are authored in
  * plain markdown and must not be rewritten — the Natoli-structure components
  * below are mapped onto the markdown conventions already used in the files:
  *
@@ -44,7 +44,7 @@ function ProjectSummary({ children }: { children: React.ReactNode }) {
       <p className="font-mono text-xs font-semibold uppercase tracking-[0.1em] text-accent">
         Project Summary
       </p>
-      <p className="mt-3 font-serif text-xl leading-relaxed text-fg">{body}</p>
+      <p className="mt-3 text-xl leading-relaxed text-fg">{body}</p>
     </aside>
   );
 }
@@ -64,7 +64,7 @@ function StatCallout({ paragraphs }: { paragraphs: string[] }) {
           key={i}
           className="rounded-lg border border-border bg-bg-raised p-6"
         >
-          <div className="font-serif text-5xl leading-none text-fg">
+          <div className="font-display text-5xl font-bold leading-none text-fg">
             {s.value}
           </div>
           {s.caption && (
@@ -96,7 +96,7 @@ function PersonaCard({ text }: { text: string }) {
   return (
     <aside className="my-10 rounded-lg border border-border-strong bg-surface p-6 sm:p-7">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="font-serif text-lg text-fg">{name}</span>
+        <span className="font-display text-lg font-semibold text-fg">{name}</span>
         {label && (
           <span className="font-mono text-[11px] uppercase tracking-[0.06em] text-fg-muted">
             {label}

@@ -11,22 +11,38 @@ import type { WorkLogo } from "@/lib/work";
  * Each mark is sized by `object-contain` inside a fixed box, so logos with very
  * different proportions (a wide NIH lockup, a squarer crest) sit on a shared
  * baseline without being stretched.
+ *
+ * The marks stay on one row at every width. From `sm` up the row runs the full
+ * container and each cell shares the space equally. Below that there is not
+ * enough width to read four marks at once, so the row scrolls sideways at a
+ * legible fixed size instead of shrinking them. It bleeds through the page
+ * gutter on that breakpoint so a partly visible mark at the edge shows there
+ * is more to scroll to.
  */
 export default function LogoStrip({ logos }: { logos: WorkLogo[] }) {
   if (!logos.length) return null;
 
   return (
-    <section aria-label="Partners and funders" className="logo-strip mt-8">
-      <ul className="flex flex-wrap gap-2">
+    <section aria-label="Partners and funders" className="logo-strip">
+      <ul className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] sm:mx-0 sm:overflow-x-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden">
         {logos.map((logo) => (
           <li
             key={logo.src}
-            className="flex h-20 flex-1 basis-40 items-center justify-center rounded-lg border border-border bg-surface px-5"
+            className="flex h-20 w-40 shrink-0 items-center justify-center rounded-lg border border-border bg-surface px-5 sm:w-auto sm:min-w-0 sm:flex-1 sm:shrink"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={logo.src}
               alt={logo.alt}
+              /* Defaults live in the class; `scale` overrides them per mark. */
+              style={
+                logo.scale
+                  ? {
+                      maxHeight: `${2.5 * logo.scale}rem`,
+                      maxWidth: `${150 * logo.scale}px`,
+                    }
+                  : undefined
+              }
               className="max-h-10 w-full max-w-[150px] object-contain"
             />
           </li>

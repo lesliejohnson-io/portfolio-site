@@ -1,15 +1,22 @@
 ---
 slug: "synapse"
+layout: "v2"
 featured: true
 order: 4
 name: "Synapse"
-tag: "Concept for a TBI Rehab Center"
+category: "Health AI · Concept"
+tag: "Health AI · Concept"
 role: "Product Design Lead (research, strategy, prototype)"
-title: "Designing for the caregiver, not the patient: a companion built for emotional states, not tasks"
-titleHighlight: "emotional states"
+title: "From doctor's note to plain language in one tap."
 who: "Family caregivers of TBI patients, the spouse, adult child, or family member doing the daily recovery work, often while quietly grieving"
 what: "A mobile PWA caregiver companion, designed for a TBI rehab center's caregiver support group: a guided daily journey, a medical-jargon translator, zero-friction capture, and a community that includes a grief thread"
-summary: "Every health app for brain-injury recovery centers the patient. I designed Synapse for the caregiver beside them, a guided companion, not another dashboard to manage."
+summary: "An AI companion for caregivers of people recovering from brain injury, turning clinical notes into plain language and questions for the next visit. Concept for a TBI rehab center."
+status: "concept with an interactive prototype, designed for a TBI rehab center's caregiver support group. Not built as a shipped product."
+heroPending: "The translator sequence: a real medical note resolving into plain language, what it means for tomorrow, and questions for the next appointment."
+stats:
+  - value: "89%"
+    label: "Nurses who would give it to caregivers"
+    caption: "17 of 19 nurses who reviewed the prototype wanted caregivers to use it with their patients"
 visual:
   type: "video"
   orientation: "portrait"
@@ -21,105 +28,91 @@ visual:
 ---
 
 {/*
-  Same pattern as the other three: "Front-page card" -> `summary` only,
-  not rendered in the body. The closing "One note on framing and
-  evidence" is Leslie's own editorial note (addressed to her, not
-  case-study prose), so it isn't rendered either — but it explicitly
-  instructs two checks, both applied below:
-  1. Source or soften the "millions of TBI caregivers" market figure —
-     that figure doesn't actually appear anywhere in this draft, so
-     nothing to change.
-  2. Keep the "almost no apps built for the caregiver" claim as
-     qualitative "almost none," not a hard zero. The draft was
-     inconsistent on this — "almost no one has built a tool for them"
-     in the body vs. "No one built for the person beside them" in the
-     H3 heading, and "In every existing product..." elsewhere. Softened
-     both to match the qualitative version already used correctly
-     nearby, so a single counterexample can't dent the argument.
+  Migrated to the CASE_STUDY_LAYOUT.md section order (Context, Objective,
+  Approach, Outcomes & Impact, Reflection) from Leslie's supplied writeup.
+  Every sentence below is hers, verbatim; only the heading levels and the
+  visual placeholders are markup.
+
+  `visual` stays for the work row on the home and work pages — that is the
+  portrait story video, not the case study hero, which is still pending.
 */}
 
-> **PROJECT SUMMARY**
-> Every health app for TBI puts the patient at the center. Synapse puts the caregiver there instead: the exhausted spouse or adult child who shows up to every appointment and doesn't understand half of what's said. I designed a guided companion built for that person's emotional state rather than their task list, one priority at a time, a translator that turns medical jargon into plain language and hope, and a community that names the grief no other app acknowledges. It's a concept with an interactive prototype, and the real output is a category reframe: not a health tracker with a caregiver mode, but a caregiver companion that happens to track health.
+## Context
 
-## At a glance
+Most health apps for traumatic brain injury put the patient at the center. In most existing products, the caregiver is a data-entry point, an alert recipient, a viewer. The patient is the subject; the caregiver is infrastructure.
 
-- **Who:** Family caregivers of TBI patients, the spouse, adult child, or family member doing the daily recovery work, often while quietly grieving
-- **What:** A mobile PWA caregiver companion, designed for a TBI rehab center's caregiver support group: a guided daily journey, a medical-jargon translator, zero-friction capture, and a community that includes a grief thread
-- **Result:** A category reframe from patient health-tracker to caregiver companion, expressed through an interactive prototype
-- **Status:** Concept with interactive prototype. Designed for a real rehab-center support group; not built as a shipped product.
+Yet caregivers are the hidden labor force of TBI recovery. They're present at every appointment, every discharge, every bad day. They make consequential decisions on incomplete information, running on five hours of sleep and a fear they can't quite name.
 
-## The problem
+In interviews with 8 caregivers, that person kept surfacing. The spouse who sat in the neurology appointment and didn't understand half of what was said. The adult child logging symptoms at 11pm, not sure whether today's setback is normal or a warning sign. The person who is also, quietly, grieving the version of their loved one who existed before the injury.
 
-### Every health app centers the patient. Almost no one builds for the person beside them.
+**My role:** product design lead, from the research that surfaced the caregiver, to the strategy behind the reframe, to the interactive prototype. Designing for a real rehab center's caregiver support group kept the work grounded in a real community rather than an imagined one.
 
-Caregivers are the hidden labor force of TBI recovery. They're present at every appointment, every discharge, every bad day. They make consequential decisions on incomplete information, running on five hours of sleep and a fear they can't quite name. And almost no one has built a tool for them. In most existing products, the caregiver is a data-entry point, an alert recipient, a viewer. The patient is the subject; the caregiver is infrastructure.
+## Objective
 
-That's the gap Synapse is built for: the person holding everything together, who has never had an app that talked to them.
+Give the person holding everything together a tool that talks to them. That meant one design constraint above all: not "what can we show," but "what can we take off this person's plate." The caregiver needed:
 
-## The reframe
+- One priority at a time, because every extra option costs energy they don't have.
+- Medical language they can understand, and questions to bring to the next appointment.
+- A way to capture things fast, before a symptom, a question, or a word the doctor used is forgotten.
+- Acknowledgment, of both the work they're doing and the grief they're carrying.
 
-### The version I threw out was good work, and completely wrong
+## Approach
 
-The original brief was straightforward: make invisible TBI recovery progress visible. My first version was a patient-facing dashboard, resilience score, domain charts, a heatmap. By most measures it was good work. It was also completely wrong for the person who would actually open the app.
+### 1. A good dashboard was the wrong answer
 
-The shift happened when I stopped asking "how do I display this information?" and started asking "who opens this app, and what state are they in when they do?" The moment the question changed, the dashboard fell apart. A dashboard assumes a user who wants control. This user needs relief.
+The original brief was to make invisible TBI recovery progress visible. My first version was a patient-facing dashboard: a resilience score, domain charts, a heatmap. By most measures it was good work. It was also wrong for the person who would open the app.
 
-*[Visual: The reframe, side by side — the discarded patient dashboard next to the caregiver home screen. The entire thesis in one image.]*
+The shift came when I stopped asking "how do I display this information?" and started asking "who opens this app, and what state are they in when they do?" A dashboard assumes a user who wants control. This user needs relief.
 
-## The users, and what they needed
+*[Visual: The reframe, side by side: the discarded patient dashboard next to the caregiver home screen.]*
 
-### Built for the caregiver at 11pm, alone, running on empty
+### 2. Four screens and one button, each with one job
 
-In early research a different user kept surfacing than the brief assumed. The spouse who sat in the neurology appointment and didn't understand half of what was said. The adult child logging symptoms at 11pm, not sure whether today's setback is normal or a warning sign. The person who is also, quietly, grieving the version of their loved one who existed before the injury.
+The structure carries the philosophy. This is a guide, not a library.
 
-A dashboard doesn't help that person. A dashboard says: here is all your information, good luck. What that person needs is closer to a hand on the shoulder, a voice that says here's the one thing that matters right now. So that became the design constraint: not "what can we show," but "what can we take off this person's plate."
-
-## My role
-
-### Product design lead: research, strategy, prototype
-
-I led the concept end to end, from the research that surfaced the caregiver to the strategy behind the reframe to the interactive prototype. It was designed for a TBI rehab center's caregiver support group, which kept the work grounded in a real community rather than an imagined one.
-
-## The work
-
-### Four screens, four jobs, nothing extra
-
-The structure itself carries the philosophy. This is a guide, not a library.
-
-- **Today** surfaces one priority. One urgent card, two supporting, and a closing line that speaks to the caregiver instead of reporting on the patient. The home screen welcomes the person, rather than summarizing their loved one's metrics. That first sentence is a design decision.
-- **Translate** turns medical jargon into plain language, always one tap away. It defines terms in natural language and hands back follow-up questions the caregiver can bring to the next appointment.
-- **Note**, a floating capture button, is the most important element in the navigation. Caregivers constantly need to record a symptom, a question, or a word the doctor used before they forget it. One tap, from anywhere.
+- **Today** surfaces one priority: one urgent card, two supporting, and a closing line that speaks to the caregiver instead of reporting on the patient. The home screen welcomes the person rather than summarizing their loved one's metrics.
+- **Translate** turns medical jargon into plain language, always one tap away.
+- **Note,** a floating capture button, is the most important element in the navigation. One tap, from anywhere.
 - **Journey** holds the recovery arc, on demand, for when the caregiver needs perspective. "Week 12 was the turn. You logged it at 7am. You were the first to know."
 - **Community** includes a thread most caregiver apps don't have: for the caregivers who are also grieving. You're allowed to feel both things at once.
 
-*[Visual: The Today screen — with its acknowledgment line, so the "welcome the person, not the metrics" decision is visible.]*
+*[Visual: The Today screen, with its acknowledgment line, so the "welcome the person, not the metrics" decision is visible.]*
 
-### The visuals that earned their place
+### 3. The translator turns a doctor's note into a plan for tomorrow
 
-I ran an explicit audit and cut the stats strip. Gamification on top of grief is a design failure. Everything that stayed had to do emotional work or reveal something invisible to the eye. The clearest example: the same symptom calendar, reframed from a clinical tool observing the patient to a record that belongs to the caregiver and acknowledges their consistency before naming a pattern. The visual is identical. The framing is everything.
+Caregivers are shut out of understanding their loved one's care, not because doctors are unkind, but because the language of medicine was never built for them. "Mild improvement in executive function, continued post-traumatic amnesia." The doctor said it, the caregiver wrote it down, and has no idea what it means for tomorrow morning.
 
-*[Visual: The identical symptom calendar, two framings — clinician version and caregiver version. The visual is identical, the framing is everything.]*
+The translator explains the note in plain language, says what it means for the day ahead, and sends the caregiver into the next appointment with better questions. The voice matters as much as the accuracy, and that's what makes it a different product from a medical dictionary.
 
-### The translator: the feature that defines the product
+*[Visual: The translator sequence: a medical note resolving into plain language and appointment questions.]*
 
-Caregivers are shut out of understanding their loved one's care, not because doctors are unkind, but because the language of medicine was never built for them. "Mild improvement in executive function, continued post-traumatic amnesia." The doctor said it, the caregiver wrote it down, and has no idea what it means for tomorrow morning. The translator explains the note in natural language, says what it means for the day ahead, and sends the caregiver into the next appointment with better questions. The voice matters as much as the accuracy, and that's what makes it a different product category than a medical dictionary.
+### 4. Every visual had to earn its place
 
-*[Visual: The translator sequence — a real medical note resolving into plain language plus what it means tomorrow. The defining feature, shown working.]*
+I ran an explicit audit and cut the stats strip. Gamification on top of grief is a design failure. Everything that stayed had to do emotional work or reveal something invisible to the eye.
 
-## Key decisions and trade-offs
+The clearest example is the symptom calendar. The same calendar, reframed from a clinical tool observing the patient to a record that belongs to the caregiver, acknowledges their consistency before naming a pattern. The visual is identical. The framing is everything.
 
-| Decision | Why | Result |
-| --- | --- | --- |
-| Fewer options, not more | Caregivers decide on depleted cognitive resources; every extra option is a cost | A guided journey that gives relief instead of a dashboard that demands control |
-| Language that regulates, not just informs | The caregiver needs support as much as the patient does | Copy like "this is very normal at week 18" and "this note is cautiously hopeful" |
-| Acknowledge the person doing the work | Health apps report on the patient; almost none name the caregiver's labor | "You've shown up 18 of the last 21 days." "You were the first to know." |
+*[Visual: The identical symptom calendar, two framings: the clinician version and the caregiver version.]*
 
-## The reflection
+### 5. The language steadies, not just informs
+
+The caregiver needs support as much as the patient does, so the copy is designed to regulate as well as inform: "This is very normal at week 18." "This note is cautiously hopeful." And it names the work no health app acknowledges: "You've shown up 18 of the last 21 days."
+
+## Outcomes & Impact
+
+- An interactive prototype of a guided companion for TBI caregivers, built around one priority at a time instead of a dashboard that demands control.
+- A translator that turns clinical notes into plain language and appointment questions.
+- 17 of 19 nurses who reviewed the prototype wanted to give it to caregivers to use with their patients.
+- A category reframe: not a health tracker with a caregiver mode, but a caregiver companion that also happens to track health.
+
+<StatRow />
+
+## Reflection
 
 ### Designing for a state, not a task
 
-Most product work is task-oriented: the user wants to accomplish X, so we reduce friction. Caregivers in acute situations aren't in a task-completion state. They're in an emotional and cognitive state that governs how they process information and how much decision-making energy they have left. Designing for the state instead of the task is the whole move, and it's a lens I'd bring to any product where the user shows up depleted, anxious, or grieving.
+Most product work is task-oriented: the user wants to accomplish something, so we reduce friction. Caregivers in acute situations aren't in a task-completion state. They're in an emotional and cognitive state that governs how they take in information and how much decision-making energy they have left. Designing for the state instead of the task is the whole move, and it's a lens I'd bring to any product where the user shows up depleted, anxious, or grieving.
 
-### The contrarian bet: this is a new category
+### The bet: this is a new category
 
-Treating the caregiver as the primary user, their observations as the data, their comprehension as the goal, their emotional state as a design constraint, doesn't just change the interface. It changes the category. Synapse isn't a health tracker with a caregiver mode bolted on. It's a caregiver companion that also happens to track health. That's the bet, and it's the kind of reframe that only shows up when you're willing to throw out good work because it's aimed at the wrong person.
+Treating the caregiver as the primary user, their observations as the data, their comprehension as the goal, and their emotional state as a design constraint doesn't just change the interface. It changes the category. That kind of reframe only shows up when you're willing to throw out good work because it's aimed at the wrong person.

@@ -41,16 +41,30 @@ export default function WorkRow({ item }: { item: WorkItem }) {
       className="group relative grid grid-cols-1 items-center gap-8 border-t border-border py-12 md:grid-cols-12 md:gap-12 md:py-16"
     >
       <div className="md:col-span-5">
-        <p className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-xs uppercase tracking-[0.08em] text-fg-muted">
-          <span>{item.name}</span>
-          <span className="rounded-full border border-border bg-surface px-2.5 py-1 text-fg-secondary">
+        {/*
+          One pill, saying what the product is. The project name is already
+          the row's title and link, so repeating it here only competed with it.
+        */}
+        <p className="font-mono text-xs uppercase tracking-[0.08em]">
+          <span className="inline-block rounded-full border border-border bg-surface px-2.5 py-1 text-fg-secondary">
             {item.tag}
           </span>
         </p>
 
         <Reveal>
+          {/*
+            A title written as more than one sentence stacks one sentence per
+            line, matching the case study page header. A single-sentence title
+            is one block and wraps as before. The highlight is resolved inside
+            each sentence, so a highlight that straddles the break simply
+            falls back to plain text rather than breaking the layout.
+          */}
           <h3 className="font-display mt-4 text-2xl font-bold leading-snug tracking-[-0.01em] text-fg transition-colors group-hover:text-accent sm:text-3xl">
-            {renderTitle(item.title, item.titleHighlight)}
+            {item.title.split(/(?<=\.)\s+/).map((sentence) => (
+              <span key={sentence} className="block">
+                {renderTitle(sentence, item.titleHighlight)}
+              </span>
+            ))}
           </h3>
         </Reveal>
 

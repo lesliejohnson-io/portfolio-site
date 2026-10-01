@@ -5,27 +5,28 @@ const channels = [
     num: "01",
     tag: "Systems",
     statement: "I think in systems.",
-    body: "I design the relationships between people, machines, information, and decisions. Then I look for where they'll fail.",
+    body: "I design the relationships between people, machines, information, and decisions, then look for where they'll break.",
   },
   {
     num: "02",
     tag: "Behavior",
     statement: "I design for behavior.",
-    body: "Good interfaces don't just communicate information. They shape confidence, attention, and action. I design for cognitive load, trust calibration, and decision-making under pressure.",
+    body: "Interfaces don't just deliver information. They shape attention, confidence, and action. I design for cognitive load, calibrated trust, and decisions made under pressure.",
   },
   {
     num: "03",
     tag: "Delivery",
     statement: "I build and ship.",
-    body: "I work with uncertainty. I frame the problem, build hypotheses, prototype, test, and iterate. I measure success by what changes, not simply by what launches.",
+    body: "I frame the problem, form hypotheses, prototype, test, and iterate. I measure success by what changes, not by what launches.",
   },
   {
     num: "04",
     tag: "People",
     statement: "I move work through people.",
-    body: "The best ideas only matter if they survive engineering tradeoffs, product priorities, and organizational complexity. I align engineering, product, research, and design around a shared understanding of the problem, and I grow the designers doing that work.",
+    body: "Good ideas only matter if they survive engineering tradeoffs, product priorities, and organizational complexity. I align engineering, product, research, and design around a shared understanding of the problem, and I grow the designers doing the work.",
   },
 ];
+
 
 export default function WhatIBring() {
   return (

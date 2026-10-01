@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="container-wide flex flex-col gap-6 py-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="font-mono text-xs tracking-[0.06em] text-fg-muted">
+            <p className="font-display text-lg font-bold text-fg-muted">
               Intelligent Systems Meet{" "}
               <span className="text-accent">Human Design</span>
             </p>
@@ -40,7 +40,7 @@ export default function Footer() {
 
         <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border pt-6 font-mono text-[11px] text-fg-muted">
           <span>&copy; {year} Leslie Johnson</span>
-          <span>Built with Next.js and Tailwind CSS. Designed and coded in conversation with Claude.</span>
+          <span>Built with Next.js and Tailwind CSS.</span>
         </div>
       </div>
     </footer>

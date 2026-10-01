@@ -22,11 +22,11 @@ export default function Nav() {
     <header className="sticky top-2 z-30 mt-2">
       {/*
         container-wide supplies the page margin; the negative inline margin
-        pushes the bar 4px past it on each side, so the pill sits just proud of
+        pushes the bar 8px past it on each side, so the pill sits just proud of
         the content below rather than flush with it.
       */}
       <div className="container-wide">
-        <div className="-mx-1 flex items-center justify-between rounded-full border border-border/60 bg-bg/60 px-6 py-3 backdrop-blur-xl backdrop-saturate-150">
+        <div className="-mx-2 flex items-center justify-between rounded-full border border-border/60 bg-bg/60 px-6 py-3 backdrop-blur-xl backdrop-saturate-150">
         <Link
           href="/"
           className="font-display flex items-center gap-2.5 text-lg font-medium tracking-tight text-fg transition-colors hover:text-accent"

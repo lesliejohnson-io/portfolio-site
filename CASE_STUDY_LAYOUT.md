@@ -4,9 +4,10 @@ Template for every page at `/work/[slug]`. Modeled on the structure of Jack Moff
 
 ## Page structure, top to bottom
 
-### 1. Header (wide container)
+### 1. Header (body column width)
 - **Category pill:** small, rounded, accent-tinted label from frontmatter `category` (e.g. "Physical AI", "Health Research", "Fintech"). One category per case study.
-- **Title:** the outcome-led `title`, as the page's only `h1`. Archivo bold, large (about 3.5rem desktop, 2.25rem mobile), tight leading, left-aligned. Capped at three of the page's four columns (75% of the container) so it breaks into two or three lines; full width below the `sm` breakpoint.
+- **Title:** the outcome-led `title`, as the page's only `h1`. Archivo bold, large (about 3.5rem desktop, 2.25rem mobile), tight leading, left-aligned. The pill and title sit at the body column measure (about 680px), sharing the same left and right margins as every paragraph below them. The logo strip and hero run the full page column.
+- **Status note:** optional. One line from frontmatter `status`, under the title, for a study whose work is still in progress. Rendered with a bold "Status:" label. Omit the field and nothing renders — most studies have no status line.
 - **Logo strip:** the frontmatter `logos` marks, under the title. White-on-transparent artwork, inverted to near-black on the light theme and held at low opacity. Used instead of a text list of institutions.
 
 ### 2. Hero visual (wide container, full width)
@@ -57,6 +58,7 @@ Existing fields stay. Add:
 ```yaml
 layout: "v2"                     # opt in to this template; omit to keep the old page
 category: "Physical AI"          # pill label
+status: "working prototype…"     # optional; one line under the title
 hero: "/work/synapse/hero.png"   # image or .mp4/.webm; optional
 heroAlt: "…"                     # required if hero is set
 heroPending: "…"                 # what the hero will show, for the placeholder

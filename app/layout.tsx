@@ -25,10 +25,15 @@ const archivo = Archivo({
   display: "swap",
 });
 
+/*
+  Serif, used only for the Working Library statement and the footer tagline —
+  both italic, so only the italic faces are loaded. Add a normal style here if
+  it is ever needed upright.
+*/
 const newsreader = Newsreader({
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["400", "500", "600"],
+  style: ["italic"],
+  weight: ["400", "500"],
   variable: "--font-newsreader",
   display: "swap",
 });
