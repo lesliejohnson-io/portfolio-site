@@ -44,6 +44,30 @@ export default function WorkRowVisual({ visual }: { visual?: WorkVisual }) {
   }
 
   const portrait = visual.orientation === "portrait";
+  const fit = portrait
+    ? "mx-auto h-full w-auto object-contain"
+    : "h-full w-full object-cover";
+
+  /*
+    A still needs no motion branch and no dark mat behind it. It is contained
+    rather than cropped: these are composed product shots with their own
+    margins and labels, and filling a 16:9 row frame with a wider export cuts
+    the edges off the thing the row is meant to show.
+  */
+  if (visual.type === "image") {
+    return (
+      /*
+        No fixed frame: the still sets its own height from its aspect ratio.
+        Contained inside a 16:9 box the artwork sat letterboxed, so a radius
+        on the element rounded empty space while the artwork's own corners
+        stayed square. Sized to the image, the corners are the artwork's.
+      */
+      <div className="relative overflow-hidden rounded-lg">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={visual.src} alt={visual.alt ?? ""} className="block w-full" />
+      </div>
+    );
+  }
 
   return (
     <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-video-mat transition-colors group-hover:border-border-strong">
@@ -51,11 +75,7 @@ export default function WorkRowVisual({ visual }: { visual?: WorkVisual }) {
         <img
           src={visual.poster}
           alt={visual.alt ?? ""}
-          className={
-            portrait
-              ? "mx-auto h-full w-auto object-contain"
-              : "h-full w-full object-cover"
-          }
+          className={fit}
         />
       ) : (
         <video
@@ -65,11 +85,7 @@ export default function WorkRowVisual({ visual }: { visual?: WorkVisual }) {
           playsInline
           poster={visual.poster}
           aria-label={visual.alt}
-          className={
-            portrait
-              ? "mx-auto h-full w-auto object-contain"
-              : "h-full w-full object-cover"
-          }
+          className={fit}
         >
           {visual.sources.map((src) => (
             <source

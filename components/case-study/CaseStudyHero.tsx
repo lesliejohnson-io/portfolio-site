@@ -12,13 +12,22 @@ export default function CaseStudyHero({
   src,
   alt,
   pending,
+  bleed = false,
 }: {
   src?: WorkItem["hero"];
   alt?: string;
   pending?: string;
+  /**
+   * True when the hero sits on a band matching the artwork's own background.
+   * The frame then drops its border and rounding — both would draw a visible
+   * edge through a field that is meant to read as continuous — and the image
+   * is contained rather than cropped, so the composition stays intact.
+   */
+  bleed?: boolean;
 }) {
-  const frame =
-    "aspect-[16/9] w-full overflow-hidden rounded-xl sm:aspect-[2/1]";
+  const frame = bleed
+    ? "aspect-[16/9] w-full sm:aspect-[2/1]"
+    : "aspect-[16/9] w-full overflow-hidden rounded-xl sm:aspect-[2/1]";
 
   if (!src) {
     return (
@@ -54,7 +63,9 @@ export default function CaseStudyHero({
     <img
       src={src}
       alt={alt ?? ""}
-      className={`${frame} border border-border object-cover`}
+      className={`${frame} ${
+        bleed ? "object-contain" : "border border-border object-cover"
+      }`}
     />
   );
 }

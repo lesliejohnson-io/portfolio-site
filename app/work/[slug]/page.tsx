@@ -98,12 +98,29 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
             </div>
           )}
 
-          <div className="container-wide mt-10">
-            <CaseStudyHero
-              src={meta.hero}
-              alt={meta.heroAlt}
-              pending={meta.heroPending}
-            />
+          {/*
+            With `heroBackground` the band runs the full width of the viewport
+            in the artwork's own colour, so the image's background continues
+            to both edges instead of stopping at a frame. The image itself
+            stays at the page column — stretching it edge to edge would blow
+            up a composition made to be read at this size.
+          */}
+          <div
+            className="mt-10"
+            style={
+              meta.heroBackground
+                ? { backgroundColor: meta.heroBackground }
+                : undefined
+            }
+          >
+            <div className="container-wide">
+              <CaseStudyHero
+                src={meta.hero}
+                alt={meta.heroAlt}
+                pending={meta.heroPending}
+                bleed={Boolean(meta.heroBackground)}
+              />
+            </div>
           </div>
 
           {meta.stats && (

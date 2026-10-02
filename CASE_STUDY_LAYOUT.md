@@ -13,6 +13,7 @@ Template for every page at `/work/[slug]`. Modeled on the structure of Jack Moff
 ### 2. Hero visual (wide container, full width)
 - One wide visual directly under the title, full container width, landscape (about 21:9 to 16:9).
 - Source: frontmatter `hero` (image or looping video, same rules as the home page rows). If missing, render the designed VisualSlot placeholder at the same size.
+- **Full-bleed band:** set frontmatter `heroBackground` to the artwork's own background colour and the band runs the full width of the viewport in that colour, with the image contained at the page column. The frame drops its border and rounding so the two read as one continuous field. Omit it and the hero keeps its bordered frame.
 - No caption.
 
 ### 3. Key outcomes strip (body column width)
@@ -60,6 +61,7 @@ layout: "v2"                     # opt in to this template; omit to keep the old
 category: "Physical AI"          # pill label
 status: "working prototype…"     # optional; one line under the title
 hero: "/work/synapse/hero.png"   # image or .mp4/.webm; optional
+heroBackground: "#e8e7e3"        # optional; artwork's own bg, for a full-bleed band
 heroAlt: "…"                     # required if hero is set
 heroPending: "…"                 # what the hero will show, for the placeholder
 logos:                           # optional institution marks under the title

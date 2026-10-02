@@ -43,6 +43,13 @@ export type WorkItem = {
    * Only for studies still in progress — omit it and nothing renders.
    */
   status?: string;
+  /**
+   * The hero's surrounding band colour, sampled from the artwork's own
+   * background so the two read as one continuous field running the full width
+   * of the page. Content, not theme — hence a literal value in frontmatter
+   * rather than a token. Omit it and the hero keeps its bordered frame.
+   */
+  heroBackground?: string;
   /** Pill label above the title, e.g. "Health Research". One per study. */
   category?: string;
   /** Wide hero directly under the header. Image, or .mp4/.webm for a clip. */
@@ -80,14 +87,26 @@ export type WorkLogo = {
  * `orientation: "portrait"` letterboxes the clip on a dark mat inside the
  * row's landscape frame instead of cropping it.
  */
-export type WorkVisual = {
-  type: "video";
-  poster: string;
-  sources: string[];
-  orientation?: "portrait" | "landscape";
-  /** Describes what the clip shows, for the poster's alt text. */
-  alt?: string;
-};
+/**
+ * A work row's visual. A still and a clip are the same slot, discriminated by
+ * `type`, so a row can start as an export and become a moving one later
+ * without the row component or the frontmatter shape changing around it.
+ */
+export type WorkVisual =
+  | {
+      type: "video";
+      poster: string;
+      sources: string[];
+      orientation?: "portrait" | "landscape";
+      /** Describes what the clip shows, for the poster's alt text. */
+      alt?: string;
+    }
+  | {
+      type: "image";
+      src: string;
+      orientation?: "portrait" | "landscape";
+      alt?: string;
+    };
 
 const WORK_DIR = path.join(process.cwd(), "content", "work");
 
