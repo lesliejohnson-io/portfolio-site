@@ -6,7 +6,8 @@ const INTERACTIVE = 'a, button, [role="button"], label, summary, [data-cursor="g
 const NATIVE = 'input, textarea, select, [contenteditable="true"]';
 
 /**
- * Custom dot cursor, built from scratch (no libraries). It is pure decoration
+ * Custom cursor, built from scratch (no libraries). A dot at rest; over
+ * anything clickable it becomes a reticle of four corner brackets. It is pure decoration
  * layered on top of the real cursor — focus states and hit targets are never
  * touched. It only activates on fine-pointer devices and stays disabled under
  * prefers-reduced-motion, so touch and motion-sensitive users get the native
@@ -76,7 +77,18 @@ export default function CustomCursor() {
 
   return (
     <div ref={dotRef} className="custom-cursor" aria-hidden="true">
-      <span className="cc-ring" />
+      {/*
+        Over anything clickable the dot gives way to a reticle: four corner
+        brackets framing the target, borrowed from the framing box over the
+        face in the About portrait. Four spans rather than one bordered box
+        because a box draws all four sides — corners only is the whole point.
+      */}
+      <span className="cc-reticle">
+        <i className="cc-corner" />
+        <i className="cc-corner" />
+        <i className="cc-corner" />
+        <i className="cc-corner" />
+      </span>
       <span className="cc-dot" />
     </div>
   );

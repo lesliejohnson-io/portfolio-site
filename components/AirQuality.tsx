@@ -16,6 +16,10 @@ import { useEffect, useRef, useState } from "react";
  *
  * Set in JetBrains Mono rather than the pen's Inconsolata, so it matches the
  * rest of the site's metadata.
+ *
+ * The card's colours are literal rather than site tokens: the AQI bands are
+ * the pen's own palette and must not drift with the theme, and the field
+ * colour belongs to the same closed set.
  */
 /*
   The pen's AQI bands. Particle spacing is 440/AQI, so worse air packs the
@@ -30,6 +34,19 @@ const BANDS: [number, string, string][] = [
   [200, "#5943de", "#a41d99"],
   [Infinity, "#a41d99", "#ec2f4b"],
 ];
+
+/*
+  The field the particles sit on. The pen runs its bands at full strength on a
+  near-black card, where its own particles read fine; at the sizes here the
+  lightest band (#73f3fe) is brighter than the particles themselves, so they
+  disappear into it. Each band stop is mixed down toward the field colour,
+  which darkens every band by the same amount while keeping the hue shift that
+  carries the reading. 30% was the point where the particles hold at least 3:1
+  against the lightest band.
+*/
+const FIELD = "#4231a3";
+const BAND_MIX = "30%";
+const band_ = (c: string) => `color-mix(in oklab, ${c} ${BAND_MIX}, ${FIELD})`;
 
 const THICKNESS = 80 * 80;
 /** Closest approach used for the force, so it can't blow up. */
@@ -249,11 +266,12 @@ export default function AirQuality({ className = "" }: { className?: string }) {
   return (
     <div
       style={{
+        backgroundColor: FIELD,
         backgroundImage: aqi === null
           ? undefined
-          : `linear-gradient(${band[1]}, ${band[2]})`,
+          : `linear-gradient(${band_(band[1])}, ${band_(band[2])})`,
       }}
-      className={`relative flex flex-col justify-between overflow-hidden bg-[#111121] p-6 font-mono text-white ${className}`}
+      className={`relative flex flex-col justify-between overflow-hidden p-6 font-mono text-white ${className}`}
     >
       <canvas
         ref={canvasRef}

@@ -63,7 +63,7 @@ export default function ResourceCard({ item }: { item: Resource }) {
 
       {item.quote ? (
         <blockquote>
-          <p className="font-serif text-2xl font-medium italic leading-tight text-fg">
+          <p className="font-display-serif text-3xl font-semibold italic leading-[1.1] tracking-[-0.02em] text-fg">
             {item.quote}
           </p>
           {item.attribution && (

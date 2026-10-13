@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import AboutPhoto from "@/components/mdx/AboutPhoto";
-import WhatIBring from "@/components/WhatIBring";
+import AboutCta from "@/components/mdx/AboutCta";
 
 export default function AboutPage() {
   /*
@@ -19,7 +19,7 @@ export default function AboutPage() {
   return (
     <article className="container-wide py-20 sm:py-24">
       <div className="prose-about">
-        <MDXRemote source={source} components={{ AboutPhoto, WhatIBring }} />
+        <MDXRemote source={source} components={{ AboutPhoto, AboutCta }} />
       </div>
     </article>
   );

@@ -52,6 +52,11 @@ export type WorkItem = {
   heroBackground?: string;
   /** Pill label above the title, e.g. "Health Research". One per study. */
   category?: string;
+  /**
+   * One or two sentences under the title, saying what the work was in the
+   * author's own voice. Optional — omit it and nothing renders.
+   */
+  deck?: string;
   /** Wide hero directly under the header. Image, or .mp4/.webm for a clip. */
   hero?: string;
   heroAlt?: string;

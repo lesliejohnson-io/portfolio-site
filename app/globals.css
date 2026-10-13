@@ -86,8 +86,27 @@
     flows through this one line, so changing the face later means loading it
     in layout.tsx and repointing here; no component changes.
   */
+  /*
+    Chart tokens. The accent and a neutral grey are near-identical under
+    deuteranopia (delta-E 1.8), so these are an EMPHASIS pair, not a
+    categorical palette: the accent carries the point and the grey is the
+    de-emphasised baseline. Identity always comes from a label or a mark
+    shape, never from the hue alone.
+  */
+  --chart-accent: var(--accent);
+  --chart-muted: var(--fg-muted);
+  --chart-muted-fill: var(--border-strong);
+  --chart-grid: var(--border);
+  /*
+    The check-in marker. The handoff specified amber; the site has no amber,
+    and its one warm colour is reserved for genuine errors. Ink reads as an
+    event marker, stays distinct from the accent line under every form of
+    colour blindness, and needs no new palette entry.
+  */
+  --chart-flag: var(--fg);
+
   --font-display: var(--font-archivo);
-  --font-serif: var(--font-newsreader);
+  --font-display-serif: var(--font-cormorant-garamond);
   --font-sans: var(--font-source-sans);
   --font-mono: var(--font-jetbrains-mono);
 }
@@ -164,32 +183,88 @@
 }
 
 .cc-dot,
-.cc-ring {
+.cc-reticle {
   position: absolute;
   top: 0;
   left: 0;
-  border-radius: 9999px;
 }
 
 .cc-dot {
   width: 7px;
   height: 7px;
   margin: -3.5px 0 0 -3.5px;
+  border-radius: 9999px;
   background: var(--fg);
   transition: opacity 0.15s ease;
 }
 
-.cc-ring {
-  width: 36px;
-  height: 36px;
-  margin: -18px 0 0 -18px;
-  border: 1px solid var(--accent);
+/*
+  The reticle that replaces the dot over anything clickable: four corner
+  brackets, square rather than rounded, matching the framing box in the About
+  portrait. Sized a little larger than the old ring so the corners read as a
+  frame around what's under the pointer rather than a mark on top of it.
+*/
+.cc-reticle {
+  width: 38px;
+  height: 38px;
+  margin: -19px 0 0 -19px;
   opacity: 0;
-  transform: scale(0.5);
+  /*
+    Opens from slightly wide and settles in, so the frame reads as closing on
+    the target. The old ring grew outward from half size, which read as a
+    bubble.
+  */
+  transform: scale(1.3);
   transition: transform 0.18s ease, opacity 0.18s ease;
 }
 
-.custom-cursor[data-grow="true"] .cc-ring {
+/*
+  The brackets take --fg, not --accent, so the whole cursor is one colour and
+  the reticle reads as the dot opening up. Accent would vanish against the
+  accent-filled primary button — exactly the control where the cursor most
+  needs to respond.
+*/
+.cc-corner {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 0 solid var(--fg);
+}
+
+/*
+  Each corner takes two of the four borders. Written out by position rather
+  than generated, because there are exactly four and naming them is clearer
+  than a loop of nth-child arithmetic.
+*/
+.cc-corner:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.cc-corner:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.cc-corner:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.cc-corner:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+.custom-cursor[data-grow="true"] .cc-reticle {
   opacity: 1;
   transform: scale(1);
 }
@@ -245,15 +320,19 @@
 }
 
 /*
-  12px margin and 4px of vertical padding around the portrait, so it sits
-  close to the text instead of in its own band. The inline margin stays `auto`
-  because the prose container is wider than the reading column — a literal
-  12px there would pull the image out of the column it is aligned to.
+  The portrait at 65% of the reading column, centred. A 680px square filled a
+  laptop viewport on its own, so the reader scrolled past a wall of image
+  before reaching the first story section; at 442px both halves still read and
+  the first heading comes into view with it.
+
+  The inline margin stays `auto` because the prose container is wider than the
+  reading column — a literal value there would pull the image off the centre
+  line the text is centred on.
 */
 .prose-about .about-portrait {
   margin: 12px auto;
   padding-block: 4px;
-  max-width: 680px;
+  max-width: 442px;
 }
 
 .prose-about h2 {
@@ -311,6 +390,83 @@
   color: var(--fg);
   font-weight: 600;
 }
+
+.prose-about blockquote,
+.prose-about .about-cta {
+  margin-inline: auto;
+  max-width: 680px;
+}
+
+/*
+  Lead paragraph: the one line under the h1 that frames the whole page. Styled
+  by position rather than a class so the MDX stays plain markdown — it is
+  always the paragraph immediately after the title.
+
+  Cormorant Garamond italic. It is a high-contrast display serif with a small
+  x-height, so it needs a size up from the sans it replaced to hold the same
+  optical weight under the headline. The leading is tight for prose but the
+  face carries it: its small x-height leaves real space between lines even
+  when the ratio looks low.
+*/
+.prose-about h1 + p {
+  font-family: var(--font-display-serif);
+  font-style: italic;
+  font-size: 1.625rem;
+  line-height: 1.3;
+  /* Tracking matches the Resources quotes — one face, one setting. */
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  margin-bottom: 1.75rem;
+  text-wrap: pretty;
+}
+
+/*
+  The pull quote. A hairline rule on the left and the display face set it apart
+  from the story paragraphs without a box or a colour wash.
+*/
+.prose-about blockquote {
+  margin-block: 3.5rem;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--accent);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+  text-wrap: pretty;
+}
+
+.prose-about blockquote p {
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin-bottom: 0;
+}
+
+/* The two closing buttons wrap to one per line on a narrow phone. */
+.prose-about .about-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 640px) {
+  .prose-about h1 {
+    font-size: 2rem;
+  }
+
+  .prose-about h1 + p {
+    font-size: 1.375rem;
+  }
+
+  .prose-about blockquote {
+    margin-block: 2.5rem;
+    font-size: 1.25rem;
+  }
+}
+
 
 .prose-about em {
   font-style: italic;
@@ -752,4 +908,252 @@
 */
 .demo-span {
   column-span: all;
+}
+
+/* ---------- Case study charts ---------- */
+
+/*
+  Shared chart chrome. Marks follow the house spec: 2px lines, markers at
+  least 8px across, a 2px surface ring where marks overlap, hairline solid
+  grid, and text in text tokens rather than the data colour.
+*/
+.chart-figure {
+  margin-block: 2.5rem;
+}
+
+.chart-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--fg);
+  margin-bottom: 0.75rem;
+}
+
+.chart-caption {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--fg-muted);
+}
+
+.chart-canvas {
+  width: 100%;
+}
+
+/*
+  Server rendering draws at the fallback width before the measurement lands,
+  which is wider than a phone column — the cap keeps that first paint from
+  pushing the page sideways.
+*/
+.chart-canvas svg {
+  display: block;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.chart-axis-text {
+  fill: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  /* Ticks sit in a column, which is where tabular figures earn their keep. */
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-grid-line {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+
+.chart-band {
+  fill: var(--chart-accent);
+  opacity: 0.1;
+}
+
+.chart-line {
+  fill: none;
+  stroke: var(--chart-accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* The ring is drawn in the page colour so dots stay legible over the line. */
+.chart-dot {
+  fill: var(--chart-accent);
+  stroke: var(--bg);
+  stroke-width: 2;
+}
+
+.chart-checkin {
+  fill: var(--chart-flag);
+  stroke: var(--bg);
+  stroke-width: 2;
+}
+
+.chart-replay-tick {
+  stroke: var(--chart-muted);
+  stroke-width: 2;
+}
+
+/* The key names every mark, so nothing depends on telling two colours apart. */
+.chart-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--fg-secondary);
+}
+
+.chart-key li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+}
+
+.chart-key-line {
+  width: 14px;
+  height: 2px;
+  background: var(--chart-accent);
+}
+
+.chart-key-band {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--chart-accent) 10%, var(--bg));
+  outline: 1px solid var(--chart-grid);
+}
+
+.chart-key-diamond {
+  width: 9px;
+  height: 9px;
+  rotate: 45deg;
+  background: var(--chart-flag);
+}
+
+.chart-key-tick {
+  width: 2px;
+  height: 11px;
+  background: var(--chart-muted);
+}
+
+/* ---------- Survey timeline ---------- */
+
+.survey-timeline-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.survey-timeline-name {
+  margin: 0 0 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg);
+}
+
+.survey-timeline-bar {
+  position: relative;
+  height: 24px;
+}
+
+.survey-timeline-segment {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--chart-muted-fill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.survey-timeline-bar[data-tone="accent"] .survey-timeline-segment {
+  background: var(--chart-accent);
+}
+
+.survey-timeline-segment-label {
+  padding-inline: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  white-space: nowrap;
+  color: var(--fg);
+}
+
+/* The moment the data lands, on the same day scale as the bar. */
+.survey-timeline-arrives {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 2px;
+  background: var(--chart-muted);
+  border-radius: 1px;
+}
+
+.survey-timeline-bar[data-tone="accent"] .survey-timeline-arrives {
+  background: var(--chart-accent);
+}
+
+.survey-timeline-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--fg-secondary);
+}
+
+/* Shown only where the bar is too narrow to carry the phase names itself. */
+.survey-timeline-phases {
+  display: none;
+}
+
+.survey-timeline-axis {
+  position: relative;
+  height: 1.5rem;
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--chart-grid);
+}
+
+.survey-timeline-tick {
+  position: absolute;
+  top: 0.375rem;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  white-space: nowrap;
+  color: var(--fg-muted);
+}
+
+/* The first and last ticks pull in so they don't hang off either edge. */
+.survey-timeline-tick:first-child {
+  transform: none;
+}
+
+.survey-timeline-tick:last-child {
+  transform: translateX(-100%);
+}
+
+/*
+  Below this the narrow segments can no longer hold their labels, so the phase
+  names move into the note under the bar rather than being clipped.
+*/
+@media (max-width: 560px) {
+  .survey-timeline-segment-label {
+    display: none;
+  }
+
+  .survey-timeline-phases {
+    display: inline;
+  }
 }

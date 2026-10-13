@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import {
   Archivo,
-  Newsreader,
+  Cormorant_Garamond,
   Source_Sans_3,
   JetBrains_Mono,
 } from "next/font/google";
@@ -26,15 +26,18 @@ const archivo = Archivo({
 });
 
 /*
-  Serif, used only for the Working Library statement and the footer tagline —
-  both italic, so only the italic faces are loaded. Add a normal style here if
-  it is ever needed upright.
+  The site's only serif, replacing Newsreader: the About lead paragraph at 400
+  and the Working Library quotes on Resources at 600. Italic only — both uses
+  are italic, so there is no reason to ship the upright faces. Both weights are
+  loaded rather than leaving the browser to synthesize the heavier one: faux
+  bold smears a high-contrast serif like this, thickening the hairlines along
+  with the stems.
 */
-const newsreader = Newsreader({
+const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
   style: ["italic"],
-  weight: ["400", "500"],
-  variable: "--font-newsreader",
+  weight: ["400", "600"],
+  variable: "--font-cormorant-garamond",
   display: "swap",
 });
 
@@ -67,7 +70,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${archivo.variable} ${newsreader.variable} ${sourceSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${archivo.variable} ${cormorantGaramond.variable} ${sourceSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <ThemeScript />

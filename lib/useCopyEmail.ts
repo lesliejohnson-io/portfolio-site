@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { sendGAEvent } from "@next/third-parties/google";
+import { CONTACT_EMAIL } from "./contact";
 
-export const CONTACT_EMAIL = "leslie@lesliejohnson.io";
+export { CONTACT_EMAIL } from "./contact";
 
 /**
  * Copies the contact address and holds a "copied" flag for 2s.

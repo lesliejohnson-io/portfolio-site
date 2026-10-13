@@ -82,6 +82,12 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
                 ))}
             </h1>
 
+            {meta.deck && (
+              <p className="mt-5 text-lg leading-relaxed text-fg-secondary sm:text-xl">
+                {meta.deck}
+              </p>
+            )}
+
             {/* Only for work still in progress; most studies omit it. */}
             {meta.status && (
               <p className="mt-5 leading-relaxed text-fg-secondary">

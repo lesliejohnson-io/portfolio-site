@@ -3,6 +3,8 @@ import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 import { CaseStudyBlockquote, extractText } from "@/components/mdx/CaseStudyBlocks";
 import { VisualSlot } from "@/components/mdx/VisualSlot";
 import StatRow from "@/components/case-study/StatRow";
+import SurveyTimeline from "@/components/case-study/SurveyTimeline";
+import FatigueChart from "@/components/case-study/FatigueChart";
 import type { WorkItem } from "@/lib/work";
 
 /**
@@ -12,11 +14,36 @@ import type { WorkItem } from "@/lib/work";
  */
 function Paragraph({ children }: { children?: React.ReactNode }) {
   const text = extractText(children).trim();
-  const match = text.match(/^\[Visual:\s*([\s\S]+?)\]$/);
-  if (match) {
-    return <VisualSlot caption={match[1].trim()} />;
+
+  const visual = text.match(/^\[Visual:\s*([\s\S]+?)\]$/);
+  if (visual) {
+    return <VisualSlot caption={visual[1].trim()} />;
   }
+
+  /*
+    Any other paragraph that is nothing but a bracketed note is content still
+    to be supplied. Rendering it as a marked block rather than as a line of
+    prose keeps it from reading as finished copy, and makes it impossible to
+    publish without noticing.
+  */
+  const pending = text.match(/^\[([\s\S]+)\]$/);
+  if (pending) {
+    return <Placeholder>{pending[1].trim()}</Placeholder>;
+  }
+
   return <p>{children}</p>;
+}
+
+/** A visible "still to supply" block, matching VisualSlot's dashed frame. */
+function Placeholder({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="my-8 rounded-lg border border-dashed border-border-strong bg-surface px-6 py-5">
+      <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.1em] text-fg-muted">
+        To supply
+      </p>
+      <p className="text-sm leading-relaxed text-fg-secondary">{children}</p>
+    </div>
+  );
 }
 
 /**
@@ -59,5 +86,7 @@ export function caseStudyComponents(
     blockquote: CaseStudyBlockquote,
     a: CaseStudyLink,
     StatRow: () => <StatRow stats={meta.stats} id="how-we-measured" />,
+    SurveyTimeline,
+    FatigueChart,
   };
 }
