@@ -2,6 +2,7 @@ import React from "react";
 import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 import { CaseStudyBlockquote, extractText } from "@/components/mdx/CaseStudyBlocks";
 import { VisualSlot } from "@/components/mdx/VisualSlot";
+import { Figure } from "@/components/mdx/Figure";
 import StatRow from "@/components/case-study/StatRow";
 import SurveyTimeline from "@/components/case-study/SurveyTimeline";
 import FatigueChart from "@/components/case-study/FatigueChart";
@@ -85,6 +86,7 @@ export function caseStudyComponents(
     p: Paragraph,
     blockquote: CaseStudyBlockquote,
     a: CaseStudyLink,
+    Figure,
     StatRow: () => <StatRow stats={meta.stats} id="how-we-measured" />,
     SurveyTimeline,
     FatigueChart,

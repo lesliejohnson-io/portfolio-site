@@ -16,13 +16,20 @@
   --border: #dedcd6;
   --border-strong: #b9b6ac;
   /*
-    Teal accent. #00bfa6 is the chosen colour and is used as-is in dark mode,
-    but on this near-white background it only reaches 2.23:1 -- half the 4.5:1
-    AA needs for link text. This is the same hue (172 deg), darkened to the
-    lightest value that clears AA on both --bg (5.03:1) and --surface
-    (4.65:1) -- accent text sits on the grey surface too (footer, pills).
+    Cyan-blue accent, chosen October 2026 over the previous teal (#007a6a /
+    #00bfa6) for colour blindness: that teal and the site's neutral grey were
+    all but identical under deuteranopia (delta-E 3.5, where ~2.3 is the just-
+    noticeable difference), so any chart or state that leaned on telling them
+    apart failed for red-green colour blind readers. This hue sits far enough
+    toward blue to survive the red-green collapse (delta-E 29 light, 33 dark).
+
+    #34c3ec is the chosen colour and is used as-is in dark mode, but on this
+    near-white background it only reaches 1.73:1. This is close to the same
+    hue (196 deg vs 193), darkened to the lightest value that clears AA on
+    --bg (5.47:1) and --surface (5.06:1) -- accent text sits on the grey
+    surface too (footer, pills).
   */
-  --accent: #007a6a;
+  --accent: #006e96;
   --accent-fg: #ffffff;
   --error: #c4302b;
   --error-fg: #ffffff;
@@ -35,8 +42,9 @@
   --video-mat: #111111;
   /*
     Accent-tinted chip background, mixed from the accent so it tracks both
-    themes. Held at 8%: accent text on the tint only clears AA on the light
-    palette up to about that, and a stronger tint fails at pill text sizes.
+    themes. Held at 8%, where accent text on the tint reads at 4.90:1 on the
+    light palette. The cyan-blue has more headroom here than the old teal did,
+    but the tint is kept low so the pills stay quiet.
   */
   --accent-soft: color-mix(in srgb, var(--accent) 8%, var(--bg));
   color-scheme: light;
@@ -58,7 +66,7 @@
   --fg-muted: #8b9099;
   --border: #2e3238;
   --border-strong: #454a52;
-  --accent: #00bfa6;
+  --accent: #34c3ec;
   --accent-fg: #0b0d10;
   --error: #f0736d;
   --error-fg: #16181c;
@@ -87,11 +95,12 @@
     in layout.tsx and repointing here; no component changes.
   */
   /*
-    Chart tokens. The accent and a neutral grey are near-identical under
-    deuteranopia (delta-E 1.8), so these are an EMPHASIS pair, not a
-    categorical palette: the accent carries the point and the grey is the
-    de-emphasised baseline. Identity always comes from a label or a mark
-    shape, never from the hue alone.
+    Chart tokens. The cyan-blue accent and a neutral grey stay distinguishable
+    under every common colour blindness (delta-E 29 light, 33 dark under
+    deuteranopia), unlike the teal they replaced. They are still an EMPHASIS
+    pair rather than a categorical palette -- the accent carries the point and
+    the grey is the de-emphasised baseline -- and identity still comes from a
+    label or a mark shape, never from the hue alone.
   */
   --chart-accent: var(--accent);
   --chart-muted: var(--fg-muted);
@@ -812,6 +821,30 @@
   min-height: 22rem;
 }
 
+/*
+  A figure holding real artwork is sized by the image itself, so it drops the
+  placeholder's reserved height.
+*/
+.prose-v2 figure.case-figure {
+  min-height: 0;
+}
+
+/*
+  Figure reveal. Like the heading reveal, the hiding rule is scoped to an
+  attribute only Figure.tsx sets on mount, so with no JavaScript — or under
+  prefers-reduced-motion, where it is never set — the image is simply visible.
+*/
+.case-figure[data-animate="true"] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.case-figure[data-animate="true"][data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .prose-v2 table {
   width: 100%;
   border-collapse: collapse;
@@ -828,8 +861,15 @@
   vertical-align: top;
 }
 
+/*
+  Header row on an accent tint rather than the neutral surface, so a table
+  reads as a labelled instrument panel like the rest of the page. The tint is
+  --accent-soft, the same 8% mix used by the category pills, which is the
+  strongest the accent text clears AA on.
+*/
 .prose-v2 th {
-  background: var(--surface);
+  background: var(--accent-soft);
+  border-bottom-color: var(--border-strong);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 500;
@@ -1048,14 +1088,36 @@
 
 /* ---------- Survey timeline ---------- */
 
+/*
+  The two tracks read as one gauge: the names move into a left gutter so the
+  bars sit directly above one another on a single shared day scale, close
+  enough to be compared at a glance rather than as two separate charts. The
+  axis below is indented by the same gutter so its ticks line up with the
+  bars.
+*/
+.survey-timeline {
+  --timeline-gutter: 4.25rem;
+  --timeline-gap: 0.75rem;
+}
+
 .survey-timeline-tracks {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.625rem;
+}
+
+.survey-timeline-track {
+  display: grid;
+  grid-template-columns: var(--timeline-gutter) 1fr;
+  column-gap: var(--timeline-gap);
+  row-gap: 0.25rem;
+  align-items: center;
 }
 
 .survey-timeline-name {
-  margin: 0 0 0.375rem;
+  margin: 0;
+  grid-column: 1;
+  grid-row: 1;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   text-transform: uppercase;
@@ -1065,7 +1127,9 @@
 
 .survey-timeline-bar {
   position: relative;
-  height: 24px;
+  grid-column: 2;
+  grid-row: 1;
+  height: 22px;
 }
 
 .survey-timeline-segment {
@@ -1107,9 +1171,11 @@
 }
 
 .survey-timeline-note {
-  margin: 0.5rem 0 0;
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
   font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--fg-secondary);
 }
 
@@ -1122,6 +1188,7 @@
   position: relative;
   height: 1.5rem;
   margin-top: 0.75rem;
+  margin-left: calc(var(--timeline-gutter) + var(--timeline-gap));
   border-top: 1px solid var(--chart-grid);
 }
 
@@ -1156,4 +1223,254 @@
   .survey-timeline-phases {
     display: inline;
   }
+
+  /* No room for a gutter on a phone: the name goes back above its bar. */
+  .survey-timeline {
+    --timeline-gutter: 0rem;
+    --timeline-gap: 0rem;
+  }
+
+  .survey-timeline-track {
+    grid-template-columns: 1fr;
+  }
+
+  .survey-timeline-name,
+  .survey-timeline-bar,
+  .survey-timeline-note {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .survey-timeline-tracks {
+    gap: 1rem;
+  }
+}
+
+/* ---------- Logomark ---------- */
+
+/*
+  Hovering the wordmark sends a pulse through the node graph: the hub fires
+  first, then each outer node in turn, clockwise from the upper left, as if a
+  signal were travelling out along the edges. One pass per hover — the
+  animation is attached on hover and removed on leave, so nothing loops in the
+  corner of the eye.
+
+  `transform-box: fill-box` is what makes `transform-origin: center` mean the
+  circle's own centre rather than the SVG's origin; without it every node
+  would swing across the mark instead of swelling in place.
+*/
+.logomark-hub,
+.logomark-node {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes logomark-pulse {
+  50% {
+    transform: scale(1.22);
+  }
+}
+
+.group:hover .logomark-hub,
+.group:focus-visible .logomark-hub {
+  animation: logomark-pulse 0.45s ease-out;
+}
+
+.group:hover .logomark-node,
+.group:focus-visible .logomark-node {
+  animation: logomark-pulse 0.45s ease-out;
+  /* Staggered behind the hub, so the pulse reads as outward travel. */
+  animation-delay: calc(0.1s + var(--node-i) * 0.07s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .logomark-hub,
+  .group:focus-visible .logomark-hub,
+  .group:hover .logomark-node,
+  .group:focus-visible .logomark-node {
+    animation: none;
+  }
+}
+
+/* ---------- Fatigue detection panel ---------- */
+
+/*
+  The chart is framed as the panel a researcher sees on the clinic dashboard,
+  matching the laptop in the hero: a raised surface, hairline border, mono
+  labels, and the session's readings beside the title.
+*/
+.fatigue-panel {
+  margin: 1.5rem 0 2rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.25rem;
+  background: var(--bg-raised);
+}
+
+/*
+  A ruled header band, the way a readout on an instrument is ruled off from
+  its controls.
+*/
+.fatigue-panel-head {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.875rem;
+}
+
+.fatigue-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.fatigue-eyebrow {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.fatigue-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+/* The readings. Tabular figures so the three sit in an even row. */
+.fatigue-readings {
+  display: flex;
+  gap: 1px;
+  margin: 0;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 0.125rem;
+  overflow: hidden;
+}
+
+/* Hairline rules between the gauges come from the 1px grid gap showing through. */
+.fatigue-readings div {
+  margin: 0;
+  padding: 0.3125rem 0.625rem;
+  background: var(--accent-soft);
+  text-align: right;
+}
+
+.fatigue-readings dt {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.fatigue-readings dd {
+  margin: 0.125rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  color: var(--fg);
+}
+
+.fatigue-caption {
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.chart-axis-label {
+  fill: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+/* Square ends and no anti-aliased edge: a tick, not a rounded block. */
+.chart-bar {
+  fill: var(--chart-accent);
+  shape-rendering: crispEdges;
+}
+
+/* The band's upper edge, so the threshold reads as a line, not just a wash. */
+.chart-band-edge {
+  stroke: var(--chart-accent);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  opacity: 0.5;
+}
+
+.chart-key-bar {
+  width: 3px;
+  height: 12px;
+  background: var(--chart-accent);
+}
+
+.chart-key-triangle {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 8px solid var(--chart-flag);
+}
+
+/*
+  Bars grow from the axis once the panel scrolls into view, left to right.
+  Scoped to `data-animate`, which the component only sets after mount and
+  never under prefers-reduced-motion — so with no JavaScript the bars are
+  already at full height.
+*/
+.fatigue-panel[data-animate="true"] .chart-bar {
+  transform: scaleY(0);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--bar-i) * 22ms);
+}
+
+.fatigue-panel[data-animate="true"][data-grown="true"] .chart-bar {
+  transform: scaleY(1);
+}
+
+@media (max-width: 560px) {
+  .fatigue-panel {
+    padding: 1rem;
+  }
+
+  .fatigue-readings {
+    gap: 1rem;
+  }
+}
+
+/* ---------- Hero glow ---------- */
+
+/*
+  On the dark theme the hero artwork is a cut-out whose own soft shadow was
+  drawn for a white page: against near-black it disappears and the devices
+  look pasted on. A pair of accent drop-shadows puts the light back under
+  them.
+
+  `drop-shadow` rather than `box-shadow` on purpose — it follows the image's
+  alpha silhouette, so the glow hugs the devices instead of haloing a
+  rectangle of empty transparent pixels around them. The tight pass seats the
+  artwork, the wide pass is the glow itself.
+
+  Light theme gets nothing: the supplied shadow already reads there, and an
+  accent wash on an off-white page would look like a printing error.
+
+  Case study heroes only. The work rows show the same artwork at a third of
+  the size beside a block of text, where the glow competed with the row's own
+  hover state instead of lighting anything.
+*/
+:root[data-theme="dark"] .hero-glow {
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.5))
+    drop-shadow(0 18px 48px color-mix(in srgb, var(--accent) 25%, transparent));
 }

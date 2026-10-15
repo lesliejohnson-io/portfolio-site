@@ -29,7 +29,7 @@ export default function Nav() {
         <div className="-mx-2 flex items-center justify-between rounded-full border border-border/60 bg-bg/60 px-6 py-3 backdrop-blur-xl backdrop-saturate-150">
         <Link
           href="/"
-          className="font-display flex items-center gap-2.5 text-lg font-medium tracking-tight text-fg transition-colors hover:text-accent"
+          className="group font-display flex items-center gap-2.5 text-lg font-medium tracking-tight text-fg transition-colors hover:text-accent"
         >
           <Logomark className="h-5 w-auto shrink-0" />
           Leslie Johnson

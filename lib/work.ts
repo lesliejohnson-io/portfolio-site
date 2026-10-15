@@ -24,6 +24,12 @@ export type WorkItem = {
   /** Shown in the "Selected case studies" set on the home page. */
   featured?: boolean;
   /**
+   * Keeps a study out of every list — the home set, /work, and the related
+   * cards — without removing the file. Its own page still builds and its link
+   * still works, so a study can be parked and brought back with one line.
+   */
+  hidden?: boolean;
+  /**
    * The row's visual. Omit it and the row shows the "Visual pending"
    * placeholder, so rows can be filled in one at a time as assets arrive.
    */
@@ -124,13 +130,16 @@ export function getWorkItems(): WorkItem[] {
     return data as WorkItem;
   });
 
-  return items.sort((a, b) => a.order - b.order);
+  return items
+    .filter((item) => !item.hidden)
+    .sort((a, b) => a.order - b.order);
 }
 
 /**
  * The home page's "Selected case studies" set. Driven by `featured: true` in
  * each file's frontmatter, so changing what's featured is a content edit — no
- * hardcoded slug list in the components.
+ * hardcoded slug list in the components. Reads from getWorkItems, so a
+ * `hidden` study is excluded here too even if it is still marked featured.
  */
 export function getFeaturedWorkItems(): WorkItem[] {
   return getWorkItems().filter((item) => item.featured);

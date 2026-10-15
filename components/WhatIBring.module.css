@@ -4,7 +4,7 @@
   The panel adapts to the site theme rather than being always-dark:
   • Light mode: slightly elevated surface (off the page background) with blue
     accent signals — reads as precision instrument on a light page.
-  • Dark mode: deliberately darker than the page background, with teal signals
+  • Dark mode: deliberately darker than the page background, with cyan signals
     — the classic HMI / radar-display look.
 
   Specificity note: selectors that target <h2> and <p> elements are scoped as
@@ -41,7 +41,7 @@
   --panel-faint:     var(--fg-muted);                /* #8b9099 */
   --panel-line:      var(--border);                  /* #2e3238 */
   --panel-line-soft: rgba(244, 243, 239, 0.04);
-  --panel-signal:    var(--accent);                  /* #00bfa6 */
+  --panel-signal:    var(--accent);                  /* #34c3ec */
   --panel-signal-hi: var(--accent);
 }
 

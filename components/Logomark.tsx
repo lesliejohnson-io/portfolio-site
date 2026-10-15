@@ -11,6 +11,22 @@
  * Decorative: the adjacent "Leslie Johnson" text is the accessible name, so
  * this is hidden from assistive tech.
  */
+
+/*
+  The five outer nodes, ordered clockwise from the upper left rather than in
+  the order the artwork drew them. `--node-i` feeds the stagger in
+  globals.css, so hovering the wordmark sends one pulse around the graph
+  instead of lighting all five at once. Order is the only reason this is a
+  list; the coordinates are unchanged.
+*/
+const NODES = [
+  { cx: 35, cy: 39 },
+  { cx: 170, cy: 15 },
+  { cx: 165, cy: 104 },
+  { cx: 100, cy: 143 },
+  { cx: 15, cy: 151 },
+];
+
 export default function Logomark({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -19,15 +35,20 @@ export default function Logomark({ className = "" }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
       focusable="false"
-      className={className}
+      className={`logomark ${className}`}
     >
       <g clipPath="url(#logomark-clip)">
-        <circle cx="99.5" cy="74.5" r="29.5" />
-        <circle cx="35" cy="39" r="15" />
-        <circle cx="15" cy="151" r="15" />
-        <circle cx="100" cy="143" r="15" />
-        <circle cx="165" cy="104" r="15" />
-        <circle cx="170" cy="15" r="15" />
+        <circle className="logomark-hub" cx="99.5" cy="74.5" r="29.5" />
+        {NODES.map((node, i) => (
+          <circle
+            key={`${node.cx}-${node.cy}`}
+            className="logomark-node"
+            style={{ "--node-i": i } as React.CSSProperties}
+            cx={node.cx}
+            cy={node.cy}
+            r="15"
+          />
+        ))}
         <rect x="95" y="98" width="7" height="42" />
         <rect
           x="117"

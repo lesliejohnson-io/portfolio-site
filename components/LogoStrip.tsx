@@ -12,10 +12,13 @@ import type { WorkLogo } from "@/lib/work";
  * different proportions (a wide NIH lockup, a squarer crest) sit on a shared
  * baseline without being stretched.
  *
- * The marks stay on one row at every width. From `sm` up the row runs the full
- * container and each cell shares the space equally. Below that there is not
- * enough width to read four marks at once, so the row scrolls sideways at a
- * legible fixed size instead of shrinking them. It bleeds through the page
+ * The marks stay on one row at every width. From `sm` up each mark sits in its
+ * own bordered cell and the row runs the full container, every cell sharing
+ * the space equally. Below that there is not enough width to read four marks
+ * at once, so the row becomes a single continuous strip that scrolls sideways
+ * at a legible fixed size instead of shrinking them: the cells drop their
+ * borders and fills, because four stacked rectangles on a phone read as a
+ * list of cards rather than as one strip of marks. It bleeds through the page
  * gutter on that breakpoint so a partly visible mark at the edge shows there
  * is more to scroll to.
  */
@@ -24,11 +27,11 @@ export default function LogoStrip({ logos }: { logos: WorkLogo[] }) {
 
   return (
     <section aria-label="Partners and funders" className="logo-strip">
-      <ul className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] sm:mx-0 sm:overflow-x-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden">
+      <ul className="-mx-6 flex gap-0 overflow-x-auto px-6 pb-1 [scrollbar-width:none] sm:mx-0 sm:gap-2 sm:overflow-x-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden">
         {logos.map((logo) => (
           <li
             key={logo.src}
-            className="flex h-20 w-40 shrink-0 items-center justify-center rounded-lg border border-border bg-surface px-5 sm:w-auto sm:min-w-0 sm:flex-1 sm:shrink"
+            className="flex h-16 w-32 shrink-0 items-center justify-center px-3 sm:h-20 sm:w-auto sm:min-w-0 sm:flex-1 sm:shrink sm:rounded-lg sm:border sm:border-border sm:bg-surface sm:px-5"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img

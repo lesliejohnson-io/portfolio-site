@@ -40,7 +40,7 @@ const COMMIT = 10;
 const GROUND = "#14161a";
 const GRID = "#1e2128";
 const IDLE = "#c9ccd2";
-const CHARGING = "#00bfa6";
+const CHARGING = "#34c3ec";
 const HUNTING = "#e8a33d";
 
 type State = "walk" | "charge" | "hunt" | "boom";

@@ -53,7 +53,7 @@ export default function CaseStudyHero({
         playsInline
         aria-label={alt}
         src={src}
-        className={`${frame} border border-border bg-video-mat object-cover`}
+        className={`${frame} hero-glow border border-border bg-video-mat object-cover`}
       />
     );
   }
@@ -63,7 +63,7 @@ export default function CaseStudyHero({
     <img
       src={src}
       alt={alt ?? ""}
-      className={`${frame} ${
+      className={`${frame} hero-glow ${
         bleed ? "object-contain" : "border border-border object-cover"
       }`}
     />

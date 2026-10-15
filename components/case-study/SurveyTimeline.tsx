@@ -1,6 +1,6 @@
 /**
  * How long a survey took to reach researchers: paper carried between sites and
- * keyed in by hand, against tablets that synced overnight.
+ * keyed in by hand, against tablets that synced within eight hours.
  *
  * Built from HTML and CSS rather than SVG. The two long arrival notes have to
  * wrap, and SVG text does not wrap — in SVG they would need hand-broken lines
@@ -43,15 +43,16 @@ const TRACKS: Track[] = [
     ],
     phaseNote: "Carried between sites, then typed in by hand.",
     arrivesDay: 7,
-    arrivesLabel: "Reaches researchers, day 7+",
+    arrivesLabel: "Reaches researchers, day 7 or later",
   },
   {
     name: "Tablet",
     tone: "accent",
-    segments: [{ startDay: 0, endDay: 0.5 }],
-    arrivesDay: 0.5,
+    /* Eight hours is a third of a day on this scale. */
+    segments: [{ startDay: 0, endDay: 8 / 24 }],
+    arrivesDay: 8 / 24,
     arrivesLabel:
-      "Answered, synced overnight, reaches researchers within 12 hours",
+      "Synced within 8 hours of completion, available immediately",
   },
 ];
 
