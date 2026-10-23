@@ -99,6 +99,19 @@ export const resources: Resource[] = [
     href: "https://en.wikiquote.org/wiki/Joseph_Schumpeter",
   },
   {
+    /*
+      Leslie's own work, hence the byline in `meta` -- the Library otherwise
+      collects other people's. Transcribed from the site itself: five named
+      patterns, its own framing of what they are. Every pattern is currently
+      marked DRAFT with 0 sources, which the card does not say.
+    */
+    kind: "Pattern library",
+    meta: "Leslie Johnson · 2026",
+    title: "Trust Layer Patterns",
+    note: "Five named patterns for the trust layer between people and autonomous systems: the handoff, the glass box, graceful degradation, appropriate friction, and a shared mental model. Design patterns in the software sense — reusable solutions to problems that recur wherever autonomy meets human judgment.",
+    href: "https://trust-layer-patterns.vercel.app/",
+  },
+  {
     kind: "Tool",
     title: "Foxglove: robot data, made visible",
     note: "Before an operator can trust a robot, someone has to be able to reconstruct why it did what it did. Foxglove puts every sensor stream on one synchronized timeline. The same principle belongs in operator interfaces: show the moment, the data, and the decision side by side.",

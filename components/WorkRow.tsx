@@ -117,7 +117,7 @@ export default function WorkRow({ item }: { item: WorkItem }) {
             */}
             <span
               aria-hidden="true"
-              className="h-1.5 w-1.5 rounded-full bg-fg-muted transition-[background-color,box-shadow] group-hover:bg-accent-fg group-hover:shadow-[0_0_7px_1px_color-mix(in_srgb,var(--accent-fg)_55%,transparent)] motion-reduce:transition-none"
+              className="h-1.5 w-1.5 rounded-full bg-fg-muted transition-[background-color,box-shadow] group-hover:bg-[var(--lamp-lit)] group-hover:shadow-[0_0_7px_1px_color-mix(in_srgb,var(--lamp-lit)_55%,transparent)] motion-reduce:transition-none"
             />
             Case study
           </span>

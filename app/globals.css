@@ -41,6 +41,17 @@
   */
   --video-mat: #111111;
   /*
+    A lit indicator lamp. Set once and NOT redefined per theme, for the same
+    reason as --video-mat: a lamp that is on is brighter than whatever it
+    sits on, in both themes. Deriving it from --accent-fg looked right on the
+    light palette, where that token is white, and inverted on the dark one,
+    where it is near-black -- the glow came out as a dark smudge instead of a
+    light. It is decoration and hidden from assistive technology, so it is
+    held to the 3:1 graphical-object line rather than a text ratio; white on
+    both accent fills clears that.
+  */
+  --lamp-lit: #ffffff;
+  /*
     Accent-tinted chip background, mixed from the accent so it tracks both
     themes. Held at 8%, where accent text on the tint reads at 4.90:1 on the
     light palette. The cyan-blue has more headroom here than the old teal did,

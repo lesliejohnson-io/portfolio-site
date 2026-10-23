@@ -46,9 +46,7 @@ Nav, left to right: **Home · Work · About · Resources**, then a **Contact** b
 
 Featured on home (frontmatter `featured: true`), in `order`:
 1. Field Guide (`field-guide.mdx`)
-2. Common Project (`common-project.mdx`)
-3. Client Portal (`client-portal.mdx`)
-4. Synapse (`synapse.mdx`)
+2. Client Portal (`client-portal.mdx`)
 
 On `/work` only: ECSI / Student Portal (`ecsi.mdx`, order 5).
 
@@ -60,6 +58,7 @@ To change what's featured, move `featured: true` between frontmatter files. Don'
 - **Body:** Source Sans 3.
 - **Labels and metadata:** JetBrains Mono.
 - Newsreader is still loaded and used on case study and About pages. Once Archivo is in, decide whether Newsreader stays at all.
+- Copy style: use curly quotes (“ ”, ‘ ’) and curly apostrophes (’) in all user-facing text. Never in code.
 
 ## Color
 
@@ -81,7 +80,7 @@ Near-monochrome warm off-white base with one blue accent, defined as CSS custom 
 
 1. **Never invent, inflate, or embellish content.** No fabricated metrics, quotes, testimonials, logos, or clients. Empty slots render as designed placeholders.
 2. Every metric keeps its measurement caption exactly as written in the content files. Client Portal's outcome figures were deliberately softened to qualitative claims; don't reintroduce numbers.
-3. Naming: "Common Project" (never "Common Ground"), "Paloma AI," "Student Portal" and "Client Portal" for ECSI surfaces ("Due Notice" is retired). CMU is "Human-Computer Interaction, Carnegie Mellon," phrased as study, never a degree.
+3. Naming: "Common Project" (never "Common Ground"), "Paloma AI," "Student Portal" and "Client Portal" for ECSI surfaces ("Due Notice" is retired). CMU is "Human-Computer Interaction, Carnegie Mellon,".
 4. Contact: leslie@lesliejohnson.io. Links: linkedin.com/in/lesliejohnsonn, github.com/lesliejohnson-io.
 5. Accessibility: WCAG AA in both themes, visible focus states, semantic headings, reduced motion respected.
 
