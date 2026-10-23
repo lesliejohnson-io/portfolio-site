@@ -72,11 +72,7 @@ export default function WorkRowVisual({ visual }: { visual?: WorkVisual }) {
   return (
     <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-video-mat transition-colors group-hover:border-border-strong">
       {reduceMotion ? (
-        <img
-          src={visual.poster}
-          alt={visual.alt ?? ""}
-          className={fit}
-        />
+        <img src={visual.poster} alt={visual.alt ?? ""} className={fit} />
       ) : (
         <video
           autoPlay

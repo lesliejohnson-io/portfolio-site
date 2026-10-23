@@ -43,7 +43,7 @@ export default function Nav() {
             <Link
               key={link.href}
               href={link.href}
-              className="font-mono text-xs uppercase tracking-[0.08em] text-fg-secondary hover:text-accent"
+              className="link-draw font-mono text-xs uppercase tracking-[0.08em] text-fg-secondary hover:text-accent"
             >
               {link.label}
             </Link>

@@ -53,7 +53,7 @@ export default function Home() {
             </h2>
             <Link
               href="/work"
-              className="font-mono text-xs uppercase tracking-[0.06em] text-accent hover:underline"
+              className="link-draw font-mono text-xs uppercase tracking-[0.06em] text-accent"
             >
               All work →
             </Link>

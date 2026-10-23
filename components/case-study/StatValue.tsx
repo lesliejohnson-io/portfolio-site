@@ -1,16 +1,47 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
-/** "89%" -> { number: 89, suffix: "%" }; "20×" -> { number: 20, suffix: "×" }. */
+/**
+ * "89%" -> { number: 89, suffix: "%" }; "20×" -> { number: 20, suffix: "×" }.
+ *
+ * A value carrying a second number is not a single figure to count to — a
+ * range like "42 → 74" would animate its first half while its second sat
+ * still, reading as "100 → 74" on the way down. Those render as written,
+ * the same as a value with no leading digit at all.
+ */
 function parse(value: string) {
   const match = value.match(/^(\d+(?:\.\d+)?)(.*)$/);
-  if (!match) return null;
+  if (!match || /\d/.test(match[2])) return null;
   return { number: parseFloat(match[1]), suffix: match[2] };
 }
 
 const START = 100;
 const DURATION = 900;
+
+/**
+ * A before-and-after value joins its two figures with an arrow, e.g.
+ * "42 → 74". Each arrow is wrapped so CSS can set it smaller and lighter
+ * than the figures, leaving them to carry the visual weight.
+ *
+ * The arrow stays in the text — it isn't hidden from assistive technology,
+ * because "42 74" would lose the relationship between the two numbers.
+ * A value with no arrow renders as a plain string and gets no wrapper.
+ */
+function withArrows(value: string) {
+  if (!value.includes("→")) return value;
+
+  return (
+    <span className="stat-value">
+      {value.split("→").map((part, i) => (
+        <Fragment key={i}>
+          {i > 0 && <span className="stat-arrow">→</span>}
+          {part.trim()}
+        </Fragment>
+      ))}
+    </span>
+  );
+}
 
 /**
  * Counts down from 100 to the stat's real value the first time it scrolls into
@@ -59,7 +90,7 @@ export default function StatValue({ value }: { value: string }) {
 
   return (
     <span ref={ref} className="tabular-nums">
-      {display ?? value}
+      {display ?? withArrows(value)}
     </span>
   );
 }

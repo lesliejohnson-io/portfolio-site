@@ -53,16 +53,14 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
       <>
         <article>
           {/*
-            The pill and headline sit at the body measure, sharing the same
+            The eyebrow and headline sit at the body measure, sharing the same
             left and right margins as every paragraph below them. The logo
             strip and hero still run the full page column.
           */}
           <header className="mx-auto max-w-[680px] px-6 pt-12 sm:pt-16">
             {meta.category && (
-              <p className="mb-5">
-                <span className="inline-block rounded-full bg-accent-soft px-3 py-1.5 font-mono text-xs uppercase tracking-[0.06em] text-accent">
-                  {meta.category}
-                </span>
+              <p className="mb-4 font-mono text-xs uppercase tracking-[0.12em] text-accent">
+                {meta.category}
               </p>
             )}
             {/*
@@ -139,7 +137,7 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
               */}
               <a
                 href="#how-we-measured"
-                className="mt-5 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.06em] text-accent hover:underline"
+                className="link-draw mt-5 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.06em] text-accent"
               >
                 See how we measured this
                 <span aria-hidden="true">→</span>

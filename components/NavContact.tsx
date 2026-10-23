@@ -32,7 +32,7 @@ export default function NavContact({
         type="button"
         onClick={copy}
         aria-label={`Copy email address, ${CONTACT_EMAIL}`}
-        className="rounded-full border border-border-strong px-4 py-1.5 font-mono text-xs uppercase tracking-[0.06em] text-fg transition-colors hover:border-accent hover:text-accent"
+        className="btn-edge rounded-full border border-border-strong px-4 py-1.5 font-mono text-xs uppercase tracking-[0.06em] text-fg transition-colors hover:border-accent hover:text-accent"
       >
         Contact
       </button>

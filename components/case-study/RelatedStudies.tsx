@@ -31,7 +31,7 @@ export default function RelatedStudies({ items }: { items: WorkItem[] }) {
         </h2>
         <Link
           href="/work"
-          className="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.08em] text-accent hover:underline"
+          className="link-draw inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.08em] text-accent"
         >
           See all case studies
           <span aria-hidden="true">→</span>
@@ -48,7 +48,7 @@ export default function RelatedStudies({ items }: { items: WorkItem[] }) {
             <article className="group relative grid gap-5 rounded-xl border border-border bg-bg-raised p-5 transition-colors hover:border-border-strong sm:grid-cols-2">
               <div className="flex flex-col gap-3">
                 {item.category && (
-                  <span className="self-start rounded-full bg-accent-soft px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] text-accent">
+                  <span className="self-start font-mono text-[11px] uppercase tracking-[0.12em] text-accent">
                     {item.category}
                   </span>
                 )}

@@ -35,6 +35,15 @@ function Paragraph({ children }: { children?: React.ReactNode }) {
   return <p>{children}</p>;
 }
 
+/**
+ * A measurement note belonging to the table above it. Set in the mono face
+ * the site uses for labels and metadata, and pulled up tight so it reads as
+ * the table's caption rather than as the next paragraph of body copy.
+ */
+function TableNote({ children }: { children?: React.ReactNode }) {
+  return <p className="table-note">{children}</p>;
+}
+
 /** A visible "still to supply" block, matching VisualSlot's dashed frame. */
 function Placeholder({ children }: { children: React.ReactNode }) {
   return (
@@ -90,5 +99,6 @@ export function caseStudyComponents(
     StatRow: () => <StatRow stats={meta.stats} id="how-we-measured" />,
     SurveyTimeline,
     FatigueChart,
+    TableNote,
   };
 }

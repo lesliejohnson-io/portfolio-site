@@ -158,128 +158,78 @@
 }
 
 /*
-  Custom dot cursor. The native cursor is only hidden once the from-scratch
-  cursor component has confirmed a fine pointer and no reduced-motion request
-  and added .custom-cursor-active — so touch and reduced-motion users keep the
-  native cursor. Text inputs always keep the native caret.
+  The hover system. Every hover on the site is the same 1px accent hairline,
+  arriving differently depending on what it is attached to: it draws in from
+  the left under a link, and simply appears along the bottom edge of a
+  button. Defined here once rather than per component so the two stay in step.
+
+  Both are drawn with a pseudo-element, so neither shifts the text nor
+  affects layout, and neither can swallow a click.
 */
-.custom-cursor-active,
-.custom-cursor-active * {
-  cursor: none;
+.link-draw,
+.btn-edge {
+  position: relative;
 }
 
-.custom-cursor-active input,
-.custom-cursor-active textarea,
-.custom-cursor-active select,
-.custom-cursor-active [contenteditable="true"] {
-  cursor: auto;
+.link-draw::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: var(--accent);
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 150ms ease;
 }
 
 /*
-  A positioning anchor (follows the pointer instantly, no transition) carrying
-  two visual layers. State changes animate transform/opacity only — GPU-friendly,
-  no per-frame layout — so the dot stays crisp and precise.
+  The button's line follows whatever radius the button already has, because
+  `border-radius: inherit` on a full-bleed pseudo-element gives a pill a
+  curved bottom edge and a square button a straight one. No transition: it
+  appears instantly.
 */
-.custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
+.btn-edge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border-bottom: 1px solid var(--accent);
   pointer-events: none;
   opacity: 0;
-  will-change: transform;
-  transition: opacity 0.12s ease;
 }
 
-.cc-dot,
-.cc-reticle {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+/* Gated on a real pointer, so neither effect fires on a tap. */
+@media (hover: hover) and (pointer: fine) {
+  .link-draw:hover::after {
+    transform: scaleX(1);
+  }
 
-.cc-dot {
-  width: 7px;
-  height: 7px;
-  margin: -3.5px 0 0 -3.5px;
-  border-radius: 9999px;
-  background: var(--fg);
-  transition: opacity 0.15s ease;
+  .btn-edge:hover::after {
+    opacity: 1;
+  }
 }
 
 /*
-  The reticle that replaces the dot over anything clickable: four corner
-  brackets, square rather than rounded, matching the framing box in the About
-  portrait. Sized a little larger than the old ring so the corners read as a
-  frame around what's under the pointer rather than a mark on top of it.
+  Focus is deliberately not gated the same way. A keyboard user cannot
+  produce a hover at all, so putting these behind a pointer query would take
+  the affordance away from exactly the people who most need it.
 */
-.cc-reticle {
-  width: 38px;
-  height: 38px;
-  margin: -19px 0 0 -19px;
-  opacity: 0;
-  /*
-    Opens from slightly wide and settles in, so the frame reads as closing on
-    the target. The old ring grew outward from half size, which read as a
-    bubble.
-  */
-  transform: scale(1.3);
-  transition: transform 0.18s ease, opacity 0.18s ease;
+.link-draw:focus-visible::after {
+  transform: scaleX(1);
 }
 
-/*
-  The brackets take --fg, not --accent, so the whole cursor is one colour and
-  the reticle reads as the dot opening up. Accent would vanish against the
-  accent-filled primary button — exactly the control where the cursor most
-  needs to respond.
-*/
-.cc-corner {
-  position: absolute;
-  width: 9px;
-  height: 9px;
-  border: 0 solid var(--fg);
-}
-
-/*
-  Each corner takes two of the four borders. Written out by position rather
-  than generated, because there are exactly four and naming them is clearer
-  than a loop of nth-child arithmetic.
-*/
-.cc-corner:nth-child(1) {
-  top: 0;
-  left: 0;
-  border-top-width: 1px;
-  border-left-width: 1px;
-}
-
-.cc-corner:nth-child(2) {
-  top: 0;
-  right: 0;
-  border-top-width: 1px;
-  border-right-width: 1px;
-}
-
-.cc-corner:nth-child(3) {
-  bottom: 0;
-  left: 0;
-  border-bottom-width: 1px;
-  border-left-width: 1px;
-}
-
-.cc-corner:nth-child(4) {
-  bottom: 0;
-  right: 0;
-  border-bottom-width: 1px;
-  border-right-width: 1px;
-}
-
-.custom-cursor[data-grow="true"] .cc-reticle {
+.btn-edge:focus-visible::after {
   opacity: 1;
-  transform: scale(1);
 }
 
-.custom-cursor[data-grow="true"] .cc-dot {
-  opacity: 0;
+/* Reduced motion: the underline still arrives, it just stops drawing. */
+@media (prefers-reduced-motion: reduce) {
+  .link-draw::after {
+    transition: none;
+  }
 }
 
 .sr-only {
@@ -662,6 +612,28 @@
   }
 }
 
+/*
+  A before-and-after stat value, e.g. "42 → 74". The arrow is set at half the
+  figures' size, at normal weight against their bold, and in the muted tone,
+  so the two numbers carry the weight and the arrow only joins them.
+
+  inline-flex rather than leaving the arrow inline: a glyph this much smaller
+  sits on the shared baseline and reads as dropped below the figures, where
+  centring the boxes puts it level with them. Both sizes are em-relative, so
+  this holds at the strip's responsive 4xl/5xl without a second rule.
+*/
+.stat-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18em;
+}
+
+.stat-arrow {
+  font-size: 0.5em;
+  font-weight: 400;
+  color: var(--fg-muted);
+}
+
 /* Subtle reveal on stat callouts (allowed motion), disabled for reduced-motion. */
 @keyframes stat-rise {
   from {
@@ -830,6 +802,162 @@
 }
 
 /*
+  Wide figures. A dense diagram is unreadable at the 68ch reading measure, so
+  it breaks out to about 1000px, per CASE_STUDY_LAYOUT.md. The negative
+  margin is derived from `100%` — the body column's own content width — so the
+  figure stays centred on the column without a transform, which would fight
+  the translateY the reveal animates. On a narrow viewport the min() collapses
+  it back to the column and the margins go to zero.
+*/
+.prose-v2 figure.case-figure[data-width="wide"] {
+  --figure-wide: min(1000px, calc(100vw - 3rem));
+  width: var(--figure-wide);
+  max-width: none;
+  margin-inline: calc((100% - var(--figure-wide)) / 2);
+}
+
+/*
+  A figure at the page's own measure, mirroring .container-wide so a full
+  blueprint lines up with the hero band above it rather than landing on a
+  width of its own.
+*/
+.prose-v2 figure.case-figure[data-width="full"] {
+  --figure-full: min(1440px, calc(100vw - 2 * clamp(1.5rem, 4vw, 4rem)));
+  width: var(--figure-full);
+  max-width: none;
+  margin-inline: calc((100% - var(--figure-full)) / 2);
+}
+
+/*
+  Expandable figures. The trigger is a plain button wrapping the image, so it
+  is keyboard reachable and announces the alt text; everything here is just
+  undoing the button's own chrome.
+*/
+.figure-expand {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  position: relative;
+}
+
+.figure-expand:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/*
+  The hint sits on the artwork and only appears on hover or keyboard focus,
+  so it never competes with the diagram while reading.
+*/
+.figure-expand-hint {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.3rem;
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.figure-expand:hover .figure-expand-hint,
+.figure-expand:focus-visible .figure-expand-hint {
+  opacity: 0.9;
+}
+
+/* A coarse pointer has no hover, so the hint is simply always there. */
+@media (hover: none) {
+  .figure-expand-hint {
+    opacity: 0.9;
+  }
+}
+
+/* The hint still appears, it just stops fading. */
+@media (prefers-reduced-motion: reduce) {
+  .figure-expand-hint {
+    transition: none;
+  }
+}
+
+/*
+  The modal. <dialog> brings focus trapping, Escape, and inertness of the
+  page behind it, so none of that is reimplemented here.
+*/
+.figure-dialog {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--fg);
+  overflow: hidden;
+}
+
+.figure-dialog::backdrop {
+  background: rgb(0 0 0 / 0.75);
+}
+
+.figure-dialog-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 0.75rem;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.figure-dialog-close {
+  align-self: flex-end;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.3rem;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.figure-dialog-close:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.figure-dialog-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/*
+  Pans at the artwork's intrinsic size instead of scaling to fit — a reader
+  opened it because the page-width copy was too small to read.
+*/
+.figure-dialog-scroll {
+  flex: 1;
+  overflow: auto;
+  border-radius: 0.4rem;
+}
+
+.figure-dialog-img {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: auto;
+}
+
+/*
   Figure reveal. Like the heading reveal, the hiding rule is scoped to an
   attribute only Figure.tsx sets on mount, so with no JavaScript — or under
   prefers-reduced-motion, where it is never set — the image is simply visible.
@@ -851,6 +979,19 @@
   margin: 1.5rem 0;
   font-size: 1rem;
   line-height: 1.5;
+}
+
+/*
+  A note attached to the table above it. The negative top margin pulls it up
+  against the table's own 1.5rem bottom margin so the two read as one block,
+  and the mono face matches the labels and metadata elsewhere on the site.
+*/
+.prose-v2 .table-note {
+  margin: -1.1rem 0 1.75rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--fg-muted);
 }
 
 .prose-v2 th,

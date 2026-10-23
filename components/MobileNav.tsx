@@ -152,7 +152,7 @@ export default function MobileNav({
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="font-display rounded-md py-2 text-2xl font-bold tracking-[-0.01em] text-fg transition-colors hover:text-accent"
+                    className="link-draw font-display rounded-md py-2 text-2xl font-bold tracking-[-0.01em] text-fg transition-colors hover:text-accent"
                   >
                     {link.label}
                   </Link>

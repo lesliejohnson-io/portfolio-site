@@ -36,19 +36,17 @@ function renderTitle(title: string, highlight?: string) {
 
 export default function WorkRow({ item }: { item: WorkItem }) {
   return (
-    <article
-      data-cursor="grow"
-      className="group relative grid grid-cols-1 items-center gap-8 border-t border-border py-12 md:grid-cols-12 md:gap-12 md:py-16"
-    >
+    <article className="group relative grid grid-cols-1 items-center gap-8 border-t border-border py-12 md:grid-cols-12 md:gap-12 md:py-16">
       <div className="md:col-span-5">
         {/*
-          One pill, saying what the product is. The project name is already
-          the row's title and link, so repeating it here only competed with it.
+          One eyebrow, saying what the product is. Set as a bare line of type
+          rather than inside a pill: the row already carries a hairline rule
+          and a framed visual, and a third enclosed shape above the title read
+          as chrome competing with it. The wide tracking is what makes it
+          register as a label without a box around it.
         */}
-        <p className="font-mono text-xs uppercase tracking-[0.08em]">
-          <span className="inline-block rounded-full border border-border bg-surface px-2.5 py-1 text-fg-secondary">
-            {item.tag}
-          </span>
+        <p className="font-mono text-xs uppercase tracking-[0.12em] text-fg-secondary">
+          {item.tag}
         </p>
 
         <Reveal>

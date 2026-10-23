@@ -1,124 +1,189 @@
 ---
 slug: "client-portal"
 layout: "v2"
-category: "Product Design · Fintech"
+category: "Agentic AI · Fintech"
 featured: true
 order: 3
 name: "Client Portal"
-tag: "Product Design · Fintech"
+tag: "Agentic AI · Fintech"
 role: "Sole Product Designer"
-title: "Decisions in hours. 17 new deals in year one."
-who: "University CFOs and financial officers at ECSI's client institutions"
-what: "Real-time financial dashboards inside ECSI's Client Portal, replacing on-demand PDF report runs"
-summary: "Live financial dashboards for university executives. Decision time cut roughly in half; the dashboards drove upsells of the flagship product."
-heroPending: "Wide hero: before and after — the old portal report-request form dissolving into a live KPI dashboard"
+title: "From 24-hour report orders to self-serve dashboards"
+deck: "Self-serve financial dashboards for university finance teams. Collection agency placements, now recommended by an AI agent."
+who: "University administrators and financial officers who manage student loan portfolios at ECSI's client institutions"
+what: "Self-serve financial dashboards replacing a 24-hour report order cycle, plus an agentic rebuild of collection agency placement"
+summary: "Self-serve financial dashboards for university finance teams. Report orders stopped and client NPS rose from 42 to 74. Agency placement, now rebuilt with AI."
+heroPending: "The placement agent's recommendation for one account. The university's selected agencies ranked on compliance, data security, and collection performance, each with a confidence score and a short rationale. Approve and Override controls."
+stats:
+  - value: "42 → 74"
+    label: "Client NPS"
+  - value: "24 hrs → 0"
+    label: "Wait for a report"
 ---
 
 {/*
-  Restructured to the CASE_STUDY_LAYOUT.md section order (Context, Objective,
-  Approach, one extra section, Outcomes & Impact, Reflection). Every sentence
-  below is Leslie's own from the previous version of this file; only the
-  section order and the heading labels changed.
+  Copy replaced wholesale 2026-10-22 from Leslie's revised handoff. Every
+  sentence is hers, used verbatim; the section labels, the bullet and table
+  formatting, and the visual placeholders are mine.
 
-  No `stats` block, deliberately. Per Leslie's direction this study's outcome
-  figures (the NPS delta, the sales lift, the navigation-time and QA-bug
-  percentages, the support-request volume) were softened to qualitative
-  claims because the source draft flagged them as unverified. The layout doc
-  says to omit the outcomes strip entirely rather than pad it, so both the
-  top strip and <StatRow /> are absent until verified figures exist.
+  `summary` is deliberately NOT the same as `deck`. It still carries the
+  earlier wording, because it feeds a different surface — the home and /work
+  row blurb, and this page's meta description — and Leslie has not said
+  whether the card should keep leading with the NPS figure. It is the one
+  string on this page that no longer matches the revised copy. Flagged, not
+  changed.
 
-  The earlier note on this file still applies: plain process/scope facts
-  (CFOs presented to, executives tested with, design-system module count) are
-  left as-is — they describe what was built, not a measured outcome. The
-  "Card summary" section became the `summary` frontmatter field and isn't
-  repeated in the body.
+  CLAUDE.md hard rule 2 still says this study's outcome figures were softened
+  to qualitative claims and that numbers must not be reintroduced. The handoff
+  reintroduces them (NPS 42 → 74, about 25% fewer QA bugs), so that rule is
+  out of date and needs editing to match.
+
+  The title carries no product name — it is the outcome line alone, at
+  Leslie's direction. `name` stays "Client Portal" per CLAUDE.md hard rule 3:
+  it is the real name of this ECSI surface and it renders nowhere in the
+  current components, so it is accurate metadata rather than page copy. The
+  body refers to the product only as "its client platform", so no name
+  appears on the page at all. Note that this leaves the home row, /work row
+  and related cards identifying the study by its outcome line only.
+
+  Neither stat carries a `caption`. StatRow renders a value and label alone
+  rather than inventing a measurement note, so the rows are honest as they
+  stand — but neither figure says how it was measured, and the layout doc
+  wants that on the Outcomes row. Captions still to supply.
+
+  Hero: no asset exists yet, so `heroPending` describes it and the sized
+  placeholder renders instead. The caption it should get once the artwork
+  lands: "The agent ranks the agencies and explains why. A person makes the
+  call." Source: new build, synthetic data.
+
+  Every in-body visual below is a placeholder. The comment above each one
+  carries the caption it should get once the asset exists, plus where that
+  asset comes from. Two are marked in the handoff as the first and second to
+  cut if the page runs long.
 */}
 
 ## Context
 
-ECSI, a Global Payments company, served university administrators, financial officers, and the executives who answer for enrollment and budget outcomes.
+ECSI, a Global Payments company, services student loans for universities. Its client platform served the administrators and financial officers who manage those loan portfolios.
 
-Enrollment and budget calls worth millions used to wait on static PDF reports. Someone had to know the right date ranges, request the run, generate it, and print it for the meeting. Support fielded a steady stream of those requests every month.
+Every answer started with a form. A client ordered a report online, ECSI staff ran it in house, and the file arrived 24 hours later. A new question meant a new order and another day of waiting.
 
-Their old workflow had three problems:
+Orders peaked at the start and end of each semester, when clients needed answers fastest and ECSI staff had the least time to give.
 
-- **It was slow.** Every insight meant requesting and waiting on a report run.
-- **It was fragile.** One wrong parameter meant starting the whole request over.
-- **It didn't hold up in a room.** Everyone showed up with their own printout, so meetings fractured into people reading different pages instead of looking at one shared story.
+A report answered only the question asked when it was ordered. Clients couldn't:
 
-**My role:** sole designer, discovery through delivery. I ran research, prototyping, and testing, and I presented the work to a room of university CFOs. I did it alongside a PM, two client advisors, a marketing director, and five developers. The client advisors were my line into what clients actually wanted; I leaned on their relationships for insight I couldn't have gotten cold.
+- Change a date range or filter without ordering again
+- Drill down from a total to the accounts behind it
+- Look up a single account
 
-**The reporting system wasn't failing on data. It was failing on speed, and on the meeting the data was for.**
+{/* Caption: "One wrong parameter, and the 24-hour cycle started over." · Source: rebuild in Figma. */}
+
+*[Visual: A simple flow diagram of the old process. Online order form → ECSI runs the report in house → file uploaded 24 hours later → wrong parameter → order again (loop arrow back to the start).]*
+
+In meetings, the reports came apart. Everyone brought their own printout, and the conversation scattered across different pages.
+
+**My role:** Sole designer, from discovery through delivery. I led research, prototyping, and testing, working with a PM, two client advisors, a marketing director, and two developers. The client advisors were my line to what clients wanted. Their relationships opened doors I couldn't have opened cold.
+
+**The data was there. Clients couldn't work with it, and they couldn't see it together.**
 
 ## Objective
 
-What they needed was simple to say and hard to deliver: the numbers, live, in a form they could shape and present together.
+Put the data in clients' hands. Dashboards refreshed overnight as accounts reconciled, so each morning clients could filter, drill down from totals to accounts, look up a single account, and put one shared view in front of the room.
 
-Three real-world limits shaped every decision:
+Three constraints shaped every decision:
 
-- **A legacy data model** I had to design within, not around.
-- **A corporate rebrand** that landed in the middle of the project.
-- **A hard print requirement.** These are board packets. "Just go digital" was never on the table.
+- A legacy data model, to design within, not around.
+- A corporate rebrand that landed mid-project.
+- Paper. Reports still circulated in print, so every dashboard had to print cleanly.
+
+{/* Caption: "From a 24-hour order cycle to data waiting every morning." · Source: rebuild in Figma. · First to cut if the page feels heavy. */}
+
+*[Visual: Two panels side by side. Left, "Before": order form, 24-hour wait, static file. Right, "After": data refreshed overnight, dashboard ready every morning, filter, drill down, look up an account.]*
 
 ## Approach
 
-### 1. The reports weren't hard to read, they were hard to find
+### 1. Start with what clients were already ordering
 
-Eye-tracking and clickstream analysis showed users losing a significant share of their time to navigation before they even reached data. They knew what they wanted; the system buried it.
+Discovery drew on report-order history, reprint requests, support tickets, client interviews, and the client advisors. The reprints told the clearest story: clients re-ordering a report because one parameter was wrong, then waiting another 24 hours for the fix.
 
-*[Visual: The navigation problem — the eye-tracking or clickstream artifact showing time lost in navigation. Proof, not decoration.]*
+### 2. Five reports carried most of the demand
 
-### 2. A handful of reports carried most of the value
+Most orders came down to five reports. Each became a dashboard with one job. Everything else moved to self-serve ad hoc reports, off ECSI's queue. Account lookup was a requirement from day one. Drill-down from totals to accounts followed in a later release.
 
-Rather than rebuild everything, I looked at what clients actually ran. A handful of reports accounted for the overwhelming majority of usage. I built the dashboards around those, gave each one a single job, and put the long tail behind search and a catch-all view.
+The rule: **one dashboard, one story.** Each screen makes a single argument instead of crowding every metric onto the page.
 
-The organizing principle: **one dashboard, one story.** Each screen makes a single argument instead of dumping every available metric on the page.
+{/* Caption: "One dashboard, one story." · Source: original screenshot if found, otherwise rebuild in Figma. */}
 
-### 3. A design system that could flex without breaking
+*[Visual: One of the five dashboards, full screen. Left navigation column with the report areas listed under the product name, date-range calendar picker, account lookup, and a single focused set of charts.]*
 
-The rebrand forced a design-system decision early. I built one using atomic design, starting with a content inventory of 30 modules and refining down to 10 that could each carry multiple content types. Storybook plus Figma tokens kept brand and code in sync and meaningfully cut down on QA bugs.
+### 3. One unified design system replaced outdated styles
 
-*[Visual: The system — one clean shot of the 10-module design system.]*
+On mobile, the platform loaded outdated styles. Tracing the problem turned up so many conflicting style sheets that none could be trusted. The answer was one system: shared styles and components, built in Angular and documented in Storybook, so design and development worked from the same source. Prototypes lived in Axure, where interactions could be coded and tested before development.
 
-### 4. Two one-week sprints with real executives
+It paid off twice. When the rebrand hit mid-project, it changed once, at the system level, not page by page. And with design and code sharing components, QA bugs fell by about 25%.
 
-I ran usability sessions with executives across two sprints. Three changes came directly out of what I watched them struggle with:
+{/* Caption: "One source of truth for design and code. The rebrand changed once." · Source: original Storybook screenshot if found, otherwise rebuild in Figma. */}
 
-- **Navigation moved to a sidebar.** Users expected report tabs to live where the product lived, not in a top bar.
-- **The date-range picker was rebuilt** to behave like the calendar selectors people already knew.
-- **On-screen print was added,** so the board packet came straight off the live view with zero extra dev effort.
+*[Visual: Core components of the design system as documented in Storybook (buttons, cards, tables, chart containers, form controls), shown in the post-rebrand styling.]*
 
-### 5. The roadblock was a wrong mental model, not a labeling tweak
+### 4. Testing changed two core patterns
 
-My first wireframes nested all five report areas as tabs under the product. In testing, users kept looking for that navigation somewhere else entirely. It wasn't a labeling tweak, it was a wrong mental model, and I had to move the whole structure into the navigation column and retest before it clicked.
+Sessions included client staff, client leads, and ECSI internal staff. Two changes came straight out of them.
 
-*[Visual: The pivot — the two wireframes showing tabs-under-product moving into the sidebar. The "I tested, I was wrong, I fixed it" moment.]*
+**Navigation moved to the left column.** The first build ran the five report areas as tabs across the top. Eye-tracking showed users weren't finding them. They went looking for navigation somewhere else entirely. The problem was the mental model, not the labels. Retesting found where users expected it: in the left column, directly under the product name. That's where it went.
+
+{/* Caption: "Users missed the top tabs. They looked for navigation under the product name." · Source: original heatmap if found; the navigation before-and-after can be rebuilt in Figma. */}
+
+*[Visual: Two parts. Left: eye-tracking heatmap of the first build, with attention missing the top tabs. Right: before-and-after of the navigation, top tabs moving into the left column under the product name.]*
+
+**A calendar replaced the slider.** The date-range slider came from a licensed data-visualization library, in use mainly because ECSI had already paid for it. Dragging to a date was slow and imprecise, and no one expected it. A standard calendar picker took its place.
+
+{/* Caption: "A familiar calendar in place of an imprecise slider." · Source: rebuild in Figma. · Second to cut if the page feels heavy. */}
+
+*[Visual: Small side-by-side. Left: the licensed slider for selecting a date range. Right: the standard calendar picker that replaced it.]*
+
+### 5. Print in one click
+
+Paper wasn't going away, so every dashboard got a print button. One click sent the current view to a preformatted page and printed it. No rebuilding, no reformatting.
+
+{/* Caption: "The live view, print-ready in one click." · Source: original screenshot if found, otherwise rebuild in Figma. */}
+
+*[Visual: A dashboard with its print button highlighted, next to the preformatted print page it produces.]*
+
+### 6. From reporting on collections to recommending placements
+
+When an account goes to collections, the university chooses the agency, working from its own short list.
+
+Agency performance began as a report on amounts collected. The rebuild is a placement agent. It gathers data on each of the university's selected agencies, reviews the borrower's history and balance, and ranks the agencies on compliance, data security, and collection performance.
+
+Every recommendation carries a confidence score and a rationale. A person at the university approves it or overrides it. When confidence is low, the agent doesn't guess. It marks the account Needs human review.
+
+{/* Caption: "When the agent isn't sure, it says so and hands the decision to a person." · Source: new build, synthetic data. */}
+
+*[Visual: An account flagged "Needs human review." Low confidence score, the rationale explaining what made the recommendation uncertain, and controls for a person to choose the agency.]*
+
+Built on synthetic data modeled on ECSI's reporting.
 
 ## Key decisions and trade-offs
 
 | Decision | Why | Result |
 | --- | --- | --- |
-| Live dashboards over PDF runs | Kill the request-and-wait cycle | Fewer support requests, faster decisions |
-| Customizable widgets per school | Every institution's data tells a different story | Executive satisfaction improved noticeably |
-| Built-in print view | Board packets were non-negotiable | Requirement met with no added dev cost |
+| Self-serve dashboards over ordered reports | Every question cost a form and a 24-hour wait | Report orders stopped |
+| Five dashboards, everything else ad hoc | Five reports carried most of the demand | Clients ran one-off reports themselves |
+| Navigation in the left column, under the product name | Eye-tracking showed users missed the top tabs | Retesting confirmed it was where users looked |
+| Calendar picker over the licensed slider | The slider was slow, imprecise, and unfamiliar | Easier to use; a pattern users already knew |
+| One design system in Angular and Storybook | Conflicting style sheets broke the mobile view | Rebrand applied once; about 25% fewer QA bugs |
 
 ## Outcomes & Impact
 
-- Executives stopped waiting on reports and started closing decisions in the room, pulling live numbers themselves instead of making the call days later.
-- Enrollment and budget calls worth millions no longer waited on a report run.
-- Support stopped fielding a steady stream of report requests every month.
-- Executive satisfaction improved noticeably once each institution could shape its own view.
-- Board packets printed straight off the live view, meeting the requirement with no added dev cost.
-- The dashboards became a selling point strong enough to lift flagship product sales.
+<StatRow />
 
-*[Visual: The payoff — a final dashboard with the print view visible.]*
+- **Report orders stopped.** Clients answered their own questions from data refreshed overnight, instead of waiting 24 hours per order.
+- **One view in the room.** Clients projected the dashboards in presentations instead of passing around printouts.
+- **A centerpiece of sales demos.** The dashboards featured in new-client conversations.
+- **A system that held.** The design system absorbed a mid-project rebrand and cut QA bugs by about 25%.
 
 ## Reflection
 
-### Design for the decision before it becomes urgent
+### Fewer patterns, faster adoption
 
-I designed for the meeting people were already having. The natural next move is to design for the decision before it becomes urgent: predictive enrollment forecasting and KPI email alerts, so the dashboard pushes the signal instead of waiting to be opened. That was backlog when I left, and it's where I'd take it next.
-
-### Limiting interaction patterns accelerated adoption
-
-A few well-designed, familiar patterns got executives productive faster than a richer, more flexible toolkit would have.
+A few familiar patterns got users working sooner than a richer toolkit would have. Swapping the licensed slider for a standard calendar picker is the clearest example.
