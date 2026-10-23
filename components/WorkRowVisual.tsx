@@ -1,7 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type ComponentType, useEffect, useState } from "react";
 import type { WorkVisual } from "@/lib/work";
+import MachineStatePanel from "@/components/work/MachineStatePanel";
+
+/** Live product slices a row can show in place of a still or a clip. */
+const LIVE: Record<string, ComponentType> = {
+  "machine-state": MachineStatePanel,
+};
 
 /**
  * A work row's visual: a silent looping clip, or the styled "Visual pending"
@@ -29,18 +35,29 @@ export default function WorkRowVisual({ visual }: { visual?: WorkVisual }) {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  if (!visual) {
-    return (
-      <div className="relative flex aspect-video items-center justify-center rounded-lg border border-border bg-surface transition-colors group-hover:border-border-strong">
-        <span className="font-mono text-xs uppercase tracking-[0.1em] text-fg-muted">
-          Visual pending
-        </span>
-        <span
-          className="absolute left-4 top-4 h-2 w-2 rounded-full bg-accent"
-          aria-hidden="true"
-        />
-      </div>
-    );
+  const pending = (
+    <div className="relative flex aspect-video items-center justify-center rounded-lg border border-border bg-surface transition-colors group-hover:border-border-strong">
+      <span className="font-mono text-xs uppercase tracking-[0.1em] text-fg-muted">
+        Visual pending
+      </span>
+      <span
+        className="absolute left-4 top-4 h-2 w-2 rounded-full bg-accent"
+        aria-hidden="true"
+      />
+    </div>
+  );
+
+  if (!visual) return pending;
+
+  /*
+    A live slice carries its own frame, sizing and reduced-motion handling —
+    it is a piece of the product, not an asset dropped into the row's frame.
+    An unrecognised name renders nothing here and falls through to the
+    placeholder above on the next pass, so a typo is never a broken row.
+  */
+  if (visual.type === "live") {
+    const Live = LIVE[visual.component];
+    return Live ? <Live /> : pending;
   }
 
   const portrait = visual.orientation === "portrait";

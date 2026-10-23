@@ -77,16 +77,70 @@ export default function WorkRow({ item }: { item: WorkItem }) {
           </p>
         ) : null}
 
+        {/*
+          A line of figures under the blurb, in the same mono face as the
+          eyebrow above the title. It sits below rather than replacing the
+          blurb, because a count of states is the shape of the work, not an
+          outcome the blurb could be dropped for.
+        */}
+        {item.statLine && (
+          <p className="mt-3 font-mono text-xs uppercase tracking-[0.08em] text-fg-muted">
+            {item.statLine}
+          </p>
+        )}
+
+        {/*
+          A button rather than a bare link: outlined at rest, filled in the
+          accent on hover.
+
+          Square-ish at 4px rather than the nav Contact button's pill. A pill
+          is the shape Machine State UI gives a state badge — something being
+          reported — and this is a control, something to press. The nav and
+          About buttons keep their pills.
+
+          The whole hover is driven by `group-hover` — the row's hover, not
+          the button's. The whole row is one click target via the stretched
+          link below, so lighting the button only when the cursor is over the
+          button itself would under-report what is actually clickable.
+        */}
         <Link
           href={`/work/${item.slug}`}
-          className="mt-6 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.06em] text-accent after:absolute after:inset-0 after:content-['']"
+          className="mt-6 inline-flex items-center rounded-[4px] border border-border-strong px-5 py-2.5 font-mono text-xs uppercase tracking-[0.06em] text-fg transition-colors after:absolute after:inset-0 after:content-[''] group-hover:border-accent group-hover:bg-accent group-hover:text-accent-fg motion-reduce:transition-none"
         >
-          Case study
+          <span className="inline-flex items-center gap-1.5">
+            {/*
+              A status lamp, borrowed from Machine State UI's own vocabulary:
+              dim at rest, lit and glowing when the row is hovered. It is
+              decoration here rather than a reading — nothing about the case
+              study is being reported — so it carries no state colour of its
+              own and is hidden from assistive technology.
+            */}
+            <span
+              aria-hidden="true"
+              className="h-1.5 w-1.5 rounded-full bg-fg-muted transition-[background-color,box-shadow] group-hover:bg-accent-fg group-hover:shadow-[0_0_7px_1px_color-mix(in_srgb,var(--accent-fg)_55%,transparent)] motion-reduce:transition-none"
+            />
+            Case study
+          </span>
+
+          {/*
+            The arrow is not there at rest. On hover its slot opens and the
+            arrow slides out of it, left to right, so it reads as coming out
+            from behind the words rather than fading in beside them.
+
+            The slot clips, which is what sells it: the arrow travels from
+            fully outside the slot's left edge — under the end of the label —
+            to its resting place, and is never seen crossing the text. The
+            button widens as the slot opens, which nothing else depends on,
+            because the row's layout is a column and the button is the last
+            thing in it.
+          */}
           <span
             aria-hidden="true"
-            className="transition-transform group-hover:translate-x-0.5"
+            className="inline-flex w-0 justify-end overflow-hidden transition-[width] duration-200 ease-out group-hover:w-5 motion-reduce:transition-none"
           >
-            →
+            <span className="-translate-x-full transition-transform duration-200 ease-out group-hover:translate-x-0 motion-reduce:transition-none">
+              →
+            </span>
           </span>
         </Link>
       </div>

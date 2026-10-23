@@ -8,10 +8,10 @@ order: 2
 name: "Common Project"
 tag: "Real-Time AI"
 role: "Lead AI Product Designer (design, system architecture, NLP pipeline)"
-title: "From client's words to a live map, so the coach can stay present."
+title: "From client’s words to a live map, so the coach can stay present."
 who: "Executive and solutions-focused coaches, and, downstream, the AI systems that need structured conversational state rather than raw transcripts"
-what: "A real-time NLP web app built on the Zoom API that extracts client phrases as they're spoken, maps them spatially on a conversation quadrant, and lets the coach override any placement"
-summary: "A real-time prototype for executive coaches that reads the session transcript as it's generated, plots client phrases on a quadrant, and lets the coach override any placement. In coach testing, coaches stayed fully present, while the system maps the conversation, and captures client language."
+what: "A real-time NLP web app built on the Zoom API that extracts client phrases as they’re spoken, maps them spatially on a conversation quadrant, and lets the coach override any placement"
+summary: "A real-time prototype for executive coaches that reads the session transcript as it’s generated, plots client phrases on a quadrant, and lets the coach override any placement. In coach testing, coaches stayed fully present, while the system maps the conversation, and captures client language."
 heroPending: "The live canvas: client phrases mapped across the four quadrants mid-session. The product in one image."
 status: "working prototype, validated in coach testing. Extraction, mapping, and coach override are live. The learning loop is in active testing."
 stats:
@@ -41,7 +41,7 @@ The foundation is the Dialogic Orientation Quadrant, developed by [Haesun Moon](
 
 **My role:** lead AI product designer, and the person who built it. I owned the system architecture, UX, behavioral design, and the NLP pipeline.
 
-**The real question wasn't how to transcribe a session better. It was how to make what matters visible in real time, readable in a glance, so the coach's attention stays with the client.**
+**The real question wasn’t how to transcribe a session better. It was how to make what matters visible in real time, readable in a glance, so the coach’s attention stays with the client.**
 
 *[Visual: The quadrant model: the Dialogic Orientation Quadrant, adapted for real-time extraction.]*
 
@@ -53,21 +53,21 @@ Make the meaningful parts of a conversation visible as they happen, without cost
 - **Trust in what they saw:** classifications they could check and override, not a black box telling them what a client meant.
 - **A glance, not a study:** something they could orient to in about two seconds before returning to the person in front of them.
 
-All of it had to hold up in a high-risk setting. Classifying a person's words in a live, quasi-therapeutic conversation means a confident wrong call doesn't just annoy the user. It breaks the trust the whole tool depends on.
+All of it had to hold up in a high-risk setting. Classifying a person’s words in a live, quasi-therapeutic conversation means a confident wrong call doesn’t just annoy the user. It breaks the trust the whole tool depends on.
 
 ## Approach
 
 ### 1. The system proposes, the coach decides
 
-The system reads the session transcript as it's generated, extracts client phrases, and places them on the quadrant. The coach sees every placement and can move any phrase to a different quadrant with a tap. This is the constraint that makes an AI tool usable in a human moment.
+The system reads the session transcript as it’s generated, extracts client phrases, and places them on the quadrant. The coach sees every placement and can move any phrase to a different quadrant with a tap. This is the constraint that makes an AI tool usable in a human moment.
 
-Phrases reach the map about 6 seconds after they're spoken early in a session. That lag grows as the conversation gets longer and varies with the language model used, which is part of why the map is designed for occasional glances, not constant watching.
+Phrases reach the map about 6 seconds after they’re spoken early in a session. That lag grows as the conversation gets longer and varies with the language model used, which is part of why the map is designed for occasional glances, not constant watching.
 
 *[Visual: A phrase with its confidence score and override control.]*
 
 ### 2. Every placement can be traced
 
-Each extracted phrase carries a visible confidence score and a classification path the coach can follow. No black-box summaries. A coach can always see why something surfaced, and reject it if it doesn't fit.
+Each extracted phrase carries a visible confidence score and a classification path the coach can follow. No black-box summaries. A coach can always see why something surfaced, and reject it if it doesn’t fit.
 
 ### 3. Only confident reads reach the map
 
@@ -81,15 +81,15 @@ What persists is what mattered: extracted phrases, their placements, confidence 
 
 ### 5. Every correction teaches the system
 
-Override isn't only a safety rail. When a coach moves a phrase, or highlights something in the transcript the system missed, that correction becomes training signal. The coach staying in charge is the same act that improves the model.
+Override isn’t only a safety rail. When a coach moves a phrase, or highlights something in the transcript the system missed, that correction becomes training signal. The coach staying in charge is the same act that improves the model.
 
-This part is designed and partially built. I'm testing different approaches to see which one improves classification without eroding the coach's trust in the map. I'd rather test which direction is right than ship a guess.
+This part is designed and partially built. I’m testing different approaches to see which one improves classification without eroding the coach’s trust in the map. I’d rather test which direction is right than ship a guess.
 
 ### 6. A quiet signal shows where the conversation is heading
 
-The canvas shows where phrases landed. The next layer shows where the conversation is going. As a session develops, the system recalculates the conversation's center of gravity and shows it as a soft heat zone on the quadrant, so a coach can tell at a glance whether the dialogue is drifting from struggle toward preferred future.
+The canvas shows where phrases landed. The next layer shows where the conversation is going. As a session develops, the system recalculates the conversation’s center of gravity and shows it as a soft heat zone on the quadrant, so a coach can tell at a glance whether the dialogue is drifting from struggle toward preferred future.
 
-It is deliberately quiet, a single soft gradient rather than a busy heat map, because ambient awareness only helps if it doesn't pull the coach off the client. And it sits on top of the phrase data rather than replacing it: the individual phrases stay the source of truth.
+It is deliberately quiet, a single soft gradient rather than a busy heat map, because ambient awareness only helps if it doesn’t pull the coach off the client. And it sits on top of the phrase data rather than replacing it: the individual phrases stay the source of truth.
 
 This layer is designed and next on the build list.
 
@@ -106,7 +106,7 @@ This layer is designed and next on the build list.
 
 ## Reflection
 
-### The real product wasn't transcription. It was structured meaning with a human in charge.
+### The real product wasn’t transcription. It was structured meaning with a human in charge.
 
 A transcript records what was said. Conversational state captures what mattered, in what context, and how often. Common Project is the layer that converts one into the other without taking the decision away from the human.
 

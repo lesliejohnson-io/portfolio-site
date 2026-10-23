@@ -5,8 +5,9 @@ import { useChartWidth } from "./useChartWidth";
 
 /**
  * Answer time per question against the participant's own pace band, drawn as
- * the panel a researcher would see on the clinic dashboard — the same surface
- * as the laptop in the hero, so the case study and the artwork agree.
+ * a card from the same family as the journey and service maps earlier in the
+ * page: slate panel, teal ramp, sans labels. It was previously styled as an
+ * instrument readout, which read as machinery beside artwork that is warm.
  *
  * Bars, not a line: each question is a discrete event the tablet timed, and a
  * bar reads as "this one took longer" where a line implies a continuous
@@ -112,12 +113,14 @@ export default function FatigueChart({
   const y = (seconds: number) => pad.top + plotH - (seconds / yMax) * plotH;
   const slot = plotW / session.length;
   /*
-    Narrow bars, read as instrument ticks rather than as blocks of area: the
-    eye follows the profile of the row the way it would a trace on a monitor.
-    8px flat, except where the slot itself is narrower than that on a phone —
-    there the bars would touch, so they give up 2px to keep the gaps.
+    Columns with a soft top, matching the bars in the maps, rather than the
+    narrow crisp ticks this used to draw. 11px, except where the slot itself
+    is narrower on a phone — there the bars would touch, so they give up 3px
+    to keep the gaps.
   */
-  const barW = Math.min(8, slot - 2);
+  const barW = Math.min(11, slot - 3);
+  /* Capped at half the width so a very short bar never reads as a lozenge. */
+  const barR = Math.min(3, barW / 2);
   const x = (i: number) => pad.left + slot * i + (slot - barW) / 2;
 
   const yTicks = Array.from({ length: yMax / 5 + 1 }, (_, i) => i * 5);
@@ -194,7 +197,7 @@ export default function FatigueChart({
             Fatigue detection across one survey session
           </title>
           <desc id="fc-desc">
-            Answer time per question compared with the participant&apos;s own
+            Answer time per question compared with the participant’s own
             pace. The first eleven questions sit inside the pace band at three
             to six seconds. Times then climb through questions twelve to
             sixteen, from about nine seconds to a peak of fourteen, with
@@ -248,6 +251,7 @@ export default function FatigueChart({
                 y={y(point.seconds)}
                 width={barW}
                 height={barH}
+                rx={barR}
                 className="chart-bar"
                 /* Each bar grows from its own baseline, left to right. */
                 style={
@@ -260,7 +264,10 @@ export default function FatigueChart({
             );
           })}
 
-          {/* Check-in: an ink triangle above the bar that triggered it. */}
+          {/*
+            Check-in: a triangle above the bar that triggered it, pointing
+            down at it. The key's swatch is flipped to match.
+          */}
           {session.map((point, i) =>
             point.checkIn ? (
               <polygon

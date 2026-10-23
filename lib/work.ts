@@ -21,6 +21,13 @@ export type WorkItem = {
   result?: string;
   /** A one-line descriptive card blurb, used when there's no hard metric to lead with. */
   summary?: string;
+  /**
+   * A short line of figures under the blurb on the work row, e.g.
+   * "5 states · 3 viewing distances". For work whose shape is the point
+   * rather than an outcome metric — `result` leads instead of the blurb,
+   * where this sits under it. Omit it and nothing renders.
+   */
+  statLine?: string;
   /** Shown in the "Selected case studies" set on the home page. */
   featured?: boolean;
   /**
@@ -117,6 +124,16 @@ export type WorkVisual =
       src: string;
       orientation?: "portrait" | "landscape";
       alt?: string;
+    }
+  /*
+    A working slice of the product itself, rather than a picture of it. The
+    component is named rather than imported, because frontmatter is data: the
+    name is resolved against a small registry in WorkRowVisual, so an unknown
+    name falls back to the pending placeholder instead of breaking the build.
+  */
+  | {
+      type: "live";
+      component: "machine-state";
     };
 
 const WORK_DIR = path.join(process.cwd(), "content", "work");

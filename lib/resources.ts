@@ -93,7 +93,8 @@ export const resources: Resource[] = [
     meta: "After Joseph Schumpeter · 1942",
     title: "Progress comes from new systems replacing old ones. Every wave of technology destroys the way things were done before.",
     quote: "Progress comes from new systems replacing old ones. Every wave of technology destroys the way things were done before.",
-    attribution: 'On "creative destruction", Joseph Schumpeter, Capitalism, Socialism and Democracy, 1942',
+    attribution:
+      "Paraphrased from Joseph Schumpeter on “creative destruction,” Capitalism, Socialism and Democracy, 1942",
     note: "",
     href: "https://en.wikiquote.org/wiki/Joseph_Schumpeter",
   },

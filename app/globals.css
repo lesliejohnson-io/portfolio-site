@@ -47,6 +47,26 @@
     but the tint is kept low so the pills stay quiet.
   */
   --accent-soft: color-mix(in srgb, var(--accent) 8%, var(--bg));
+  /*
+    The fatigue panel is drawn to sit with the journey and service maps
+    earlier in the Field Guide case study, so it borrows their palette
+    instead of the page's chart defaults: the slate panel, the teal ramp,
+    the near-black ink.
+
+    Set once and NOT redefined per theme, for the same reason as
+    --video-mat: the maps are fixed artwork that stays light on both
+    themes, and a panel built to match them has to stay light with them.
+    Contrast is checked inside the panel, where ink on slate is 10.2:1 and
+    the teal marks are 3.8:1 -- AA for text and for graphical objects.
+  */
+  --map-panel: #e2e8f0;
+  --map-panel-edge: #cbd5e1;
+  --map-hairline: #e5e7eb;
+  --map-ink: #333333;
+  --map-ink-soft: #525252;
+  --map-teal: #2e7e96;
+  --map-teal-deep: #1b4551;
+  --map-teal-muted: #66a1ac;
   color-scheme: light;
 }
 
@@ -372,7 +392,7 @@
   font-style: italic;
   font-size: 1.625rem;
   line-height: 1.3;
-  /* Tracking matches the Resources quotes — one face, one setting. */
+  /* Tracking matches the Library quotes — one face, one setting. */
   letter-spacing: -0.02em;
   color: var(--fg);
   margin-bottom: 1.75rem;
@@ -740,6 +760,28 @@
 
 .prose-v2 h2 + h3 {
   margin-top: 0;
+}
+
+/*
+  A small subhead: a heading that labels a group of items rather than making a
+  claim, so it reads as a label and leaves the h2 above it carrying the
+  section. Set in the mono label face the site uses for metadata, and kept at
+  an h3 so the heading order holds.
+*/
+.prose-v2 h3.subhead-sm {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 2.25rem 0 0.875rem;
+  color: var(--fg-secondary);
+}
+
+/* The first label sits straight under the stat row it belongs to. */
+.prose-v2 dl + h3.subhead-sm {
+  margin-top: 2rem;
 }
 
 .prose-v2 p {
@@ -1436,25 +1478,19 @@
 /* ---------- Fatigue detection panel ---------- */
 
 /*
-  The chart is framed as the panel a researcher sees on the clinic dashboard,
-  matching the laptop in the hero: a raised surface, hairline border, mono
-  labels, and the session's readings beside the title.
+  The chart is framed as a card from the same family as the journey and
+  service maps earlier in the page: slate panel, soft radius, sans labels,
+  generous padding. It used to be styled as an instrument readout -- mono
+  everything, hairline rules, crisp-edged ticks -- which read as machinery
+  beside artwork that is deliberately warm.
 */
 .fatigue-panel {
   margin: 1.5rem 0 2rem;
-  padding: 1.25rem;
-  border: 1px solid var(--border-strong);
-  border-radius: 0.25rem;
-  background: var(--bg-raised);
-}
-
-/*
-  A ruled header band, the way a readout on an instrument is ruled off from
-  its controls.
-*/
-.fatigue-panel-head {
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.875rem;
+  padding: 1.5rem;
+  border: 1px solid var(--map-panel-edge);
+  border-radius: 0.75rem;
+  background: var(--map-panel);
+  color: var(--map-ink);
 }
 
 .fatigue-panel-head {
@@ -1463,71 +1499,68 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--map-panel-edge);
 }
 
 .fatigue-eyebrow {
   margin: 0 0 0.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--map-ink-soft);
 }
 
 .fatigue-title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  /* 600, not 700: the maps title their panels in a medium, not a bold. */
+  font-weight: 600;
   letter-spacing: -0.01em;
-  color: var(--fg);
+  color: var(--map-ink);
 }
 
-/* The readings. Tabular figures so the three sit in an even row. */
+/*
+  Three separate chips, the way the maps set a value off from its row,
+  rather than one block divided by hairlines. Tabular figures stay: that is
+  legibility for a row of numbers, not instrument styling.
+*/
 .fatigue-readings {
   display: flex;
-  gap: 1px;
+  gap: 0.5rem;
   margin: 0;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: 0.125rem;
-  overflow: hidden;
 }
 
-/* Hairline rules between the gauges come from the 1px grid gap showing through. */
 .fatigue-readings div {
   margin: 0;
-  padding: 0.3125rem 0.625rem;
-  background: var(--accent-soft);
+  padding: 0.4375rem 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--map-hairline);
   text-align: right;
 }
 
 .fatigue-readings dt {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--map-ink-soft);
 }
 
 .fatigue-readings dd {
   margin: 0.125rem 0 0;
-  font-family: var(--font-mono);
-  font-size: 1.0625rem;
-  font-weight: 500;
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
-  color: var(--fg);
+  color: var(--map-ink);
 }
 
 .fatigue-caption {
-  margin-top: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
+  margin-top: 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--map-ink-soft);
 }
 
 .chart-axis-label {
@@ -1537,10 +1570,13 @@
   letter-spacing: 0.06em;
 }
 
-/* Square ends and no anti-aliased edge: a tick, not a rounded block. */
+/*
+  Soft-topped columns. These were 3px crisp-edged ticks meant to read like a
+  trace on a monitor; rounded and widened, they read as the maps' own bars.
+  The radius comes from `rx` on the rect, in the component.
+*/
 .chart-bar {
   fill: var(--chart-accent);
-  shape-rendering: crispEdges;
 }
 
 /* The band's upper edge, so the threshold reads as a line, not just a wash. */
@@ -1552,17 +1588,94 @@
 }
 
 .chart-key-bar {
-  width: 3px;
+  width: 10px;
   height: 12px;
+  border-radius: 3px 3px 0 0;
   background: var(--chart-accent);
 }
 
+/*
+  Every mark inside the panel is repainted from the map palette. Scoped to
+  .fatigue-panel so the other charts on the site keep the page's own chart
+  tokens and stay theme-aware.
+*/
+.fatigue-panel .chart-key {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--map-ink-soft);
+}
+
+.fatigue-panel .chart-axis-text,
+.fatigue-panel .chart-axis-label {
+  fill: var(--map-ink-soft);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.fatigue-panel .chart-grid-line {
+  stroke: var(--map-panel-edge);
+}
+
+.fatigue-panel .chart-band {
+  fill: var(--map-teal);
+  opacity: 0.12;
+}
+
+.fatigue-panel .chart-band-edge {
+  stroke: var(--map-teal);
+  opacity: 0.6;
+}
+
+.fatigue-panel .chart-bar {
+  fill: var(--map-teal);
+}
+
+/*
+  The check-in marker and the replay tick stay shape-distinguished rather
+  than hue-distinguished, as before -- only the ink changes, because the
+  panel no longer follows the theme and var(--fg) would go near-white on it.
+*/
+.fatigue-panel .chart-checkin {
+  fill: var(--map-teal-deep);
+  stroke: var(--map-panel);
+}
+
+.fatigue-panel .chart-replay-tick {
+  stroke: var(--map-ink-soft);
+}
+
+.fatigue-panel .chart-key-bar {
+  background: var(--map-teal);
+}
+
+.fatigue-panel .chart-key-band {
+  background: color-mix(in srgb, var(--map-teal) 12%, var(--map-panel));
+  outline: 1px solid var(--map-teal-muted);
+}
+
+.fatigue-panel .chart-key-triangle {
+  border-top-color: var(--map-teal-deep);
+}
+
+.fatigue-panel .chart-key-tick {
+  background: var(--map-ink-soft);
+}
+
+/*
+  Points DOWN, matching the marker in the chart, whose apex sits below its
+  two upper corners and hangs over the bar that triggered the check-in. A
+  border-bottom triangle points up, which is what this used to be.
+*/
 .chart-key-triangle {
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-bottom: 8px solid var(--chart-flag);
+  border-top: 8px solid var(--chart-flag);
 }
 
 /*

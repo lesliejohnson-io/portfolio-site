@@ -26,7 +26,7 @@ const archivo = Archivo({
 
 /*
   The site's only serif, replacing Newsreader: the About lead paragraph at 400
-  and the Working Library quotes on Resources at 600. Italic only — both uses
+  and the pull quotes on the Library page at 600. Italic only — both uses
   are italic, so there is no reason to ship the upright faces. Both weights are
   loaded rather than leaving the browser to synthesize the heavier one: faux
   bold smears a high-contrast serif like this, thickening the hairlines along

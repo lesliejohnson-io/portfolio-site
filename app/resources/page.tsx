@@ -8,7 +8,7 @@ import ResourceCard from "@/components/ResourceCard";
 import { resources } from "@/lib/resources";
 
 export const metadata: Metadata = {
-  title: "Working Library — Leslie Johnson",
+  title: "Library — Leslie Johnson",
   description:
     "The papers, books, and tools behind the work: human-machine trust, autonomy, and interface design for AI systems.",
 };
@@ -109,7 +109,7 @@ export default function ResourcesPage() {
     <div className="container-wide pb-24 pt-16 sm:pt-20">
       <header className="max-w-2xl">
         <h1 className="font-display text-4xl font-bold leading-[1.1] tracking-[-0.02em] text-fg sm:text-5xl">
-          Working Library
+          Library
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-fg-secondary">
           The papers, books, and tools behind the work: human-machine trust,

@@ -5,13 +5,13 @@ const channels = [
     num: "01",
     tag: "Systems",
     statement: "I think in systems.",
-    body: "I design the relationships between people, machines, information, and decisions, then look for where they'll break.",
+    body: "I design the relationships between people, machines, information, and decisions, then look for where they’ll break.",
   },
   {
     num: "02",
     tag: "Behavior",
     statement: "I design for behavior.",
-    body: "Interfaces don't just deliver information. They shape attention, confidence, and action. I design for cognitive load, calibrated trust, and decisions made under pressure.",
+    body: "Interfaces don’t just deliver information. They shape attention, confidence, and action. I design for cognitive load, calibrated trust, and decisions made under pressure.",
   },
   {
     num: "03",

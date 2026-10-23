@@ -1,0 +1,225 @@
+/*
+  Machine State UI — the UNIT-01 panel, ported from Leslie's library at
+  github.com/lesliejohnson-io/machine-ui (src/tokens.css, StatusIndicator.css,
+  and the hero-machine block in docs.css).
+
+  The tokens are scoped to .frame rather than :root on purpose, and that is
+  the library's own stated principle: the five state colours are the only
+  saturated hues on screen, so colour always means machine state and never
+  decoration. Letting them reach :root would put them one typo away from the
+  site's chrome. They are product artwork, like the Field Guide maps, so they
+  do not change between light and dark — an operator panel is dark in both.
+*/
+.frame {
+  --surface-0: #0e1520;
+  --surface-1: #16202c;
+  --line: #263445;
+  --text-hi: #d8e1ea;
+  --text-low: #8295a8;
+
+  --state-operational: #2fbf71;
+  --state-warning: #e8b93e;
+  --state-degraded: #e87d3e;
+  --state-fault: #e8484f;
+  --state-offline: #8296a8;
+
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/*
+  The enclosure is a photograph of a real industrial HMI: stainless mounting
+  rails, a bezel, and hard controls including an emergency stop. It sets the
+  frame's size, as the still branch of WorkRowVisual does, rather than being
+  fitted into a 16:9 box — letterboxing a photograph that already has its own
+  margins would crop the rails off the thing the row is meant to show.
+
+  Its background is opaque and light, so like the Field Guide maps it stays
+  light in both themes. It is fixed artwork, not site chrome.
+*/
+.enclosure {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/*
+  The live app, laid over the panel's glass. The inset is measured from the
+  artwork itself — the glass runs x 139-484 and y 106-299 of the 624x412
+  image — so the overlay tracks the photograph at any width. Re-measure these
+  four numbers if the photograph is ever replaced.
+*/
+.screen {
+  position: absolute;
+  left: 22.28%;
+  top: 25.97%;
+  width: 55.45%;
+  height: 46.6%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-0);
+  overflow: hidden;
+  /*
+    Sizing in container units rather than viewport units ties the app to the
+    screen it is drawn on: the readings keep their proportions against the
+    bezel whatever width the row is given.
+  */
+  container-type: size;
+}
+
+/*
+  The app's own inset lives here rather than on .screen. Container units are
+  resolved against the nearest ANCESTOR container, so cqh on .screen -- the
+  container itself -- looked outward, found none, and fell back to viewport
+  units: a top padding of 13% of the window, which pushed the app off the
+  bottom of the glass. Inside .panel the same units resolve against .screen,
+  which is what they were meant to measure.
+*/
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6cqh;
+  width: 100%;
+  padding: 0 5cqw;
+  color: var(--text-hi);
+}
+
+.id {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: 7.6cqw;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 3cqw;
+  line-height: 1.4;
+  color: var(--text-low);
+}
+
+/*
+  The badge at the library's `lg` size — wall-display scale, where the text
+  label is mandatory. It is the one element the row has to carry from across
+  a room, which is the claim the case study makes.
+*/
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  align-self: flex-start;
+  padding: 0.4em 0.9em;
+  border: 0.5cqw solid color-mix(in srgb, var(--c) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--c) 12%, transparent);
+  color: var(--c);
+  font-family: var(--font-mono);
+  font-size: 5.6cqw;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.badgeLabel {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge[data-state="OPERATIONAL"] {
+  --c: var(--state-operational);
+}
+.badge[data-state="WARNING"] {
+  --c: var(--state-warning);
+}
+.badge[data-state="DEGRADED"] {
+  --c: var(--state-degraded);
+}
+.badge[data-state="FAULT"] {
+  --c: var(--state-fault);
+}
+.badge[data-state="OFFLINE"] {
+  --c: var(--state-offline);
+}
+
+/* Motion is reserved for FAULT alone, so motion always means "act". */
+.pulse {
+  animation: badge-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--c) 45%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+/*
+  Four columns rather than a wrapping row. On the library's full-width docs
+  header the readings sit in one line beside the badge; on a tablet screen
+  that line has to wrap, and wrapping by content length stranded LINK alone
+  on a row of its own. A fixed four-up grid keeps the readings as one block
+  whatever the width, which is also how an operator scans them.
+*/
+.vitals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3cqw;
+  width: 100%;
+}
+
+.vital {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.vitalLabel {
+  font-family: var(--font-mono);
+  font-size: 2.8cqw;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  color: var(--text-low);
+}
+
+.vitalValue {
+  font-family: var(--font-mono);
+  font-size: 5.2cqw;
+  font-weight: 500;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.vitalValue {
+  white-space: nowrap;
+}
+
+/*
+  "stale 1.2s" is the one reading long enough to wrap its column, which would
+  nudge the centred block every time the link dropped. It is already the
+  dimmed state, so it takes a smaller size with it rather than reflowing.
+*/
+.vitalDim .vitalValue {
+  font-size: 3.4cqw;
+  color: var(--text-low);
+}
+
+/*
+  The simulation is already frozen under reduced motion — the interval never
+  starts — so this covers the one thing left that moves: FAULT's pulse, which
+  can be reached by the seed reading only if the panel renders one.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+}

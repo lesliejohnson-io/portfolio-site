@@ -14,7 +14,7 @@ export default function AboutPhoto() {
     <figure className="about-portrait">
       <Image
         src="/images/operator-portrait.webp"
-        alt="Leslie Johnson against a technical grid, the left half a photograph and the right half a machine's wireframe reading of her, labelled HUMAN and MACHINE, with a readout giving state operational, attention high, and trust calibrated."
+        alt="Leslie Johnson against a technical grid, the left half a photograph and the right half a machine’s wireframe reading of her, labelled HUMAN and MACHINE, with a readout giving state operational, attention high, and trust calibrated."
         width={1024}
         height={1024}
         sizes="(min-width: 768px) 442px, 100vw"

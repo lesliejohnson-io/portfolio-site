@@ -9,15 +9,17 @@ tag: "Agentic AI · Fintech"
 role: "Sole Product Designer"
 title: "From 24-hour report orders to self-serve dashboards"
 deck: "Self-serve financial dashboards for university finance teams. Collection agency placements, now recommended by an AI agent."
-who: "University administrators and financial officers who manage student loan portfolios at ECSI's client institutions"
+who: "University administrators and financial officers who manage student loan portfolios at ECSI’s client institutions"
 what: "Self-serve financial dashboards replacing a 24-hour report order cycle, plus an agentic rebuild of collection agency placement"
 summary: "Self-serve financial dashboards for university finance teams. Report orders stopped and client NPS rose from 42 to 74. Agency placement, now rebuilt with AI."
-heroPending: "The placement agent's recommendation for one account. The university's selected agencies ranked on compliance, data security, and collection performance, each with a confidence score and a short rationale. Approve and Override controls."
+heroPending: "The placement agent’s recommendation for one account. The university’s selected agencies ranked on compliance, data security, and collection performance, each with a confidence score and a short rationale. Approve and Override controls."
 stats:
-  - value: "42 → 74"
-    label: "Client NPS"
-  - value: "24 hrs → 0"
-    label: "Wait for a report"
+  - value: "100%"
+    label: "Client adoption"
+  - value: "38%"
+    label: "Fewer support tickets"
+  - value: "+32"
+    label: "Point increase in client NPS"
 ---
 
 {/*
@@ -45,9 +47,9 @@ stats:
   appears on the page at all. Note that this leaves the home row, /work row
   and related cards identifying the study by its outcome line only.
 
-  Neither stat carries a `caption`. StatRow renders a value and label alone
-  rather than inventing a measurement note, so the rows are honest as they
-  stand — but neither figure says how it was measured, and the layout doc
+  None of the three stats carries a `caption`. StatRow renders a value and
+  label alone rather than inventing a measurement note, so the rows are honest
+  as they stand — but no figure says how it was measured, and the layout doc
   wants that on the Outcomes row. Captions still to supply.
 
   Hero: no asset exists yet, so `heroPending` describes it and the sized
@@ -69,7 +71,7 @@ Every answer started with a form. A client ordered a report online, ECSI staff r
 
 Orders peaked at the start and end of each semester, when clients needed answers fastest and ECSI staff had the least time to give.
 
-A report answered only the question asked when it was ordered. Clients couldn't:
+A report answered only the question asked when it was ordered. Clients couldn’t:
 
 - Change a date range or filter without ordering again
 - Drill down from a total to the accounts behind it
@@ -81,13 +83,13 @@ A report answered only the question asked when it was ordered. Clients couldn't:
 
 In meetings, the reports came apart. Everyone brought their own printout, and the conversation scattered across different pages.
 
-**My role:** Sole designer, from discovery through delivery. I led research, prototyping, and testing, working with a PM, two client advisors, a marketing director, and two developers. The client advisors were my line to what clients wanted. Their relationships opened doors I couldn't have opened cold.
+**My role:** Sole designer, from discovery through delivery. I led research, prototyping, and testing, working with a PM, two client advisors, a marketing director, and two developers. The client advisors were my line to what clients wanted. Their relationships opened doors I couldn’t have opened cold.
 
-**The data was there. Clients couldn't work with it, and they couldn't see it together.**
+**The data was there. Clients couldn’t work with it, and they couldn’t see it together.**
 
 ## Objective
 
-Put the data in clients' hands. Dashboards refreshed overnight as accounts reconciled, so each morning clients could filter, drill down from totals to accounts, look up a single account, and put one shared view in front of the room.
+Put the data in clients’ hands. Dashboards refreshed overnight as accounts reconciled, so each morning clients could filter, drill down from totals to accounts, look up a single account, and put one shared view in front of the room.
 
 Three constraints shaped every decision:
 
@@ -97,7 +99,7 @@ Three constraints shaped every decision:
 
 {/* Caption: "From a 24-hour order cycle to data waiting every morning." · Source: rebuild in Figma. · First to cut if the page feels heavy. */}
 
-*[Visual: Two panels side by side. Left, "Before": order form, 24-hour wait, static file. Right, "After": data refreshed overnight, dashboard ready every morning, filter, drill down, look up an account.]*
+*[Visual: Two panels side by side. Left, “Before”: order form, 24-hour wait, static file. Right, “After”: data refreshed overnight, dashboard ready every morning, filter, drill down, look up an account.]*
 
 ## Approach
 
@@ -107,7 +109,7 @@ Discovery drew on report-order history, reprint requests, support tickets, clien
 
 ### 2. Five reports carried most of the demand
 
-Most orders came down to five reports. Each became a dashboard with one job. Everything else moved to self-serve ad hoc reports, off ECSI's queue. Account lookup was a requirement from day one. Drill-down from totals to accounts followed in a later release.
+Most orders came down to five reports. Each became a dashboard with one job. Everything else moved to self-serve ad hoc reports, off ECSI’s queue. Account lookup was a requirement from day one. Drill-down from totals to accounts followed in a later release.
 
 The rule: **one dashboard, one story.** Each screen makes a single argument instead of crowding every metric onto the page.
 
@@ -129,7 +131,7 @@ It paid off twice. When the rebrand hit mid-project, it changed once, at the sys
 
 Sessions included client staff, client leads, and ECSI internal staff. Two changes came straight out of them.
 
-**Navigation moved to the left column.** The first build ran the five report areas as tabs across the top. Eye-tracking showed users weren't finding them. They went looking for navigation somewhere else entirely. The problem was the mental model, not the labels. Retesting found where users expected it: in the left column, directly under the product name. That's where it went.
+**Navigation moved to the left column.** The first build ran the five report areas as tabs across the top. Eye-tracking showed users weren’t finding them. They went looking for navigation somewhere else entirely. The problem was the mental model, not the labels. Retesting found where users expected it: in the left column, directly under the product name. That’s where it went.
 
 {/* Caption: "Users missed the top tabs. They looked for navigation under the product name." · Source: original heatmap if found; the navigation before-and-after can be rebuilt in Figma. */}
 
@@ -143,7 +145,7 @@ Sessions included client staff, client leads, and ECSI internal staff. Two chang
 
 ### 5. Print in one click
 
-Paper wasn't going away, so every dashboard got a print button. One click sent the current view to a preformatted page and printed it. No rebuilding, no reformatting.
+Paper wasn’t going away, so every dashboard got a print button. One click sent the current view to a preformatted page and printed it. No rebuilding, no reformatting.
 
 {/* Caption: "The live view, print-ready in one click." · Source: original screenshot if found, otherwise rebuild in Figma. */}
 
@@ -153,15 +155,15 @@ Paper wasn't going away, so every dashboard got a print button. One click sent t
 
 When an account goes to collections, the university chooses the agency, working from its own short list.
 
-Agency performance began as a report on amounts collected. The rebuild is a placement agent. It gathers data on each of the university's selected agencies, reviews the borrower's history and balance, and ranks the agencies on compliance, data security, and collection performance.
+Agency performance began as a report on amounts collected. The rebuild is a placement agent. It gathers data on each of the university’s selected agencies, reviews the borrower’s history and balance, and ranks the agencies on compliance, data security, and collection performance.
 
-Every recommendation carries a confidence score and a rationale. A person at the university approves it or overrides it. When confidence is low, the agent doesn't guess. It marks the account Needs human review.
+Every recommendation carries a confidence score and a rationale. A person at the university approves it or overrides it. When confidence is low, the agent doesn’t guess. It marks the account Needs human review.
 
 {/* Caption: "When the agent isn't sure, it says so and hands the decision to a person." · Source: new build, synthetic data. */}
 
-*[Visual: An account flagged "Needs human review." Low confidence score, the rationale explaining what made the recommendation uncertain, and controls for a person to choose the agency.]*
+*[Visual: An account flagged “Needs human review.” Low confidence score, the rationale explaining what made the recommendation uncertain, and controls for a person to choose the agency.]*
 
-Built on synthetic data modeled on ECSI's reporting.
+Built on synthetic data modeled on ECSI’s reporting.
 
 ## Key decisions and trade-offs
 
@@ -177,10 +179,25 @@ Built on synthetic data modeled on ECSI's reporting.
 
 <StatRow />
 
-- **Report orders stopped.** Clients answered their own questions from data refreshed overnight, instead of waiting 24 hours per order.
+{/*
+  "For ECSI" and "For clients" are written as JSX rather than `###` so they can
+  carry the small-subhead class — markdown has no way to set one. They stay
+  h3s, which keeps the heading order under the h2 above them.
+*/}
+
+<h3 className="subhead-sm">For ECSI</h3>
+
+- **Staff time back.** About 20 staff hours a month no longer went to running and uploading reports by hand, including during the semester rushes when staff were stretched thinnest.
+- **Support tickets down 38%.** With answers in the dashboards, clients needed support less often for reports and report fixes.
+- **A feature sales could show.** The dashboards became a centerpiece of sales demos in new-client conversations.
+- **Less time spent on fixes.** The design system absorbed a mid-project rebrand and cut QA bugs by about 25%.
+
+<h3 className="subhead-sm">For clients</h3>
+
+- **Every client on board.** All client institutions adopted the dashboards.
+- **No more waiting.** Data refreshed overnight replaced the 24-hour order cycle.
 - **One view in the room.** Clients projected the dashboards in presentations instead of passing around printouts.
-- **A centerpiece of sales demos.** The dashboards featured in new-client conversations.
-- **A system that held.** The design system absorbed a mid-project rebrand and cut QA bugs by about 25%.
+- **Higher satisfaction.** Client NPS rose 32 points, from 42 to 74.
 
 ## Reflection
 

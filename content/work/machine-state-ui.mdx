@@ -1,0 +1,55 @@
+---
+slug: "machine-state-ui"
+layout: "v2"
+featured: true
+order: 4
+name: "Machine State UI"
+category: "Design system · Open source"
+tag: "Design system · Open source"
+title: "One language for machine state"
+who: "Operators who have to read machine state at a glance, on a dashboard or from across a warehouse floor"
+what: "A component library for machine state: five states, three viewing distances, and escalation rules built in, demonstrated on a simulated machine"
+summary: "Five states every operator can read at a glance, from across a warehouse floor or on a dashboard. A component library with escalation rules built in, demonstrated on a simulated machine that drifts, faults, and drops offline."
+statLine: "5 states · 3 viewing distances"
+status: "v0.1, in progress. StatusIndicator and TelemetryCard are documented and running against the live simulation; AlertBanner, StateTimeline and FleetGrid are still to land."
+heroPending: "The five states side by side at all three sizes, beside the live UNIT-01 simulation mid-fault."
+visual:
+  type: "live"
+  component: "machine-state"
+---
+
+{/*
+  Added 2026-10-23, replacing Synapse in the featured four. The card copy —
+  title, summary and statLine — is Leslie's, verbatim from her brief.
+
+  Everything else in the frontmatter is transcribed from her own live demo at
+  https://machine-ui-kappa.vercel.app/ : the five state names, the three sizes
+  and their viewing distances, the shipped and in-progress components. Nothing
+  here is inferred beyond that page and her brief.
+
+  THE BODY IS NOT WRITTEN. Leslie supplied the home card only, so every
+  section below is a bracketed placeholder, which the case study template
+  renders as a visible "still to supply" block rather than as prose. The page
+  builds and the row links to it, but it must not go live in this state.
+
+  The row's visual is the live UNIT-01 panel, rebuilt as a local component
+  from Leslie's own source rather than iframed from the deployed demo, at her
+  direction. See components/work/MachineStatePanel.tsx for what was ported
+  and what was changed.
+*/}
+
+## Context
+
+[Context: what operators were reading before, and why machine state needed one language across robotics, drones and industrial systems.]
+
+## Objective
+
+[Objective, plus the constraints the library had to meet.]
+
+## Approach
+
+[The work, as numbered claim-led steps: the five-state model, the escalation rules, the three viewing distances, and the simulated machine the components are documented against.]
+
+## Outcomes
+
+[What came of it.]
