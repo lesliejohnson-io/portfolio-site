@@ -1,18 +1,25 @@
 ---
 slug: "client-portal"
 layout: "v2"
-category: "Agentic AI · Fintech"
+category: "Product Design · Fintech"
 featured: true
 order: 3
 name: "Client Portal"
-tag: "Agentic AI · Fintech"
+tag: "Product Design · Fintech"
 role: "Sole Product Designer"
-title: "From 24-hour report orders to self-serve dashboards"
-deck: "Self-serve financial dashboards for university finance teams. Collection agency placements, now recommended by an AI agent."
+title: "Financial Dashboards: Putting the data in clients’ hands"
+deck: "Self-serve dashboards that let university finance teams answer their own questions, plus a concept extension where an AI agent recommends collection-agency placements."
 who: "University administrators and financial officers who manage student loan portfolios at ECSI’s client institutions"
 what: "Self-serve financial dashboards replacing a 24-hour report order cycle, plus an agentic rebuild of collection agency placement"
 summary: "Self-serve financial dashboards for university finance teams. Report orders stopped and client NPS rose from 42 to 74. Agency placement, now rebuilt with AI."
+hero: "/work/client-portal/resolved-accounts-hero.png"
+heroBackground: "#f2f2ef"
+heroAlt: "A desktop dashboard and a phone side by side, both showing the portal’s Resolved Accounts view for Portland State University. The desktop view has three summary tiles — a 32.3% resolved rate, $416.4K resolved amount and 308 resolved accounts — above a twelve-month stacked bar chart, with a tooltip on May 2022 reading 64 accounts placed, 26 resolved, a 40.6% resolved rate and a $35,230.00 resolved balance, and a Data Summary table of monthly placements below. The phone shows the same view stacked: date range, the three tiles, the chart, then the first months of the summary as cards. The sidebar lists Resolved, Active, Agency and Payment Accounts under RECOVERY Pro, with REFUND Pro beneath."
 heroPending: "The placement agent’s recommendation for one account. The university’s selected agencies ranked on compliance, data security, and collection performance, each with a confidence score and a short rationale. Approve and Override controls."
+visual:
+  type: "image"
+  src: "/work/client-portal/resolved-accounts-hero.png"
+  alt: "A desktop dashboard and a phone side by side, both showing the portal’s Resolved Accounts view for Portland State University. The desktop view has three summary tiles — a 32.3% resolved rate, $416.4K resolved amount and 308 resolved accounts — above a twelve-month stacked bar chart, with a tooltip on May 2022 reading 64 accounts placed, 26 resolved, a 40.6% resolved rate and a $35,230.00 resolved balance, and a Data Summary table of monthly placements below. The phone shows the same view stacked: date range, the three tiles, the chart, then the first months of the summary as cards. The sidebar lists Resolved, Active, Agency and Payment Accounts under RECOVERY Pro, with REFUND Pro beneath."
 stats:
   - value: "100%"
     label: "Client adoption"
@@ -23,9 +30,21 @@ stats:
 ---
 
 {/*
-  Copy replaced wholesale 2026-10-22 from Leslie's revised handoff. Every
-  sentence is hers, used verbatim; the section labels, the bullet and table
-  formatting, and the visual placeholders are mine.
+  Copy replaced wholesale 2026-10-26 from
+  `public/work/client-portal/client-portal-case-study.md`. Every sentence is
+  Leslie's, used verbatim; the section labels, the bullet and table
+  formatting, and the visual placeholders are mine. This supersedes the
+  2026-10-22 handoff. What changed in this pass: the competitive pressure
+  paragraph and the six-week timeline in Context, bolded lead-ins on the
+  Objective constraints, a rewritten design-system step (Axure is now the
+  component library and Angular/Storybook the build, it "paid off three ways"
+  rather than twice, and accessible colour and type is called out), and the
+  placement agent reframed from a "rebuild" to a "concept extension".
+
+  The source file's title, category and deck were all applied afterwards, at
+  Leslie's direction on 2026-10-26, so the page header now matches the
+  source file end to end. `summary` is the one string that does not — see
+  the note below.
 
   `summary` is deliberately NOT the same as `deck`. It still carries the
   earlier wording, because it feeds a different surface — the home and /work
@@ -34,33 +53,68 @@ stats:
   string on this page that no longer matches the revised copy. Flagged, not
   changed.
 
-  CLAUDE.md hard rule 2 still says this study's outcome figures were softened
-  to qualitative claims and that numbers must not be reintroduced. The handoff
-  reintroduces them (NPS 42 → 74, about 25% fewer QA bugs), so that rule is
-  out of date and needs editing to match.
+  `deck` now calls the placement agent a concept extension, matching what
+  the body says twice. `summary` still says "Agency placement, now rebuilt
+  with AI", which reads as shipped. That string feeds the home and /work
+  row blurb and this page's meta description, so the cards still oversell
+  what exists. Flagged, not changed.
 
-  The title carries no product name — it is the outcome line alone, at
-  Leslie's direction. `name` stays "Client Portal" per CLAUDE.md hard rule 3:
-  it is the real name of this ECSI surface and it renders nowhere in the
-  current components, so it is accurate metadata rather than page copy. The
-  body refers to the product only as "its client platform", so no name
-  appears on the page at all. Note that this leaves the home row, /work row
-  and related cards identifying the study by its outcome line only.
+  CLAUDE.md hard rule 2 still says this study's outcome figures were softened
+  to qualitative claims and that numbers must not be reintroduced. The source
+  file reintroduces them (NPS 42 → 74, about 25% fewer QA bugs), so that rule
+  is out of date and needs editing to match.
+
+  `title`, `category` and `deck` are the source file's own, applied
+  2026-10-26 at Leslie's direction, replacing the outcome-only title and
+  the earlier deck. `tag` holds the same string as `category`: it is the
+  row eyebrow to the pill's label, and the two have always matched here.
+
+  `name` stays "Client Portal" per CLAUDE.md hard rule 3. It is the real
+  name of this ECSI surface and it renders nowhere in the current
+  components, so it is accurate metadata rather than page copy. The title
+  now leads with "Financial Dashboards", which describes the work rather
+  than naming the product; the body still refers to it only as "its client
+  platform", so the ECSI product name appears nowhere on the page.
+
+  `category` no longer says "Agentic AI". The pill and the row eyebrow now
+  read as product design work, which is what the deck and the body both
+  describe — the agent is the last step of six and a concept. The three
+  now point the same way.
 
   None of the three stats carries a `caption`. StatRow renders a value and
   label alone rather than inventing a measurement note, so the rows are honest
   as they stand — but no figure says how it was measured, and the layout doc
   wants that on the Outcomes row. Captions still to supply.
 
-  Hero: no asset exists yet, so `heroPending` describes it and the sized
-  placeholder renders instead. The caption it should get once the artwork
-  lands: "The agent ranks the agencies and explains why. A person makes the
-  call." Source: new build, synthetic data.
+  Hero: the asset Leslie supplied is resolved-accounts-hero.png — the
+  Resolved Accounts dashboard, not the placement agent screen that
+  `heroPending` describes. It is wired up as the hero as supplied;
+  `heroPending` is left in place because it still describes the agent
+  visual that has not landed, and it is inert now that `hero` is set.
+  The artwork is 4200x2880 (1.46:1) on its own #f2f2ef field, so
+  `heroBackground` is set to that value: the image is contained at the page
+  column and the band carries the same colour to both edges. Without it the
+  frame would crop a 2:1 window out of the composition and cut the table.
+  Source: new build, synthetic data.
+
+  The row `visual` points at that same file, so the home row, /work row and
+  the related-study card show what the page's hero shows. Its `alt` is the
+  hero's, repeated verbatim — the same picture should not get two different
+  descriptions. Field Guide does the same.
+
+  Step 5, "Print in one click", and its visual were cut on 2026-10-26 at
+  Leslie's direction, and the step that followed renumbered to 5 and
+  retitled "predictive placements". The Approach now runs 1-5. The source
+  file still carries the print step, so it and this page have diverged
+  there. The Objective still lists paper as a constraint, which is true of
+  the project whether or not the step describing the answer is on the page.
 
   Every in-body visual below is a placeholder. The comment above each one
   carries the caption it should get once the asset exists, plus where that
-  asset comes from. Two are marked in the handoff as the first and second to
-  cut if the page runs long.
+  asset comes from. Per the source file's convention, a visual rebuilt in
+  Figma rather than recovered from the original work gets "Recreated from the
+  original." appended to its caption. Two are marked in the source as the
+  first and second to cut if the page runs long.
 */}
 
 ## Context
@@ -77,13 +131,27 @@ A report answered only the question asked when it was ordered. Clients couldn’
 - Drill down from a total to the accounts behind it
 - Look up a single account
 
-{/* Caption: "One wrong parameter, and the 24-hour cycle started over." · Source: rebuild in Figma. */}
+{/*
+  The first slot with real artwork. `wide` rather than the body column: at
+  680px the step labels in a 1818px-wide diagram fall below legible size.
+  Source: rebuild in Figma. The caption is the one written for this visual
+  in the source file, unchanged.
+*/}
 
-*[Visual: A simple flow diagram of the old process. Online order form → ECSI runs the report in house → file uploaded 24 hours later → wrong parameter → order again (loop arrow back to the start).]*
+<Figure
+  src="/work/client-portal/old-process-flow.png"
+  alt="A four-step flow diagram headed “Before · how a report was ordered.” Step 01, the client, is an online order form. Step 02, ECSI, is the report run in house. Step 03, 24 hours later, is the file uploaded. Step 04, the client again, is a wrong parameter, outlined in red. From it a red dashed line labelled “Order again” loops back to the first step, returning the client to the order form."
+  caption="One wrong parameter, and the 24-hour cycle started over."
+  width="1818"
+  height="728"
+  wide
+/>
 
 In meetings, the reports came apart. Everyone brought their own printout, and the conversation scattered across different pages.
 
-**My role:** Sole designer, from discovery through delivery. I led research, prototyping, and testing, working with a PM, two client advisors, a marketing director, and two developers. The client advisors were my line to what clients wanted. Their relationships opened doors I couldn’t have opened cold.
+Meanwhile, competitors had started giving their clients dashboards. ECSI leadership made catching up a priority.
+
+**My role:** Sole designer, from discovery through delivery. I led research, prototyping, and testing, working with a PM, two client advisors, a marketing director, and two developers. The client advisors were my line to what clients wanted. Their relationships opened doors I couldn’t have opened cold. Discovery to launch of the first dashboards took about six weeks.
 
 **The data was there. Clients couldn’t work with it, and they couldn’t see it together.**
 
@@ -93,9 +161,9 @@ Put the data in clients’ hands. Dashboards refreshed overnight as accounts rec
 
 Three constraints shaped every decision:
 
-- A legacy data model, to design within, not around.
-- A corporate rebrand that landed mid-project.
-- Paper. Reports still circulated in print, so every dashboard had to print cleanly.
+- **A legacy data model**, to design within, not around.
+- **A corporate rebrand** that landed mid-project.
+- **Paper.** Reports still circulated in print, so every dashboard had to print cleanly.
 
 {/* Caption: "From a 24-hour order cycle to data waiting every morning." · Source: rebuild in Figma. · First to cut if the page feels heavy. */}
 
@@ -119,13 +187,36 @@ The rule: **one dashboard, one story.** Each screen makes a single argument inst
 
 ### 3. One unified design system replaced outdated styles
 
-On mobile, the platform loaded outdated styles. Tracing the problem turned up so many conflicting style sheets that none could be trusted. The answer was one system: shared styles and components, built in Angular and documented in Storybook, so design and development worked from the same source. Prototypes lived in Axure, where interactions could be coded and tested before development.
+On mobile, the platform loaded outdated styles. Tracing the problem turned up so many conflicting style sheets that none could be trusted. The answer was one system: a component library built in Axure, where interactions could be coded and tested before development. Developers built the components in Angular and documented them in Storybook, so design and code worked from the same source.
 
-It paid off twice. When the rebrand hit mid-project, it changed once, at the system level, not page by page. And with design and code sharing components, QA bugs fell by about 25%.
+It paid off three ways. When the rebrand hit mid-project, it changed once, at the system level, not page by page. Every color and type combination was verified as accessible. And with design and code sharing components, QA bugs fell by about 25%.
 
-{/* Caption: "One source of truth for design and code. The rebrand changed once." · Source: original Storybook screenshot if found, otherwise rebuild in Figma. */}
+{/*
+  `background` is not optional here: the sheet is exported with a
+  transparent page, and its type is Ink 900. Without a mat the dark theme
+  would render near-black text on a near-black page. White is the ground it
+  was composed on — its own cards and controls are #FFFFFF.
 
-*[Visual: Core components of the design system as documented in Storybook (buttons, cards, tables, chart containers, form controls), shown in the post-rebrand styling.]*
+  `wide` plus `expandable`: at 3200x5132 this is the one asset no page
+  width can show in full. At the 1000px breakout the four section headings
+  and the swatch names read, which is what makes it worth showing inline;
+  the specs need the click, and `expandable` is a real link to the file, so
+  it still works with JavaScript off.
+
+  Caption as written for this visual in the source file, including the
+  "Recreated from the original." the source appends to a Figma rebuild.
+*/}
+
+<Figure
+  src="/work/client-portal/dashboard-design-system.png"
+  alt="A design system sheet headed “RECOVERY Pro · Design System: colors, type, and components”, noting that every example on it comes from the Resolved Accounts dashboard. Section 01, Color, holds fifteen named swatches with their hex values and the role each plays, among them Navy 800 #243B64 for the sidebar and mobile header, Blue 600 #3A63B4 for the search field outline, Green 500 #10C878 for the resolved segment, Cyan 500 #18C5EE for the unresolved segment, Ink 900 #1E2430 for primary text and Page 50 #EEF1F7 for the page background. Section 02, Typography, is a table of eight roles against a sample and a spec, set in Open Sans with a 75% condensed width for labels, running from the 27px bold KPI value through page and card titles, body and table figures, nav items, and 12px meta and axis type. Section 03, Components, shows six annotated specimens — a KPI card, the controls row with its date-range field, a chart tooltip, the left navigation with its product groups, a 100% stacked bar chart, and the mobile month card with its notification badge — each carrying its measurements, with the data table and its header fill and row height beneath them. Section 04, Surfaces and spacing, gives three corner radii for controls, cards and overlays, and the spacing scale 17, 18, 24, 44, 52."
+  caption="One source of truth for design and code. The rebrand changed once. Recreated from the original Axure system."
+  width="3200"
+  height="5132"
+  background="#ffffff"
+  wide
+  expandable
+/>
 
 ### 4. Testing changed two core patterns
 
@@ -143,27 +234,19 @@ Sessions included client staff, client leads, and ECSI internal staff. Two chang
 
 *[Visual: Small side-by-side. Left: the licensed slider for selecting a date range. Right: the standard calendar picker that replaced it.]*
 
-### 5. Print in one click
-
-Paper wasn’t going away, so every dashboard got a print button. One click sent the current view to a preformatted page and printed it. No rebuilding, no reformatting.
-
-{/* Caption: "The live view, print-ready in one click." · Source: original screenshot if found, otherwise rebuild in Figma. */}
-
-*[Visual: A dashboard with its print button highlighted, next to the preformatted print page it produces.]*
-
-### 6. From reporting on collections to recommending placements
+### 5. From reporting on collections to predictive placements
 
 When an account goes to collections, the university chooses the agency, working from its own short list.
 
-Agency performance began as a report on amounts collected. The rebuild is a placement agent. It gathers data on each of the university’s selected agencies, reviews the borrower’s history and balance, and ranks the agencies on compliance, data security, and collection performance.
+At ECSI, agency performance shipped as reporting on amounts collected. The concept extension is a placement agent. It gathers data on each of the university’s selected agencies, reviews the borrower’s history and balance, and ranks the agencies on compliance, data security, and collection performance.
 
-Every recommendation carries a confidence score and a rationale. A person at the university approves it or overrides it. When confidence is low, the agent doesn’t guess. It marks the account Needs human review.
+Every recommendation carries a confidence score and a rationale. A person at the university approves it or overrides it. When confidence is low, the agent doesn’t guess. It marks the account **Needs human review**.
 
 {/* Caption: "When the agent isn't sure, it says so and hands the decision to a person." · Source: new build, synthetic data. */}
 
 *[Visual: An account flagged “Needs human review.” Low confidence score, the rationale explaining what made the recommendation uncertain, and controls for a person to choose the agency.]*
 
-Built on synthetic data modeled on ECSI’s reporting.
+A concept, built on synthetic data modeled on ECSI’s reporting.
 
 ## Key decisions and trade-offs
 
@@ -173,7 +256,7 @@ Built on synthetic data modeled on ECSI’s reporting.
 | Five dashboards, everything else ad hoc | Five reports carried most of the demand | Clients ran one-off reports themselves |
 | Navigation in the left column, under the product name | Eye-tracking showed users missed the top tabs | Retesting confirmed it was where users looked |
 | Calendar picker over the licensed slider | The slider was slow, imprecise, and unfamiliar | Easier to use; a pattern users already knew |
-| One design system in Angular and Storybook | Conflicting style sheets broke the mobile view | Rebrand applied once; about 25% fewer QA bugs |
+| One design system, built in Axure | Conflicting style sheets broke the mobile view | Rebrand applied once; accessible color and type; about 25% fewer QA bugs |
 
 ## Outcomes & Impact
 

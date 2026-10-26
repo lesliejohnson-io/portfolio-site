@@ -10,7 +10,6 @@ title: "One language for machine state"
 who: "Operators who have to read machine state at a glance, on a dashboard or from across a warehouse floor"
 what: "A component library for machine state: five states, three viewing distances, and escalation rules built in, demonstrated on a simulated machine"
 summary: "Five states every operator can read at a glance, from across a warehouse floor or on a dashboard. A component library with escalation rules built in, demonstrated on a simulated machine that drifts, faults, and drops offline."
-statLine: "5 states · 3 viewing distances"
 status: "v0.1, in progress. StatusIndicator and TelemetryCard are documented and running against the live simulation; AlertBanner, StateTimeline and FleetGrid are still to land."
 heroPending: "The five states side by side at all three sizes, beside the live UNIT-01 simulation mid-fault."
 visual:
@@ -20,7 +19,13 @@ visual:
 
 {/*
   Added 2026-10-23, replacing Synapse in the featured four. The card copy —
-  title, summary and statLine — is Leslie's, verbatim from her brief.
+  title and summary — is Leslie's, verbatim from her brief.
+
+  The `statLine` that sat under the blurb ("5 states · 3 viewing
+  distances") was removed on 2026-10-26 at Leslie's direction. It was the
+  only study using that field; WorkRow renders nothing when it is absent,
+  so the field stays in the type for a later row to use. Both figures are
+  still in `summary` and `what`.
 
   Everything else in the frontmatter is transcribed from her own live demo at
   https://machine-ui-kappa.vercel.app/ : the five state names, the three sizes
