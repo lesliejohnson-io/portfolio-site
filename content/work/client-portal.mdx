@@ -3,7 +3,7 @@ slug: "client-portal"
 layout: "v2"
 category: "Product Design · Fintech"
 featured: true
-order: 3
+order: 4
 name: "Client Portal"
 tag: "Product Design · Fintech"
 role: "Sole Product Designer"
@@ -12,13 +12,17 @@ deck: "Self-serve dashboards that let university finance teams answer their own 
 who: "University administrators and financial officers who manage student loan portfolios at ECSI’s client institutions"
 what: "Self-serve financial dashboards replacing a 24-hour report order cycle, plus an agentic rebuild of collection agency placement"
 summary: "Self-serve financial dashboards for university finance teams. Report orders stopped and client NPS rose from 42 to 74. Agency placement, now rebuilt with AI."
-hero: "/work/client-portal/resolved-accounts-hero.png"
-heroBackground: "#f2f2ef"
+hero: "/work/client-portal/resolved-accounts-hero-transparent.png"
+# The artwork carries its own alpha now, so the full-bleed band has no colour
+# to match. Kept rather than dropped because the flag is what makes the hero
+# contain rather than crop, and drops the frame's border and rounding — a
+# border would otherwise be drawn around the mockup's transparent surround.
+heroBackground: "transparent"
 heroAlt: "A desktop dashboard and a phone side by side, both showing the portal’s Resolved Accounts view for Portland State University. The desktop view has three summary tiles — a 32.3% resolved rate, $416.4K resolved amount and 308 resolved accounts — above a twelve-month stacked bar chart, with a tooltip on May 2022 reading 64 accounts placed, 26 resolved, a 40.6% resolved rate and a $35,230.00 resolved balance, and a Data Summary table of monthly placements below. The phone shows the same view stacked: date range, the three tiles, the chart, then the first months of the summary as cards. The sidebar lists Resolved, Active, Agency and Payment Accounts under RECOVERY Pro, with REFUND Pro beneath."
 heroPending: "The placement agent’s recommendation for one account. The university’s selected agencies ranked on compliance, data security, and collection performance, each with a confidence score and a short rationale. Approve and Override controls."
 visual:
   type: "image"
-  src: "/work/client-portal/resolved-accounts-hero.png"
+  src: "/work/client-portal/resolved-accounts-hero-transparent.png"
   alt: "A desktop dashboard and a phone side by side, both showing the portal’s Resolved Accounts view for Portland State University. The desktop view has three summary tiles — a 32.3% resolved rate, $416.4K resolved amount and 308 resolved accounts — above a twelve-month stacked bar chart, with a tooltip on May 2022 reading 64 accounts placed, 26 resolved, a 40.6% resolved rate and a $35,230.00 resolved balance, and a Data Summary table of monthly placements below. The phone shows the same view stacked: date range, the three tiles, the chart, then the first months of the summary as cards. The sidebar lists Resolved, Active, Agency and Payment Accounts under RECOVERY Pro, with REFUND Pro beneath."
 stats:
   - value: "100%"
@@ -86,15 +90,17 @@ stats:
   as they stand — but no figure says how it was measured, and the layout doc
   wants that on the Outcomes row. Captions still to supply.
 
-  Hero: the asset Leslie supplied is resolved-accounts-hero.png — the
-  Resolved Accounts dashboard, not the placement agent screen that
+  Hero: the asset Leslie supplied is resolved-accounts-hero-transparent.png
+  — the Resolved Accounts dashboard, not the placement agent screen that
   `heroPending` describes. It is wired up as the hero as supplied;
   `heroPending` is left in place because it still describes the agent
   visual that has not landed, and it is inert now that `hero` is set.
-  The artwork is 4200x2880 (1.46:1) on its own #f2f2ef field, so
-  `heroBackground` is set to that value: the image is contained at the page
-  column and the band carries the same colour to both edges. Without it the
-  frame would crop a 2:1 window out of the composition and cut the table.
+  The artwork is 4200x2880 (1.46:1) with its own alpha, replacing the
+  earlier flat version on a #f2f2ef field on 2026-10-27. `heroBackground`
+  is now "transparent" rather than that colour: it still has to be set,
+  because it is what makes the hero contain rather than crop a 2:1 window
+  out of the composition, and what drops the frame's border and rounding —
+  a border would otherwise be drawn around the mockup's empty surround.
   Source: new build, synthetic data.
 
   The row `visual` points at that same file, so the home row, /work row and

@@ -1,26 +1,20 @@
-<svg width="185" height="166" viewBox="0 0 185 166" fill="none" xmlns="http://www.w3.org/2000/svg">
-<style>
-  .icon-shape { fill: #1C212E; }
-  @media (prefers-color-scheme: dark) {
-    .icon-shape { fill: #F4F3EF; }
-  }
-</style>
-<g clip-path="url(#clip0_2845_17)">
-<circle class="icon-shape" cx="99.5" cy="74.5" r="29.5"/>
-<circle class="icon-shape" cx="35" cy="39" r="15"/>
-<circle class="icon-shape" cx="15" cy="151" r="15"/>
-<circle class="icon-shape" cx="100" cy="143" r="15"/>
-<circle class="icon-shape" cx="165" cy="104" r="15"/>
-<circle class="icon-shape" cx="170" cy="15" r="15"/>
-<rect class="icon-shape" x="95" y="98" width="7" height="42"/>
-<rect class="icon-shape" x="117" y="85.2743" width="7" height="42" transform="rotate(-63.6801 117 85.2743)"/>
-<rect class="icon-shape" x="44.1948" y="46.6647" width="7" height="42" transform="rotate(-61.9577 44.1948 46.6647)"/>
-<rect class="icon-shape" x="121.271" y="60.1705" width="7" height="66.1045" transform="rotate(-127.597 121.271 60.1705)"/>
-<rect class="icon-shape" x="18.0439" y="153.124" width="7" height="91.2745" transform="rotate(-132.884 18.0439 153.124)"/>
-</g>
-<defs>
-<clipPath id="clip0_2845_17">
-<rect width="185" height="166" fill="white"/>
-</clipPath>
-</defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-107.38 -91.77 205.38 205.38">
+<!--
+  One flat colour: the light-theme highlight teal, the same #12A594 that
+  LogoMark lights its nearest nodes with on light. No depth ramp and no
+  prefers-color-scheme variant, so the mark reads as a single silhouette
+  wherever a browser puts it.
+-->
+<style>.n{fill:#12A594}.l{stroke:#12A594;stroke-linecap:round}</style>
+<circle class="n" cx="-57.82" cy="54.49" r="15.26"/>
+<line class="l" x1="0.00" y1="0.00" x2="-57.82" y2="54.49" stroke-width="15.08"/>
+<circle class="n" cx="74.13" cy="11.57" r="16.26"/>
+<line class="l" x1="0.00" y1="0.00" x2="74.13" y2="11.57" stroke-width="15.54"/>
+<circle class="n" cx="0.00" cy="0.00" r="33.92"/>
+<line class="l" x1="0.00" y1="0.00" x2="-1.45" y2="75.31" stroke-width="16.09"/>
+<circle class="n" cx="-1.45" cy="75.31" r="17.45"/>
+<line class="l" x1="0.00" y1="0.00" x2="-81.49" y2="-20.71" stroke-width="16.48"/>
+<circle class="n" cx="-81.49" cy="-20.71" r="18.28"/>
+<line class="l" x1="0.00" y1="0.00" x2="60.39" y2="-51.42" stroke-width="17.05"/>
+<circle class="n" cx="60.39" cy="-51.42" r="19.51"/>
 </svg>

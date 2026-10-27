@@ -41,6 +41,24 @@
   */
   --video-mat: #111111;
   /*
+    The hero wave. The band, the strip behind the floating nav that carries it
+    up to the top of the page, and the mesh itself all read from here;
+    WaveHero.tsx parses these straight into THREE colours, so the CSS band and
+    the WebGL clear colour cannot drift apart.
+
+    Unlike --video-mat this IS redefined per theme. On light the band is the
+    page background, so the hero reads as the page rather than a panel laid on
+    it, and the mesh inverts to dark ink: deep navy valleys rising to a dark
+    teal at the peaks. The line opacities go up with it — ink at 0.42 on
+    near-white is a grey haze, where the same figure on near-black is a clean
+    lit line.
+  */
+  --wave-hero-bg: #fafaf8;
+  --wave-hero-low: #152a4d;
+  --wave-hero-high: #0b6357;
+  --wave-hero-line-strong: 0.62;
+  --wave-hero-line-soft: 0.26;
+  /*
     A lit indicator lamp. Set once and NOT redefined per theme, for the same
     reason as --video-mat: a lamp that is on is brighter than whatever it
     sits on, in both themes. Deriving it from --accent-fg looked right on the
@@ -101,6 +119,11 @@
   --accent-fg: #0b0d10;
   --error: #f0736d;
   --error-fg: #16181c;
+  --wave-hero-bg: #05090d;
+  --wave-hero-low: #1f3f8f;
+  --wave-hero-high: #2ee6c8;
+  --wave-hero-line-strong: 0.42;
+  --wave-hero-line-soft: 0.15;
   color-scheme: dark;
 }
 
@@ -118,6 +141,7 @@
   --color-error: var(--error);
   --color-error-fg: var(--error-fg);
   --color-video-mat: var(--video-mat);
+  --color-wave-hero-bg: var(--wave-hero-bg);
   --color-accent-soft: var(--accent-soft);
 
   /*

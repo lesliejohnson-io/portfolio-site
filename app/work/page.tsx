@@ -18,7 +18,7 @@ export default function WorkPage() {
           Work
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-fg-secondary">
-          Every case study, most recent work first.
+          Relevant case studies.
         </p>
       </header>
 

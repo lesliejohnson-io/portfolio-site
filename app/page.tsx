@@ -1,4 +1,5 @@
 import Link from "next/link";
+import WaveHero from "@/components/WaveHero";
 import WorkRow from "@/components/WorkRow";
 import { getFeaturedWorkItems } from "@/lib/work";
 
@@ -8,41 +9,26 @@ export default function Home() {
   return (
     <>
       {/*
-        The hero sits on its own tinted band. The colour runs edge to edge
-        while the text stays in the page column, so the band reads as part of
-        the page rather than a boxed-in panel. `--surface` is the same tone as
-        the footer, which bookends the page.
+        WaveHero carries its own band, column and headline, so it sits outside
+        container-wide and replaces the tinted hero that used to be here.
       */}
-      <div className="relative bg-surface">
+      <div className="relative">
         {/*
           Carries the band up behind the floating nav, which is a sticky
           sibling above this page in the layout and so can't be reached from
-          here directly. An extension sitting entirely above the band covers
-          that strip without a hardcoded nav height; overflow past the top of
-          the document isn't scrollable, so nothing moves.
+          here directly. It has to live out here rather than inside WaveHero,
+          which clips its own overflow to keep the mesh inside the band.
+
+          An extension sitting entirely above the band covers that strip
+          without a hardcoded nav height; overflow past the top of the
+          document isn't scrollable, so nothing moves. The nav is z-30 and
+          this is not positioned above it, so it paints behind the bar.
         */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh] bg-surface"
+          className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh] bg-wave-hero-bg"
         />
-        <div className="container-wide">
-          {/*
-            Compact hero — headline plus one supporting line only, kept short
-            so the first case study row is visible on a ~1440x900 laptop
-            screen without scrolling.
-          */}
-          <section className="max-w-4xl pb-12 pt-16 sm:pb-16 sm:pt-20">
-            <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-[-0.02em] text-fg sm:text-6xl">
-              Intelligent systems
-              <br />
-              meet <span className="text-accent">human design.</span>
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-secondary">
-              I turn complex systems into interfaces people can read, trust,
-              and act on.
-            </p>
-          </section>
-        </div>
+        <WaveHero />
       </div>
 
       <div className="container-wide">

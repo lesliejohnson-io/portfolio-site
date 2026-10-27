@@ -16,6 +16,11 @@ import "./globals.css";
   Headline face. Loaded as a variable font, so one file covers every weight
   from 400 to 900 instead of shipping a separate file per weight. Italic is
   included for the hero's emphasized second line.
+
+  No `weight` array on purpose. Naming weights swaps the variable file for one
+  static instance per weight, which would cover 600/700/800 but drop the 500
+  that `h1`-`h4` default to in globals.css. The variable axis already serves
+  every weight WaveHero (700), LogoMark (600 and 800) and the headings ask for.
 */
 const archivo = Archivo({
   subsets: ["latin"],
@@ -71,7 +76,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${archivo.variable} ${cormorantGaramond.variable} ${sourceSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      {/*
+        Archivo's variable is redeclared here as well as on <html>. WaveHero and
+        LogoMark read `--font-archivo` through inline styles, so the variable is
+        pinned to the element they actually render inside.
+      */}
+      <body className={`${archivo.variable} min-h-full flex flex-col`}>
         <ThemeScript />
         <Nav />
         <main className="flex-1">{children}</main>

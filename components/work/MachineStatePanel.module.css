@@ -35,8 +35,10 @@
   fitted into a 16:9 box — letterboxing a photograph that already has its own
   margins would crop the rails off the thing the row is meant to show.
 
-  Its background is opaque and light, so like the Field Guide maps it stays
-  light in both themes. It is fixed artwork, not site chrome.
+  Its studio backdrop was knocked out on 2026-10-27, so the enclosure now
+  sits on whatever the page is: the light plate it used to carry read as a
+  bright box in the row on the dark theme. The hardware itself is still fixed
+  artwork and does not retheme — only the backdrop behind it is gone.
 */
 .enclosure {
   display: block;
