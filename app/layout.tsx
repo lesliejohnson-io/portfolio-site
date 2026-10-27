@@ -14,8 +14,12 @@ import "./globals.css";
 
 /*
   Headline face. Loaded as a variable font, so one file covers every weight
-  from 400 to 900 instead of shipping a separate file per weight. Italic is
-  included for the hero's emphasized second line.
+  from 400 to 900 instead of shipping a separate file per weight.
+
+  Upright only. Nothing on the site sets italic on `--font-display`: the italic
+  rules in globals.css are Cormorant on `--font-display-serif`, and the `em`
+  rules in prose run on the body face. Carrying the italic axis doubled the
+  font files fetched from Google at build time for a face nothing renders.
 
   No `weight` array on purpose. Naming weights swaps the variable file for one
   static instance per weight, which would cover 600/700/800 but drop the 500
@@ -24,7 +28,6 @@ import "./globals.css";
 */
 const archivo = Archivo({
   subsets: ["latin"],
-  style: ["normal", "italic"],
   variable: "--font-archivo",
   display: "swap",
 });
