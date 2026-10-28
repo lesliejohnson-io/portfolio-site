@@ -59,6 +59,41 @@
   --wave-hero-line-strong: 0.62;
   --wave-hero-line-soft: 0.26;
   /*
+    The hero field — the perspective wireframe and its machine-state nodes.
+    HeroField.tsx parses these straight into THREE colours, so the band, the
+    WebGL clear colour and the fog cannot drift apart, the same arrangement
+    --wave-hero-* uses.
+
+    Set once and NOT redefined per theme, unlike --wave-hero-*, and for a
+    mechanical reason rather than a stylistic one: the nodes are drawn with
+    additive blending, which adds light to whatever is behind it. On a dark
+    field that reads as a lit lamp; on near-white there is no headroom left
+    to add to and the nodes vanish. So the field stays dark on both palettes
+    and the hero reads as an instrument panel inset into the page. Same
+    precedent as --video-mat and --lamp-lit below.
+
+    --hero-field-line is DARKER than the bg on purpose: the grid is etched
+    into the field rather than drawn on top of it, and the nodes carry the
+    light. HeroField lerps from bg toward it by a depth fade, so the lines
+    dissolve at the front edge and at the horizon.
+  */
+  --hero-field-bg: #0a0f16;
+  --hero-field-line: #010101;
+  --hero-field-node: #2dd4bf;
+  --hero-field-node-hero: #38bdf8;
+  /*
+    Label type on the field. Both are measured against --hero-field-bg, not
+    against --bg: 13.9:1 for the signal text and 5.6:1 for the metric, so the
+    pair clears AA on the dark field in either theme.
+  */
+  --hero-field-label: #e8edf3;
+  --hero-field-metric: #8fa3b8;
+  /*
+    The hero subline, lighter than the label metric because it is reading
+    copy rather than a glanceable figure. 10.5:1 on --hero-field-bg.
+  */
+  --hero-field-subline: #c4cdd6;
+  /*
     A lit indicator lamp. Set once and NOT redefined per theme, for the same
     reason as --video-mat: a lamp that is on is brighter than whatever it
     sits on, in both themes. Deriving it from --accent-fg looked right on the
@@ -142,6 +177,10 @@
   --color-error-fg: var(--error-fg);
   --color-video-mat: var(--video-mat);
   --color-wave-hero-bg: var(--wave-hero-bg);
+  --color-hero-field-bg: var(--hero-field-bg);
+  --color-hero-field-label: var(--hero-field-label);
+  --color-hero-field-metric: var(--hero-field-metric);
+  --color-hero-field-subline: var(--hero-field-subline);
   --color-accent-soft: var(--accent-soft);
 
   /*
@@ -1762,4 +1801,129 @@
 :root[data-theme="dark"] .hero-glow {
   filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.5))
     drop-shadow(0 18px 48px color-mix(in srgb, var(--accent) 25%, transparent));
+}
+
+/*
+  The FAULT signal pulses, so a stopped machine reads as needing attention
+  rather than as another steady lamp. Lifted out of the hero prototype, which
+  injected these keyframes into document.head at runtime; the hero band is
+  part of the site now, so its one animation lives with the rest of them.
+
+  FAULT only. Every other state holds steady — a field where everything
+  blinks says nothing.
+*/
+@keyframes sigFault {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.sig-fault {
+  animation: sigFault 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sig-fault {
+    animation: none;
+  }
+}
+
+/*
+  The hero headline sits on a glass panel, so the signals drifting behind it
+  stay readable as texture instead of competing with the type. The
+  backdrop-filter blurs the label overlay underneath it (z-index 2) while the
+  panel itself rides at z-index 3.
+
+  The rgba() values stay literal rather than becoming tokens: they are white
+  at very low alpha, tuned against the dark field, and they mean the same
+  thing on both themes because the field itself does not flip.
+
+  box-sizing is explicit because the padding is large relative to the panel —
+  at phone width the max-width never applies and the padding has to come out
+  of the measured width, not get added to it.
+*/
+.hero-field-panel {
+  box-sizing: border-box;
+  max-width: 560px;
+  padding: 36px 40px;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.035),
+    rgba(255, 255, 255, 0.005)
+  );
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+  backdrop-filter: blur(6px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+/*
+  The hero has two layouts, and they are genuinely different arrangements
+  rather than one squeezed down.
+
+  Mobile first: the panel is a block in normal flow with the field below it,
+  so the headline is read against a flat background and the field is a
+  separate thing underneath. Full width inside 16px gutters, and the panel
+  drops its max-width so it fills them.
+
+  From 768px the panel lifts off and floats over the field again, which is
+  the arrangement the prototype had. The breakpoint matches Tailwind's md,
+  and HeroFieldCanvas re-initializes at the same width.
+*/
+.hero-field-stage {
+  position: relative;
+  height: 40vh;
+  min-height: 240px;
+}
+
+.hero-field-text {
+  position: relative;
+  z-index: 3;
+  padding-block: 2.5rem 2rem;
+}
+
+.hero-field .hero-field-text {
+  /* 16px gutters, overriding .container-wide's wider padding */
+  padding-inline: 16px;
+}
+
+@media (max-width: 767.98px) {
+  .hero-field-panel {
+    max-width: none;
+    padding: 24px;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-field {
+    min-height: 40vh;
+  }
+
+  .hero-field-stage {
+    position: absolute;
+    inset: 0;
+    height: auto;
+    min-height: 0;
+  }
+
+  .hero-field-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    min-height: 40vh;
+    padding-block: 0;
+    pointer-events: none;
+  }
+
+  .hero-field .hero-field-text {
+    padding-inline: clamp(1.5rem, 4vw, 4rem);
+  }
 }

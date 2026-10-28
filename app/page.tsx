@@ -1,5 +1,5 @@
 import Link from "next/link";
-import WaveHero from "@/components/WaveHero";
+import HeroField from "@/components/HeroField";
 import WorkRow from "@/components/WorkRow";
 import { getFeaturedWorkItems } from "@/lib/work";
 
@@ -9,27 +9,18 @@ export default function Home() {
   return (
     <>
       {/*
-        WaveHero carries its own band, column and headline, so it sits outside
+        HeroField carries its own band, column and headline, so it sits outside
         container-wide and replaces the tinted hero that used to be here.
-      */}
-      <div className="relative">
-        {/*
-          Carries the band up behind the floating nav, which is a sticky
-          sibling above this page in the layout and so can't be reached from
-          here directly. It has to live out here rather than inside WaveHero,
-          which clips its own overflow to keep the mesh inside the band.
 
-          An extension sitting entirely above the band covers that strip
-          without a hardcoded nav height; overflow past the top of the
-          document isn't scrollable, so nothing moves. The nav is z-30 and
-          this is not positioned above it, so it paints behind the bar.
-        */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh] bg-wave-hero-bg"
-        />
-        <WaveHero />
-      </div>
+        WaveHero's band extension above the nav is deliberately gone with it.
+        That strip painted --wave-hero-bg behind the floating nav so the band
+        reached the top of the page, which worked because on the light theme
+        that token WAS the page background. The field band is dark on both
+        themes, so the same strip would put the nav's translucent pill and its
+        dark link text on near-black in light mode. The field starts below the
+        nav instead, and the nav keeps the page background under it.
+      */}
+      <HeroField />
 
       <div className="container-wide">
         <section id="work" className="pb-24 pt-16 sm:pt-20">
