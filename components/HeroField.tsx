@@ -78,10 +78,11 @@ export default function HeroField() {
         */}
         <div className="hero-field-text container-wide">
           {/*
-            The glass panel is the motion element itself, so it fades and
-            rises as one object rather than the type sliding around inside a
-            frame that is already there. Its own geometry — width, padding,
-            blur, border — lives in .hero-field-panel in globals.css.
+            The headline block is the motion element itself, so the headline
+            and the line under it fade and rise as one object rather than
+            drifting independently. Its measure lives in .hero-field-panel in
+            globals.css, which is all that is left of the glass card that
+            used to sit behind this text.
           */}
           <motion.div
             variants={containerVariants}
@@ -101,7 +102,8 @@ export default function HeroField() {
               variants={item}
               className="max-w-[480px] text-[clamp(16px,1.4vw,20px)] leading-[1.5] text-hero-field-subline"
             >
-              I turn complex systems into interfaces people can read, trust, and act on.
+              I translate what complex systems are doing into language people can read, trust,
+              and act on.
             </motion.p>
           </motion.div>
         </div>

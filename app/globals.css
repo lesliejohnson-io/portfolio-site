@@ -82,10 +82,21 @@
   --hero-field-node: #2dd4bf;
   --hero-field-node-hero: #38bdf8;
   /*
-    Label type on the field. Both are measured against --hero-field-bg, not
-    against --bg: 13.9:1 for the signal text and 5.6:1 for the metric, so the
-    pair clears AA on the dark field in either theme.
+    Label type on the field. All three are measured against --hero-field-bg,
+    not against --bg: 9.0:1 for the signal text, 5.6:1 for the metric and
+    13.9:1 for --hero-field-label, so they clear AA on the dark field in
+    either theme.
+
+    The signal takes the same light blue as the hero node, so a revealed
+    message reads as light coming off the field rather than a caption laid
+    over it. It is a separate token from --hero-field-node-hero even though
+    the value matches: one is a glow colour, the other is type, and if the
+    node ever shifts hue the text should not follow it below AA.
+
+    --hero-field-label stays near-white — it is also the hero headline, which
+    is reading copy, not an indicator.
   */
+  --hero-field-signal: #38bdf8;
   --hero-field-label: #e8edf3;
   --hero-field-metric: #8fa3b8;
   /*
@@ -1833,35 +1844,19 @@
 }
 
 /*
-  The hero headline sits on a glass panel, so the signals drifting behind it
-  stay readable as texture instead of competing with the type. The
-  backdrop-filter blurs the label overlay underneath it (z-index 2) while the
-  panel itself rides at z-index 3.
+  The headline block. It used to be a glass card — tinted, blurred and
+  bordered — floating on the field; the card is gone and the type now sits
+  directly on the field, so the band reads as one surface instead of a panel
+  pasted onto it.
 
-  The rgba() values stay literal rather than becoming tokens: they are white
-  at very low alpha, tuned against the dark field, and they mean the same
-  thing on both themes because the field itself does not flip.
-
-  box-sizing is explicit because the padding is large relative to the panel —
-  at phone width the max-width never applies and the padding has to come out
-  of the measured width, not get added to it.
+  What remains is the measure: the max-width that keeps the headline from
+  running the full width of a wide screen. Contrast is unaffected, because
+  --hero-field-label and --hero-field-subline are both measured against
+  --hero-field-bg rather than against the old panel tint.
 */
 .hero-field-panel {
   box-sizing: border-box;
   max-width: 560px;
-  padding: 36px 40px;
-  border-radius: 16px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.035),
-    rgba(255, 255, 255, 0.005)
-  );
-  -webkit-backdrop-filter: blur(6px) saturate(120%);
-  backdrop-filter: blur(6px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 20px 50px rgba(0, 0, 0, 0.25);
 }
 
 /*
@@ -1877,10 +1872,15 @@
   the arrangement the prototype had. The breakpoint matches Tailwind's md,
   and HeroFieldCanvas re-initializes at the same width.
 */
+/*
+  The band's height. 40vh sets the proportion and the 100px is a fixed
+  addition on top of it, so the field gains the same amount of room on a
+  laptop and on a tall desktop display rather than growing with the viewport.
+*/
 .hero-field-stage {
   position: relative;
-  height: 40vh;
-  min-height: 240px;
+  height: calc(40vh + 100px);
+  min-height: 340px;
 }
 
 .hero-field-text {
@@ -1897,13 +1897,12 @@
 @media (max-width: 767.98px) {
   .hero-field-panel {
     max-width: none;
-    padding: 24px;
   }
 }
 
 @media (min-width: 768px) {
   .hero-field {
-    min-height: 40vh;
+    min-height: calc(40vh + 100px);
   }
 
   .hero-field-stage {
@@ -1918,7 +1917,7 @@
     inset: 0;
     display: flex;
     align-items: center;
-    min-height: 40vh;
+    min-height: calc(40vh + 100px);
     padding-block: 0;
     pointer-events: none;
   }

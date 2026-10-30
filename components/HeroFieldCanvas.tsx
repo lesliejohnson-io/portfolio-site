@@ -116,8 +116,10 @@ type LineSet = {
   geo: THREE.BufferGeometry
   mat: THREE.LineBasicMaterial
   pos: Float32Array
+  col: Float32Array
   idx: Int32Array
   count: number
+  strength: number
 }
 
 type Label = {
@@ -132,7 +134,14 @@ type Label = {
   w: number
 }
 
-type Screen = { sx: number; sy: number; d: number; confidence: number; t: number }
+type Screen = {
+  sx: number
+  sy: number
+  d: number
+  confidence: number
+  t: number
+  fade: number
+}
 
 const MOBILE_MAX = 768
 
@@ -161,7 +170,7 @@ export default function HeroFieldCanvas() {
   /*
     Keyed on `mobile`, so crossing the breakpoint tears the whole scene down
     and builds the other one. The two modes differ in grid resolution, node
-    spacing and whether a label layer exists at all, none of which can be
+    spacing, pixel ratio and how many labels they allow, none of which can be
     retrofitted onto a running scene — and the teardown below is thorough, so
     rebuilding is both the simplest and the cleanest way to switch.
   */
@@ -176,22 +185,66 @@ export default function HeroFieldCanvas() {
     const x_half = 260000
     const y_near = 2000
     const y_far = 310000
-    const wave_amp = 6000
-    const vertical_strength = 0.4 // 0 = invisible, 1 = same as horizontal lines
+    // The height the five terms in heightAt can reach together, used to
+    // normalize a node's glow between trough and crest.
+    const wave_amp = 9400
+    /*
+      One knob for how fast the whole field moves: the wave and the signals
+      riding it advance by `dt` per frame, so changing this keeps the two in
+      step instead of letting the nodes drift across the crests. 0.016 was
+      the prototype's rate; 0.765 of it is the current pace.
+    */
+    const dt = 0.016 * 0.765
+    /*
+      How far each set of lines is lerped from the field colour toward
+      --hero-field-line. 0 leaves a set exactly the colour of the field,
+      which is to say invisible.
+
+      The lines running across the field are at 0: the forward-rolling swell
+      is read from the lit nodes and the lines running INTO the field, and
+      the cross lines were banding the wave into stripes. At 0 the set is not
+      built at all rather than drawn in the background colour — an invisible
+      line still paints, and these lines sit at the same depth as the ones
+      going the other way, so drawing them would punch gaps in those and
+      cost a few thousand vertices a frame for the privilege.
+    */
+    const horizontal_strength = 0
+    const vertical_strength = 0.4
     const look_y = 7900 // lower number = waves reach higher up the hero
 
     // --- Node settings ---
-    let node_count = 60
-    // pixels between nodes on screen: higher = more spread out
-    const min_spacing = mobile ? 56 : 70
+    // How many signals are in the stream at once. They recycle, so this is
+    // the steady count on the field, not a budget that runs out. Fewer on a
+    // phone, where the band is a third of the width.
+    const node_count = mobile ? 16 : 34
+    /*
+      Where a signal enters and how far it travels. It is seeded well short
+      of the grid's far edge on purpose: at y_far a node is a sub-pixel speck
+      that would take twenty seconds to reach the front, so the stream would
+      drain faster than it refilled. From here the run takes about nine
+      seconds, which keeps the field populated at every depth.
+    */
+    const spawn_y = 132000
+    const fade_in_span = 34000 // distance over which a new signal comes up
+    const fade_out_span = 16000 // distance over which it dies at the front
     const offline_count = 3
-    const node_size = 4500
+    /*
+      Point size is attenuated by distance and scaled by the height of the
+      drawing buffer, so the same world size reads much smaller on a short
+      band. Bumped on mobile to land back at roughly the same lamp on screen.
+    */
+    const node_size = mobile ? 7000 : 4500
     const hero_node_size = 9000
     const node_lift = 300
 
     // --- Label settings ---
-    const reveal_radius = 170
-    const max_labels = 4
+    /*
+      Mobile shows at most two signals at once: the band is short, so a third
+      label only crowds the two that matter. The tighter radius keeps a label
+      close to the node that owns it on a narrow screen.
+    */
+    const reveal_radius = mobile ? 120 : 170
+    const max_labels = mobile ? 2 : 4
     const label_gap = 6 // pixels of clearance between labels
     const idle_ms = 3000
 
@@ -251,12 +304,44 @@ export default function HeroFieldCanvas() {
     for (let c = 0; c <= cols; c++) gx[c] = -x_half + (2 * x_half * c) / cols
     for (let r = 0; r <= rows; r++) gy[r] = y_near + ((y_far - y_near) * r) / rows
 
-    // Smooth swells instead of random spikes
+    /*
+      Smooth swells instead of random spikes, and they travel forward: the
+      crests run across the field and roll toward the viewer rather than
+      sliding sideways.
+
+      Two things make that happen. The dominant terms vary with y (depth)
+      rather than x, so a crest is a ridge spanning the width of the field
+      instead of a column running into it. And their phase advances with +t,
+      which puts a line of constant phase at a smaller y every frame, and
+      smaller y is nearer the camera — so the ridge moves toward the front
+      edge. (The old -t term did the reverse and drifted to the horizon.)
+
+      The third term keeps a slight diagonal lean and a cross-swell along x,
+      so the ridges do not read as perfectly parallel bars.
+
+      The last two are the lumps: each is a ridge multiplied by a standing
+      wave across the width, which breaks the ridge into a row of swells
+      instead of one unbroken bar, with flat lanes where the x factor passes
+      through zero. Only the y phase advances, so a lump rolls toward the
+      viewer without sliding sideways, and the two lattices are at different
+      scales and offsets so they do not line up into a tidy grid.
+
+      Their wavelengths are deliberately much shorter than the swell's, and
+      their phases advance more slowly. A node travels at the swell's speed,
+      so it keeps its place on the swell all the way in — but the lumps pass
+      under it at a different rate, and that difference is what makes a node
+      climb and drop as it comes: roughly one rise every four to six seconds,
+      rather than gliding in at a fixed height. The lumps carry most of the
+      amplitude for the same reason: with the cross lines gone, a node's rise
+      and fall is where the surface is read.
+    */
     function heightAt(x: number, y: number, t: number) {
       return (
-        2600 * Math.sin(x / 52000 + t * 0.45) +
-        2000 * Math.sin(y / 38000 - t * 0.32) +
-        1400 * Math.sin((x - y) / 70000 + t * 0.22)
+        2400 * Math.sin(y / 26000 + t * 0.55) +
+        1300 * Math.sin(y / 12000 + x / 90000 + t * 0.9) +
+        900 * Math.sin((y + x * 0.35) / 44000 + t * 0.35) +
+        3000 * Math.sin(y / 7000 + t * 0.5) * Math.sin(x / 38000 + 0.6) +
+        1800 * Math.sin(y / 4500 + t * 0.9 + 1.7) * Math.cos(x / 24000 - 0.4)
       )
     }
 
@@ -272,13 +357,54 @@ export default function HeroFieldCanvas() {
     const bg = new THREE.Color(palette.bg)
     const lc = new THREE.Color(palette.line)
 
-    function fadeAt(y: number) {
-      const depth = 10000 + y
-      return smoothstep(12000, 45000, depth) * (1 - smoothstep(190000, 300000, depth))
+    /*
+      How much of the band the front taper gets, in CSS pixels, measured up
+      from the bottom edge — the field's visible front edge, since the grid's
+      own near edge (y_near) projects below the band.
+
+      Pixels, where this used to fade over world units. The field is in
+      perspective, so a fixed world distance covers a third of the band near
+      the front and a few pixels at the horizon: the old 33000-unit ramp
+      started taking the lines out from halfway down the band. Reading the
+      taper in screen space holds it at the same thickness whatever the band
+      measures, so the swell stays lit almost all the way in, then goes.
+    */
+    const front_fade_px = 80
+    const pv = new THREE.Vector3()
+
+    /*
+      Screen y, in CSS pixels from the top of the band, of a row at depth y.
+      Taken on the flat plane (height 0) — the swell carries a vertex a few
+      pixels either side of this, which a taper this soft will not show.
+    */
+    function screenYAt(y: number) {
+      pv.set(0, y, 0)
+      field.localToWorld(pv)
+      pv.project(camera)
+      return ((1 - pv.y) / 2) * size.h
     }
 
-    function setColor(arr: Float32Array, i: number, y: number, strength: number) {
-      const f = fadeAt(y) * strength
+    function fadeAt(y: number) {
+      const depth = 10000 + y
+      return (
+        smoothstep(0, front_fade_px, size.h - screenYAt(y)) *
+        (1 - smoothstep(190000, 300000, depth))
+      )
+    }
+
+    /*
+      Every vertex in a row fades the same amount, and a row only moves on
+      screen when the band is resized, so the fade is cached per row rather
+      than projected for each of the 22,000 vertices.
+    */
+    const row_fade = new Float32Array(rows + 1)
+    function computeFades() {
+      for (let r = 0; r <= rows; r++) row_fade[r] = fadeAt(gy[r])
+    }
+    computeFades()
+
+    function setColor(arr: Float32Array, i: number, r: number, strength: number) {
+      const f = row_fade[r] * strength
       arr[i * 3] = bg.r + (lc.r - bg.r) * f
       arr[i * 3 + 1] = bg.g + (lc.g - bg.g) * f
       arr[i * 3 + 2] = bg.b + (lc.b - bg.b) * f
@@ -296,7 +422,7 @@ export default function HeroFieldCanvas() {
         posArr[i * 3] = gx[c]
         posArr[i * 3 + 1] = gy[r]
         idx[i] = r * W + c
-        setColor(colArr, i, gy[r], strength)
+        setColor(colArr, i, r, strength)
       })
       const geo = new THREE.BufferGeometry()
       geo.setAttribute("position", new THREE.BufferAttribute(posArr, 3))
@@ -305,25 +431,28 @@ export default function HeroFieldCanvas() {
       const lines = new THREE.LineSegments(geo, mat)
       lines.frustumCulled = false
       field.add(lines)
-      return { geo, mat, pos: posArr, idx, count }
+      return { geo, mat, pos: posArr, col: colArr, idx, count, strength }
     }
 
-    // Horizontal lines only: no diagonals
-    const horiz = buildLines(
-      (rows + 1) * cols * 2,
-      function (put) {
-        let i = 0
-        for (let r = 0; r <= rows; r++) {
-          for (let c = 0; c < cols; c++) {
-            put(i++, c, r)
-            put(i++, c + 1, r)
-          }
-        }
-      },
-      1,
-    )
+    // Lines across the field: no diagonals. Off by default, see above.
+    const horiz =
+      horizontal_strength > 0
+        ? buildLines(
+            (rows + 1) * cols * 2,
+            function (put) {
+              let i = 0
+              for (let r = 0; r <= rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                  put(i++, c, r)
+                  put(i++, c + 1, r)
+                }
+              }
+            },
+            horizontal_strength,
+          )
+        : null
 
-    // Softer vertical lines
+    // Softer lines running into the field
     const vert = buildLines(
       W * rows * 2,
       function (put) {
@@ -344,71 +473,86 @@ export default function HeroFieldCanvas() {
     }
 
     /*
-      --- Nodes: spread evenly across the screen, so more land in the front ---
-      Placement is decided in screen space rather than in the grid, which is
-      what keeps the field from clumping: the old version picked grid points
-      at random, and because perspective crushes the far rows together, most
-      of them landed in a band near the horizon.
-
-      Every grid point is projected, the ones outside the readable area are
-      dropped, the rest are shuffled, and a point is only accepted if it is
-      at least min_spacing pixels from everything accepted so far. Measured
-      against the container, not the window.
+      Vertex colours are written once at build, since they only depend on
+      depth — but the front taper is measured in pixels, so a band that
+      changes height moves it. Rewritten on resize, not per frame.
     */
-    const pv = new THREE.Vector3()
-
-    pv.set(0, y_far, 0)
-    field.localToWorld(pv)
-    pv.project(camera)
-    const horizon_y = ((1 - pv.y) / 2) * size.h
-
-    type Candidate = { gi: number; sx: number; sy: number }
-    const candidates: Candidate[] = []
-    for (let r = 0; r <= rows; r++) {
-      for (let c = 0; c <= cols; c++) {
-        pv.set(gx[c], gy[r], 0)
-        field.localToWorld(pv)
-        pv.project(camera)
-        if (pv.z >= 1) continue
-        const sx = ((pv.x + 1) / 2) * size.w
-        const sy = ((1 - pv.y) / 2) * size.h
-        if (sx < size.w * 0.04 || sx > size.w * 0.96) continue
-        // stay out of the horizon haze and the front blur
-        if (sy < horizon_y + 30 || sy > size.h * 0.74) continue
-        candidates.push({ gi: r * W + c, sx, sy })
+    function recolor(set: LineSet) {
+      for (let i = 0; i < set.count; i++) {
+        setColor(set.col, i, (set.idx[i] / W) | 0, set.strength)
       }
+      set.geo.attributes.color.needsUpdate = true
     }
-    for (let k = candidates.length - 1; k > 0; k--) {
-      const j = Math.floor(Math.random() * (k + 1))
-      const tmp = candidates[k]
-      candidates[k] = candidates[j]
-      candidates[j] = tmp
-    }
-    const accepted: Candidate[] = []
-    for (let k = 0; k < candidates.length && accepted.length < node_count; k++) {
-      const cand = candidates[k]
-      let ok = true
-      for (let a = 0; a < accepted.length; a++) {
-        if (Math.hypot(cand.sx - accepted[a].sx, cand.sy - accepted[a].sy) < min_spacing) {
-          ok = false
-          break
-        }
-      }
-      if (ok) accepted.push(cand)
-    }
-    const node_grid: number[] = accepted.map((a) => a.gi)
-    node_count = node_grid.length
 
-    function gridX(gi: number) {
-      return gx[gi % W]
-    }
-    function gridY(gi: number) {
-      return gy[Math.floor(gi / W)]
-    }
+    /*
+      --- Nodes: a stream, not a constellation ---
+      A node is no longer tied to a grid vertex. Each one holds its own
+      continuous (x, y), rides the wave forward, dims to nothing as it
+      reaches the front edge, and starts again at the back of the run in a
+      new lane.
+
+      That makes the seeding simple: spread them evenly through the depth
+      they will travel, which is exactly the distribution the stream settles
+      into anyway, so the first second looks like every second after it. The
+      field no longer needs the old screen-space spacing pass, whose job was
+      to keep a set of fixed points from clumping.
+    */
+    const node_x = new Float32Array(node_count)
+    const node_y = new Float32Array(node_count)
+
+    /*
+      Forward speed, matched to the dominant term in heightAt: a crest there
+      holds y / 26000 + 0.55t constant, so it advances 26000 * 0.55 world
+      units per unit of t. Moving the nodes at exactly that rate keeps each
+      one on the same part of its swell the whole way in, rather than sliding
+      through crests and valleys as it travels.
+    */
+    const node_speed = 26000 * 0.55
 
     const offline: Record<number, boolean> = {}
-    for (let k = 0; k < offline_count; k++) {
-      offline[Math.floor(Math.random() * node_count)] = true
+    /*
+      Which signal a node is carrying. Re-rolled with the lane, so a node
+      coming back does not read out the same line it just left with, and two
+      nodes on screen together are less likely to say the same thing.
+    */
+    const signal_seed = new Int32Array(node_count)
+
+    /*
+      How wide the camera can see at a given depth. The vertical field of
+      view is 45°, so the frame is about tan(22.5°) of the distance tall and
+      that times the aspect ratio wide. Approximate — the camera is pitched
+      down a little — but it is what decides where a node is worth putting.
+    */
+    const halfWidthAt = (y: number) => (y + 10000) * 0.414 * (size.w / size.h)
+
+    /*
+      Lanes are chosen against the width near the FRONT of the run, not at
+      the back. The frustum narrows toward the camera, so a node placed at
+      the back edge of the far frame would slide out of frame long before it
+      arrived; placed this way it starts near the middle and drifts outward
+      as it comes on, which is what travelling toward someone looks like. The
+      1.5 lets a few pass out of frame at the sides on the way, so the stream
+      does not read as a tidy cone. On a narrow phone frame this is the whole
+      difference between a populated field and three specks.
+    */
+    const laneSpread = () => Math.min(x_half * 0.92, halfWidthAt(y_near + 40000) * 1.5)
+
+    /*
+      Back to the start of the run in a new lane. The offline flag is
+      re-rolled at the rate it was seeded with, so the stream keeps turning
+      up the occasional stale node instead of the same three forever.
+    */
+    const respawn = (n: number) => {
+      node_y[n] = spawn_y
+      node_x[n] = (Math.random() * 2 - 1) * laneSpread()
+      offline[n] = Math.random() < offline_count / node_count
+      signal_seed[n] = Math.floor(Math.random() * 97)
+    }
+
+    for (let n = 0; n < node_count; n++) {
+      respawn(n)
+      // Evenly through the run rather than all at the start line.
+      node_y[n] = y_near + ((spawn_y - y_near) * (n + Math.random())) / node_count
     }
 
     const glow = makeGlowTexture()
@@ -438,11 +582,13 @@ export default function HeroFieldCanvas() {
     nodes.frustumCulled = false
     field.add(nodes)
 
-    const hero_grid = node_grid.reduce(function (best, gi) {
-      const d = Math.hypot(gridX(gi), gridY(gi) - 60000)
-      const bd = Math.hypot(gridX(best), gridY(best) - 60000)
-      return d < bd ? gi : best
-    }, node_grid[0])
+    /*
+      The hero node travels with the rest: a brighter lamp rolling in down
+      the middle of the field instead of a fixed highlight near the front. It
+      starts mid-field so one is on screen immediately, and follows the same
+      recycle rule as the stream.
+    */
+    const hero = { x: (Math.random() * 2 - 1) * halfWidthAt(y_near) * 0.6, y: spawn_y * 0.55 }
     const hero_positions = new Float32Array(3)
     const hero_geometry = new THREE.BufferGeometry()
     hero_geometry.setAttribute("position", new THREE.BufferAttribute(hero_positions, 3))
@@ -505,25 +651,20 @@ export default function HeroFieldCanvas() {
       state would re-render the tree at 60fps.
     */
     /*
-      None of this exists on mobile. A signal that only appears within 170px
-      of a pointer has nothing to reveal it on a touch screen, and reading a
-      12px caption over a moving field on a phone was never going to work —
-      so rather than render labels nobody can trigger, the overlay is never
-      built, and the focus point, the pointer listeners and the whole label
-      pass below are skipped with it. The nodes keep their crest-and-valley
-      glow, which carries the idea on its own.
+      The label layer runs in both modes. A touch screen has no hovering
+      pointer, so on mobile the labels ride the idle drift that already moves
+      the focus point when nothing has touched the field: the signals surface
+      on their own, two at a time, and a tap moves the focus to where it
+      landed.
     */
-    let overlay: HTMLDivElement | null = null
+    const overlay = document.createElement("div")
+    overlay.style.cssText =
+      "position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:2;"
+    container.appendChild(overlay)
+
     const labels: Label[] = []
 
-    if (!mobile) {
-      overlay = document.createElement("div")
-      overlay.style.cssText =
-        "position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:2;"
-      container.appendChild(overlay)
-    }
-
-    for (let n = 0; !mobile && n < node_count; n++) {
+    for (let n = 0; n < node_count; n++) {
       const el = document.createElement("div")
       el.style.cssText =
         "position:absolute;left:0;top:0;white-space:nowrap;display:flex;align-items:center;gap:7px;" +
@@ -537,7 +678,7 @@ export default function HeroFieldCanvas() {
         Mono for the metric, per the type rules in CLAUDE.md.
       */
       msg.style.cssText =
-        "font:500 12px/1.2 var(--font-sans), system-ui, sans-serif;color:var(--hero-field-label);"
+        "font:500 12px/1.2 var(--font-sans), system-ui, sans-serif;color:var(--hero-field-signal);"
       const metric = document.createElement("span")
       metric.style.cssText =
         "font:500 11px/1.2 var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;" +
@@ -545,7 +686,7 @@ export default function HeroFieldCanvas() {
       el.appendChild(shape)
       el.appendChild(msg)
       el.appendChild(metric)
-      overlay!.appendChild(el)
+      overlay.appendChild(el)
       labels.push({ el, shape, msg, metric, state: "", msgText: "", metricText: "", opacity: 0, w: 0 })
     }
 
@@ -565,7 +706,7 @@ export default function HeroFieldCanvas() {
         changed = true
       }
       const list = SIGNALS[state]
-      const msgText = list[n % list.length]
+      const msgText = list[(n + signal_seed[n]) % list.length]
       if (msgText !== label.msgText) {
         label.msg.textContent = msgText
         label.msgText = msgText
@@ -585,6 +726,43 @@ export default function HeroFieldCanvas() {
       if (changed || !label.w) label.w = label.el.offsetWidth
     }
 
+    /*
+      --- Keep-out box for the headline ---
+      The headline used to sit on a glass card, which both separated it from
+      the field and blurred whatever drifted under it. With the card gone
+      there is nothing between the two, so a label that wandered under the
+      type would simply collide with it.
+
+      The headline's box is measured in container coordinates and seeded into
+      the collision test below, which already knows how to suppress a label
+      that overlaps something — a label is dropped for landing on the
+      headline exactly as it is for landing on another label, and the slot it
+      would have used goes to the next node instead.
+
+      Desktop only: on mobile the headline is above the field, not over it,
+      so there is nothing to keep out of. Measured on resize rather than per
+      frame because both elements move together — scrolling cannot change
+      their offset.
+    */
+    const panel = container.closest(".hero-field")?.querySelector(".hero-field-panel")
+    let text_box: { x: number; y: number; w: number; h: number } | null = null
+
+    const measurePanel = () => {
+      if (mobile || !panel) {
+        text_box = null
+        return
+      }
+      const cr = container.getBoundingClientRect()
+      const pr = panel.getBoundingClientRect()
+      // Inflated a little so a label stops short of the type, not against it.
+      text_box = {
+        x: pr.left - cr.left - 12,
+        y: pr.top - cr.top - 12,
+        w: pr.width + 24,
+        h: pr.height + 24,
+      }
+    }
+
     // --- Focus point ---
     const focus = { x: -9999, y: -9999 }
     let last_pointer = -Infinity
@@ -600,18 +778,26 @@ export default function HeroFieldCanvas() {
       focus.y = e.clientY - rect.top
       last_pointer = performance.now()
     }
-    if (!mobile) {
-      window.addEventListener("pointermove", onPointer)
-      window.addEventListener("pointerdown", onPointer)
-    }
+    window.addEventListener("pointermove", onPointer)
+    window.addEventListener("pointerdown", onPointer)
+
+    /*
+      The drift sweeps the right half of a wide field, clear of the headline
+      panel floating over it. On mobile the panel is above the field rather
+      than on top of it, so the whole band is fair game and the sweep is
+      centred instead — a label pinned to one side of a 390px field would
+      always be reaching for the same two nodes.
+    */
+    const drift_x = mobile ? 0.5 : 0.68
+    const drift_amp = mobile ? 0.26 : 0.2
 
     function updateFocus(now: number) {
       if (now - last_pointer > idle_ms) {
         if (reduce_motion) {
-          focus.x = size.w * 0.68
+          focus.x = size.w * drift_x
           focus.y = size.h * 0.55
         } else {
-          focus.x = size.w * (0.68 + Math.sin(now * 0.00017) * 0.2)
+          focus.x = size.w * (drift_x + Math.sin(now * 0.00017) * drift_amp)
           focus.y = size.h * (0.55 + Math.cos(now * 0.00011) * 0.12)
         }
       }
@@ -624,14 +810,19 @@ export default function HeroFieldCanvas() {
       The one place a node's colour is decided, shared by both modes. Offline
       nodes are a dim grey wherever they are; everything else glows with the
       wave, dark in the valleys and bright at the crests, and only leans
-      toward its state colour when a label is pulling it (`near` > 0, which
-      is never the case on mobile).
+      toward its state colour when a label is pulling it (`near` > 0).
     */
-    const paintNode = (n: number, t: number, near: number, state: StateName | null) => {
+    const paintNode = (
+      n: number,
+      t: number,
+      near: number,
+      state: StateName | null,
+      fade: number,
+    ) => {
       if (offline[n]) {
-        node_colors[n * 3] = offline_color.r * 0.35
-        node_colors[n * 3 + 1] = offline_color.g * 0.35
-        node_colors[n * 3 + 2] = offline_color.b * 0.35
+        node_colors[n * 3] = offline_color.r * 0.35 * fade
+        node_colors[n * 3 + 1] = offline_color.g * 0.35 * fade
+        node_colors[n * 3 + 2] = offline_color.b * 0.35 * fade
         return
       }
       const b = 0.12 + 0.88 * t * t
@@ -644,49 +835,68 @@ export default function HeroFieldCanvas() {
         cg += (state_color.g - cg) * near
         cb += (state_color.b - cb) * near
       }
-      node_colors[n * 3] = cr
-      node_colors[n * 3 + 1] = cg
-      node_colors[n * 3 + 2] = cb
+      /*
+        The last multiply is the node's own run: full while it is out in the
+        field, tapering to nothing as it reaches the front edge and again
+        just after it rises at the horizon. With additive blending a fade to
+        zero is a fade into the background, leaving nothing behind.
+      */
+      node_colors[n * 3] = cr * fade
+      node_colors[n * 3 + 1] = cg * fade
+      node_colors[n * 3 + 2] = cb * fade
     }
 
     function updateNodes(now: number) {
-      if (!mobile) updateFocus(now)
+      updateFocus(now)
       field.updateMatrixWorld()
 
       const ranked: number[] = []
       for (let n = 0; n < node_count; n++) {
-        const gi = node_grid[n]
-        const nx = gridX(gi)
-        const ny = gridY(gi)
-        const h = H[gi]
+        // Nodes hold still under prefers-reduced-motion, as the wave does.
+        if (!reduce_motion) node_y[n] -= node_speed * dt
+
+        const nx = node_x[n]
+        const ny = node_y[n]
+        // Sampled from the wave directly: a node is no longer on a vertex.
+        const h = heightAt(nx, ny, time)
         const nz = h + node_lift
         node_positions[n * 3] = nx
         node_positions[n * 3 + 1] = ny
         node_positions[n * 3 + 2] = nz
 
         const t = Math.max(0, Math.min(1, (h + wave_amp) / (2 * wave_amp)))
-
-        /*
-          Mobile stops here. With no labels there is nothing that needs a
-          node's screen position, so the per-node project() — the expensive
-          part of this loop — is skipped outright rather than computed and
-          thrown away.
-        */
-        if (mobile) {
-          paintNode(n, t, 0, null)
-          continue
-        }
-
         const confidence = 0.35 + 0.6 * t
 
         v.set(nx, ny, nz)
         field.localToWorld(v)
         v.project(camera)
-        const visible = v.z < 1 && v.x > -1.1 && v.x < 1.1 && v.y > -1.1 && v.y < 1.1
         const sx = ((v.x + 1) / 2) * size.w
         const sy = ((1 - v.y) / 2) * size.h
+
+        /*
+          The node has run out the front of the field, so it goes back to the
+          start. Tested in world depth rather than on screen, because the
+          front edge of the field is a depth — y_near — and the fade below
+          has already taken the node to nothing by the time it gets there, so
+          the jump is never visible.
+        */
+        const gone = v.z >= 1 || ny <= y_near || v.x < -1.3 || v.x > 1.3
+        if (gone) respawn(n)
+
+        /*
+          A node's run: it comes up out of the distance, holds across the
+          field, then dies away over the last stretch and falls off the front
+          edge. Both ends are the same smoothstep, measured in distance
+          travelled, so nothing pops in or out at either end.
+        */
+        const fade = gone
+          ? 0
+          : smoothstep(spawn_y, spawn_y - fade_in_span, ny) *
+            smoothstep(y_near, y_near + fade_out_span, ny)
+
+        const visible = fade > 0 && v.x > -1.1 && v.x < 1.1
         const d = visible ? Math.hypot(sx - focus.x, sy - focus.y) : Infinity
-        scr[n] = { sx, sy, d, confidence, t }
+        scr[n] = { sx, sy, d, confidence, t, fade }
         ranked.push(n)
       }
 
@@ -701,6 +911,7 @@ export default function HeroFieldCanvas() {
         it, so a label suppressed for overlapping does not use up a slot.
       */
       const placed: { x: number; y: number; w: number; h: number }[] = []
+      if (text_box) placed.push(text_box)
       let shown = 0
 
       for (let r = 0; r < ranked.length; r++) {
@@ -708,14 +919,37 @@ export default function HeroFieldCanvas() {
         const s = scr[n]
         const label = labels[n]
         const state: StateName = offline[n] ? "OFFLINE" : stateFor(s.confidence)
-        let near = shown < max_labels && s.d < reveal_radius ? 1 - s.d / reveal_radius : 0
+        /*
+          A label is only offered to a node that is well into its run. One on
+          a node about to dissolve would be read halfway and then taken away,
+          and one on a node still rising out of the haze would arrive before
+          the light it belongs to.
+        */
+        let near =
+          shown < max_labels && s.d < reveal_radius && s.fade > 0.6
+            ? 1 - s.d / reveal_radius
+            : 0
 
         // Only show a label if it doesn't overlap one already placed
         if (near > 0) {
           fillLabel(label, n, state, s.confidence)
-          const bx = s.sx + 10
-          const by = s.sy - 18
           const bw = label.w
+          /*
+            Desktop hangs the label off the node's right shoulder, as the
+            prototype did, and flips it to the left shoulder near the right
+            edge so the text is never clipped.
+
+            On a phone a signal is nearly as wide as the field itself, so
+            there is no shoulder to hang it from. The label centres under its
+            node and is held inside the band, which reads as a caption for
+            the light above it rather than a line running off the edge.
+          */
+          const bx = mobile
+            ? Math.min(Math.max(8, s.sx - bw / 2), Math.max(8, size.w - 8 - bw))
+            : s.sx + 10 + bw > size.w - 8
+              ? Math.max(8, s.sx - 10 - bw)
+              : s.sx + 10
+          const by = mobile ? s.sy + 12 : s.sy - 18
           const bh = 16
           for (let p = 0; p < placed.length; p++) {
             const q = placed[p]
@@ -737,9 +971,9 @@ export default function HeroFieldCanvas() {
           }
         }
 
-        paintNode(n, s.t, near, state)
+        paintNode(n, s.t, near, state, s.fade)
 
-        const target_opacity = near > 0 ? Math.min(1, 0.35 + near) : 0
+        const target_opacity = near > 0 ? Math.min(1, 0.35 + near) * s.fade : 0
         if (target_opacity !== label.opacity) {
           label.el.style.opacity = target_opacity.toFixed(2)
           label.opacity = target_opacity
@@ -749,10 +983,26 @@ export default function HeroFieldCanvas() {
       node_geometry.attributes.position.needsUpdate = true
       node_geometry.attributes.color.needsUpdate = true
 
-      hero_positions[0] = gridX(hero_grid)
-      hero_positions[1] = gridY(hero_grid)
-      hero_positions[2] = H[hero_grid] + node_lift
+      if (!reduce_motion) hero.y -= node_speed * dt
+      hero_positions[0] = hero.x
+      hero_positions[1] = hero.y
+      hero_positions[2] = heightAt(hero.x, hero.y, time) + node_lift
       hero_geometry.attributes.position.needsUpdate = true
+
+      /*
+        The hero sprite has one colour for the whole point rather than a
+        per-vertex one, so its run is carried on the material's opacity
+        instead of in the colour buffer. Same two-ended fade, same recycle.
+      */
+      if (hero.y <= y_near) {
+        hero.y = spawn_y
+        hero.x = (Math.random() * 2 - 1) * halfWidthAt(y_near) * 0.6
+        hero_material.opacity = 0
+      } else {
+        hero_material.opacity =
+          smoothstep(spawn_y, spawn_y - fade_in_span, hero.y) *
+          smoothstep(y_near, y_near + fade_out_span, hero.y)
+      }
     }
 
     let time = 0
@@ -763,9 +1013,9 @@ export default function HeroFieldCanvas() {
       raf = requestAnimationFrame(render)
       const now = performance.now()
       if (!reduce_motion || !did_first_frame) {
-        if (!reduce_motion) time += 0.016
+        if (!reduce_motion) time += dt
         computeHeights(time)
-        updateLines(horiz)
+        if (horiz) updateLines(horiz)
         updateLines(vert)
         did_first_frame = true
       }
@@ -779,12 +1029,17 @@ export default function HeroFieldCanvas() {
       camera.aspect = size.w / size.h
       camera.updateProjectionMatrix()
       renderer.setSize(size.w, size.h, false)
+      computeFades()
+      if (horiz) recolor(horiz)
+      recolor(vert)
       placeBands()
+      measurePanel()
     }
 
     const ro = new ResizeObserver(resize)
     ro.observe(container)
     placeBands()
+    measurePanel()
 
     /*
       The prototype ran its loop for the life of the page. Rewriting tens of
@@ -827,8 +1082,8 @@ export default function HeroFieldCanvas() {
       document.removeEventListener("visibilitychange", onVisibility)
       window.removeEventListener("pointermove", onPointer)
       window.removeEventListener("pointerdown", onPointer)
-      horiz.geo.dispose()
-      horiz.mat.dispose()
+      horiz?.geo.dispose()
+      horiz?.mat.dispose()
       vert.geo.dispose()
       vert.mat.dispose()
       node_geometry.dispose()
@@ -837,7 +1092,7 @@ export default function HeroFieldCanvas() {
       hero_material.dispose()
       glow.dispose()
       renderer.dispose()
-      overlay?.remove()
+      overlay.remove()
       horizon_band.remove()
       front_band.remove()
       renderer.domElement.remove()
