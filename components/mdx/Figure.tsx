@@ -30,6 +30,7 @@ export function Figure({
   background,
   wide,
   full,
+  natural,
   expandable,
 }: {
   src: string;
@@ -57,6 +58,13 @@ export function Figure({
    * blueprint.
    */
   full?: boolean;
+  /**
+   * Renders the artwork at its own pixel size instead of filling the column.
+   * For a small export -- a single card or control -- where stretching to the
+   * 680px measure would only magnify its pixels. It still shrinks below its
+   * intrinsic width on a narrow viewport rather than overflowing.
+   */
+  natural?: boolean;
   /**
    * Adds a click target that opens the artwork at its intrinsic size, for a
    * diagram no page width can show in full.
@@ -112,13 +120,21 @@ export function Figure({
       alt={alt}
       width={width}
       height={height}
-      style={background ? { background } : undefined}
+      style={{
+        ...(background ? { background } : null),
+        /*
+          `natural` pins the element to the asset's own width, so the browser
+          paints it 1:1. max-w-full below still lets it shrink on a narrow
+          viewport, where honouring the pixel size would overflow the column.
+        */
+        ...(natural ? { width: `${width}px` } : null),
+      }}
       /*
         No frame: the artwork carries its own edge, and a border around a
         photograph reads as a second, competing one. The figure fills the
-        body column edge to edge.
+        body column edge to edge unless `natural` says otherwise.
       */
-      className="block w-full"
+      className={natural ? "mx-auto block h-auto max-w-full" : "block w-full"}
     />
   );
 

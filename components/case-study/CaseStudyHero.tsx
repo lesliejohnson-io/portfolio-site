@@ -13,6 +13,7 @@ export default function CaseStudyHero({
   alt,
   pending,
   bleed = false,
+  glow = true,
 }: {
   src?: WorkItem["hero"];
   alt?: string;
@@ -24,7 +25,13 @@ export default function CaseStudyHero({
    * is contained rather than cropped, so the composition stays intact.
    */
   bleed?: boolean;
+  /**
+   * False for an opaque artwork, which has no alpha silhouette for the glow to
+   * follow — it would ring the image's rectangle instead of lighting anything.
+   */
+  glow?: boolean;
 }) {
+  const lift = glow ? "hero-glow" : "";
   const frame = bleed
     ? "aspect-[16/9] w-full sm:aspect-[2/1]"
     : "aspect-[16/9] w-full overflow-hidden rounded-xl sm:aspect-[2/1]";
@@ -53,7 +60,7 @@ export default function CaseStudyHero({
         playsInline
         aria-label={alt}
         src={src}
-        className={`${frame} hero-glow border border-border bg-video-mat object-cover`}
+        className={`${frame} ${lift} border border-border bg-video-mat object-cover`}
       />
     );
   }
@@ -63,7 +70,7 @@ export default function CaseStudyHero({
     <img
       src={src}
       alt={alt ?? ""}
-      className={`${frame} hero-glow ${
+      className={`${frame} ${lift} ${
         bleed ? "object-contain" : "border border-border object-cover"
       }`}
     />

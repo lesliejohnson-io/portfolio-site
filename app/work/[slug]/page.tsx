@@ -38,6 +38,14 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
 
   const { meta, content } = study;
 
+  /*
+    The strip under the hero normally shows the same measured outcomes as
+    the Outcomes & Impact row. `stripStats` overrides just the strip, for a
+    study that leads with its scale rather than its results.
+  */
+  const stripStats = meta.stripStats ?? meta.stats;
+  const stripIsMeasured = !meta.stripStats;
+
   const body = (
     <MDXRemote
       source={content}
@@ -123,25 +131,30 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
                 alt={meta.heroAlt}
                 pending={meta.heroPending}
                 bleed={Boolean(meta.heroBackground)}
+                glow={meta.heroGlow !== false}
               />
             </div>
           </div>
 
-          {meta.stats && (
+          {stripStats && (
             /* Same measure as the body, so both stat rows line up with the text. */
             <div className="mx-auto mt-12 max-w-[680px] px-6">
-              <StatRow stats={meta.stats} showCaptions={false} />
+              <StatRow stats={stripStats} showCaptions={false} />
               {/*
                 The captions live with the Outcomes & Impact row, so the strip
-                links down to them rather than repeating them here.
+                links down to them rather than repeating them here. The link is
+                dropped when the strip is showing `stripStats`, because those
+                figures are the study's scale, not something measured.
               */}
-              <a
-                href="#how-we-measured"
-                className="link-draw mt-5 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.06em] text-accent"
-              >
-                See how we measured this
-                <span aria-hidden="true">→</span>
-              </a>
+              {stripIsMeasured && (
+                <a
+                  href="#how-we-measured"
+                  className="link-draw mt-5 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.06em] text-accent"
+                >
+                  See how we measured this
+                  <span aria-hidden="true">→</span>
+                </a>
+              )}
             </div>
           )}
 

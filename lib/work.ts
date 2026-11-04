@@ -75,8 +75,24 @@ export type WorkItem = {
   heroAlt?: string;
   /** What the hero will show, used by the placeholder until the asset exists. */
   heroPending?: string;
+  /**
+   * False drops the accent drop-shadow under the case study hero. The glow was
+   * drawn for cut-out artwork, where it follows the alpha silhouette and seats
+   * the devices on the dark theme. An opaque screenshot has no silhouette to
+   * follow, so it haloes a rectangle instead. Omit it and the glow stays.
+   */
+  heroGlow?: boolean;
   /** Up to three measured outcomes. Only real numbers; never padded. */
   stats?: WorkStat[];
+  /**
+   * Overrides what the strip under the hero shows, leaving the Outcomes &
+   * Impact row on `stats`. For a study whose scale is the thing worth leading
+   * with, where the measured outcomes still belong at the end. Omit it and
+   * both rows read `stats`, as before. The strip hides captions either way,
+   * so these need none, and the strip's "see how we measured this" link is
+   * dropped when it is set, since these figures are not the measured ones.
+   */
+  stripStats?: WorkStat[];
 };
 
 export type WorkStat = {

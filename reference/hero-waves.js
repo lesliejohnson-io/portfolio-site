@@ -40,7 +40,7 @@ var SIGNALS = {
     "Holding position, awaiting operator"
   ],
   OFFLINE: [
-    "No signal, last seen 12s ago",
+    "No signal, last seen 12s ago",                                           
     "Data is stale, don't act on this"
   ]
 };

@@ -90,8 +90,8 @@ export default function WorkRow({ item }: { item: WorkItem }) {
         )}
 
         {/*
-          A button rather than a bare link: outlined at rest, filled in the
-          accent on hover.
+          A button rather than a bare link: filled in the near-black ink at
+          rest, and in the accent while the row is hovered or being pressed.
 
           Square-ish at 4px rather than the nav Contact button's pill. A pill
           is the shape Machine State UI gives a state badge — something being
@@ -105,42 +105,21 @@ export default function WorkRow({ item }: { item: WorkItem }) {
         */}
         <Link
           href={`/work/${item.slug}`}
-          className="mt-6 inline-flex items-center rounded-[4px] border border-border-strong px-5 py-2.5 font-mono text-xs uppercase tracking-[0.06em] text-fg transition-colors after:absolute after:inset-0 after:content-[''] group-hover:border-accent group-hover:bg-accent group-hover:text-accent-fg motion-reduce:transition-none"
+          className="mt-6 inline-flex items-center gap-3 rounded-[4px] border border-fg bg-fg px-5 py-2.5 font-mono text-xs uppercase tracking-[0.06em] text-bg transition-colors after:absolute after:inset-0 after:content-[''] group-hover:border-accent group-hover:bg-accent group-hover:text-accent-fg group-active:border-accent group-active:bg-accent group-active:text-accent-fg motion-reduce:transition-none"
         >
-          <span className="inline-flex items-center gap-1.5">
-            {/*
-              A status lamp, borrowed from Machine State UI's own vocabulary:
-              dim at rest, lit and glowing when the row is hovered. It is
-              decoration here rather than a reading — nothing about the case
-              study is being reported — so it carries no state colour of its
-              own and is hidden from assistive technology.
-            */}
-            <span
-              aria-hidden="true"
-              className="h-1.5 w-1.5 rounded-full bg-fg-muted transition-[background-color,box-shadow] group-hover:bg-[var(--lamp-lit)] group-hover:shadow-[0_0_7px_1px_color-mix(in_srgb,var(--lamp-lit)_55%,transparent)] motion-reduce:transition-none"
-            />
-            Case study
-          </span>
+          <span>Read the case study</span>
 
           {/*
-            The arrow is not there at rest. On hover its slot opens and the
-            arrow slides out of it, left to right, so it reads as coming out
-            from behind the words rather than fading in beside them.
-
-            The slot clips, which is what sells it: the arrow travels from
-            fully outside the slot's left edge — under the end of the label —
-            to its resting place, and is never seen crossing the text. The
-            button widens as the slot opens, which nothing else depends on,
-            because the row's layout is a column and the button is the last
-            thing in it.
+            The arrow sits inside the button at rest and slides to the right
+            while the row is hovered or pressed. It is a transform, not a
+            layout change, so the button never changes width and the column
+            below it never shifts.
           */}
           <span
             aria-hidden="true"
-            className="inline-flex w-0 justify-end overflow-hidden transition-[width] duration-200 ease-out group-hover:w-5 motion-reduce:transition-none"
+            className="transition-transform duration-200 ease-out group-hover:translate-x-1 group-active:translate-x-1 motion-reduce:transition-none"
           >
-            <span className="-translate-x-full transition-transform duration-200 ease-out group-hover:translate-x-0 motion-reduce:transition-none">
-              →
-            </span>
+            →
           </span>
         </Link>
       </div>

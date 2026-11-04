@@ -2,12 +2,13 @@
 
 import { type ComponentType, useEffect, useState } from "react";
 import type { WorkVisual } from "@/lib/work";
-import MachineStatePanel from "@/components/work/MachineStatePanel";
 
-/** Live product slices a row can show in place of a still or a clip. */
-const LIVE: Record<string, ComponentType> = {
-  "machine-state": MachineStatePanel,
-};
+/**
+ * Live product slices a row can show in place of a still or a clip. Empty
+ * for now: a row asking for a live visual falls through to the placeholder
+ * until a slice is registered here.
+ */
+const LIVE: Record<string, ComponentType> = {};
 
 /**
  * A work row's visual: a silent looping clip, or the styled "Visual pending"
