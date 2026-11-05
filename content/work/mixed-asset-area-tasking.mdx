@@ -12,25 +12,29 @@ deck: "A search-and-rescue tasking console where the autonomy proposes, the oper
 who: "A two-person search-and-rescue team: the mission operator who makes every tasking decision, and the supervisor who watches the same view and can veto before launch"
 what: "A tasking console for 38 mixed autonomous assets, where the autonomy proposes a full plan and the operator verifies it, changes it and launches it with every coverage gap visible first"
 summary: "A search-and-rescue tasking console where the autonomy proposes, the operator decides, and every coverage gap is visible up front."
-hero: "/work/drones-sar/screen-3-individual-units.png"
+hero: "/work/drones-sar/hero.png"
+# hero- v3.png as supplied, renamed on 2026-11-05: the original name carried
+# a space and a stray hyphen, which would have to be percent-encoded in the
+# URL and is easy to get wrong in a later edit.
+#
 # The artwork is 1440x1035, about 1.39:1, and the hero frame is 2:1. This
 # field is what switches the frame from object-cover to object-contain, so it
 # has to be set or the crop would take roughly a quarter of the screen's
 # height off a UI shot. "transparent" keeps the contain and drops the frame's
 # border, while painting no full-width band -- the screen sits on the page.
 heroBackground: "transparent"
-# The artwork is an opaque screenshot sitting in a band of its own colour.
-# The hero glow follows an alpha silhouette, so here it would only ring the
-# image's rectangle inside the band.
+# The artwork is an opaque screenshot -- only its four rounded corners carry
+# alpha -- sitting in a band of its own color. The hero glow follows an alpha
+# silhouette, so here it would only ring the image's rectangle in the band.
 heroGlow: false
-heroAlt: &screenAlt "Screen 3, Tasking live: a dark mission console headed SAR-1102, Coastal Flood Response, at Charleston, South Carolina. A map of the flooded coastline is divided into four sectors — A East Cooper at 42%, B Peninsula at 18%, C Sea Islands at 36% and D Edisto at 33% — with individual asset markers across it and a few collapsed into groups such as HYD ×4. The header reads 42 minutes live, Sector B behind plan by 18 points, and 36 of 36 assets in contact. A Sector Status rail down the right gives each sector a priority chip, a coverage bar with a tick at the position the plan expects, and its tasking rows; Sector B carries a warning reading 18 pts behind plan, 36% expected by now, offering Re-propose Sector B or Keep current plan. An event feed logs timestamped changes, a legend names the six asset states, and a Hold all units button sits at the foot of the rail."
+heroAlt: &screenAlt "Screen 3, Tasking live: a mission console headed SAR-1102, Coastal Flood Response, at Charleston, South Carolina. A map of the flooded coastline is divided into four sectors — A East Cooper at 42%, B Peninsula at 18%, C Sea Islands at 36% and D Edisto at 33% — with individual asset markers across it, a few collapsed into groups such as HYD ×4, and one tagged RETURNING · BATTERY. The header reads Live 42 min, Behind plan Sector B −18 pts, and In contact 36 of 36. A Sector Status rail down the right states its own key — bar: searched so far, tick: where the plan expects to be now — then gives each sector a priority chip, a coverage bar with that tick, and its tasking rows. Sectors A, C and D read On plan; Sector B carries a warning reading 18 pts behind plan (36% expected by now), HYD-09 and HYD-11 returned for battery at 09:31, 5 of 7 Hydras still searching rooftops, offering Re-propose Sector B or Keep current plan. An event feed logs timestamped changes from 09:12 to 09:31, a legend names the six asset states and adds that a ring means needs attention and dimming means the position is not current, and a Hold all units button sits at the foot of the rail."
 heroPending: "Screen 3, Tasking live: the sector map with individual asset positions, beside the Sector Status rail and its per-sector coverage bars."
 # The home row shows the same screen as the hero. `*screenAlt` is a YAML
 # alias pointing at the `&screenAlt` anchor on heroAlt above, so the one
 # description serves both and the two can never drift apart.
 visual:
   type: "image"
-  src: "/work/drones-sar/screen-3-individual-units.png"
+  src: "/work/drones-sar/hero.png"
   alt: *screenAlt
 # What the strip under the hero shows: the scale of the problem, which is what
 # this study leads with. Captions are hidden in the strip, so these carry none.
@@ -48,13 +52,13 @@ stripStats:
 # The three outcome figures, shown with their captions in Outcomes & Impact.
 stats:
   - value: "<5"
-    label: "Minutes to task 38 assets"
+    label: "Target minutes to task 38 assets"
     caption: "Down from about 20 today. A design target from the brief, not yet tested with operators."
   - value: "0"
-    label: "Assets launched unauthorized"
+    label: "Assets launched with an assignment the operator did not see"
     caption: "Enforced by the launch summary."
   - value: "60%"
-    label: "Coverage floor for all sectors"
+    label: "Coverage floor for HIGH sectors"
     caption: "Below it, an inline warning shows the cost; launch is never blocked."
 ---
 
@@ -75,15 +79,40 @@ stats:
 
   Settled 2026-11-04: the company stays unnamed -- the Context reads "an
   autonomy company", which the source doc offered as the alternative to
-  naming it -- and the three Reflection subheads are confirmed as Leslie's
-  own words.
+  naming it.
 
-  Every *[Visual: ...]* line is a placeholder waiting on its Figma export.
+  Reflection rewritten 2026-11-05 in Leslie's words: two subheads in place
+  of the earlier three. The dropped "coverage model needs an operator"
+  subhead was the page's plainest statement that the percentages come from
+  an invented rule -- see the note below.
+
+  Text re-checked against the source doc 2026-11-05: wording, US spelling
+  ("color", "behavior") and the stat labels now follow it. The deliberate
+  departures stay: first person, the unnamed company, and Leslie's own
+  Reflection, which is newer than the doc.
+
+  Visuals placed 2026-11-05. decision-N-image.png belongs to Approach step
+  N; 6 and 7 are Screens 1 and 3, so each sits under its bullet in step 6.
+
+  Every figure sits in the body column -- no `wide` or `full` -- per Leslie,
+  2026-11-05. The exports are 2x, and every one but decision-5 is at least
+  twice the column wide, so each fills the column at more than 1x and stays
+  sharp. The dense ones carry `expandable` for reading at full size.
+  decision-5 is the exception: its 1x width, 406px, is under the column, so
+  it is `natural` with width and height given as that 1x box (406x308, the
+  same ratio as the 812x616 file). A retina screen gets every pixel, and no
+  screen shows it at double size.
+
+  Step 4's figure reads 44% and 16 pts; the source doc's quoted warning reads
+  47% and 13 pts. Both are Leslie's frames -- the 44% one is the state after
+  the ROC-04 drag the handoff describes -- so neither number is in the prose.
 
   Every figure on this page comes from the brief or the source doc. The
-  coverage percentages describe an invented model, which the first Reflection
-  says plainly -- do not restate them as measured results, and never invent a
-  number for a TBD.
+  coverage percentages describe an invented model. Since the 2026-11-05
+  Reflection rewrite the page no longer says so outright; the nearest
+  remaining caveat is the "<5 minutes" stat caption, "a design target from
+  the brief, not yet tested with operators." Do not restate the percentages
+  as measured results, and never invent a number for a TBD.
 */}
 
 ## Context
@@ -103,11 +132,11 @@ The fleet is 38 autonomous assets of four types, and they are not interchangeabl
 | Griffin (VTOL) | 4 | Radar and comms relay | Few available |
 | Kraken (surface drone) | 4 | Goes where crewed boats can’t | Slow, about 12 knots |
 
-Two Rocs are in maintenance, so 36 assets are available. Today the operator assigns them one at a time. That takes about 20 minutes and leaves coverage gaps nobody sees until the debrief.
+Two Rocs are in maintenance, so 36 are available. Today the operator assigns them one at a time. That takes about 20 minutes and leaves coverage gaps nobody sees until the debrief.
 
-**My role:** sole designer, responsible for the screens, edge-case states, component library, engineering annotations and one coded interaction on Vercel. I designed the screens in Figma and worked with Claude through the Figma MCP for file production, and Claude Code for the build.
+**My role:** sole designer, responsible for the screens, edge-case states, component library, engineering annotations and one coded interaction on Vercel. I worked with Claude through the Figma MCP for file production and Claude Code for the build.
 
-**The core problem:** the operator has to commit 36 different assets to four sectors in minutes, and trust that the plan covers the area before anything moves.
+**The core problem:** the operator has to commit 36 different assets to four sectors in minutes, and trust that the plan actually covers the area before anything moves.
 
 ## Objective
 
@@ -130,6 +159,13 @@ The first draft of Screen 2 had the right structure, but the data broke it. Unit
 - Kept ROC-05 and ROC-06 on screen as unavailable, with the reason.
 - Renamed “zones” to “sectors” to match the brief, and lettered them A to D.
 
+<Figure
+  src="/work/drones-sar/decision-1-image.png"
+  alt="The asset roster beside the map. The header reads Available: 36 of 38. The Asset Roster rail, with columns for Unit, Status · site and Endurance · link, opens on the Roc · fixed-wing group, 4 available · 2 unavailable: ROC-01 to ROC-04 each read Ready · Airfield, 18 h · strong, and ROC-05 and ROC-06 read Maintenance, Unavailable, with ROC-06 dimmed. On the map a tooltip reads ROC-05 · Unavailable, In maintenance: sensor recalibration, Expected back 22:00. The Hydra · quadrotor group, 24 available, begins below."
+  width="1396"
+  height="796"
+/>
+
 An operator who catches one wrong count stops trusting every other number on the screen.
 
 <Figure
@@ -138,39 +174,50 @@ An operator who catches one wrong count stops trusting every other number on the
   caption="Screen 2, before and after the data fix."
   width="4885"
   height="2103"
-  full
   expandable
 />
-
 ### 2. Group units where the question is “how much,” show them individually where it’s “where”
 
 On the review screen the operator is judging a plan, so the map groups assets per sector (HYD ×7). A group of one shows its ID instead of “×1,” which matches the rail and reads as intentional. Selecting a group fans it out into its units, which is where a single Hydra gets dragged to another sector.
 
 Individual positions appear only on Screen 3, once assets are flying and position matters.
 
+<Figure
+  src="/work/drones-sar/decision-2-image.png"
+  alt="The map and roster before a plan exists. On the map, 24 Hydras sit as one marker at Staging A labelled HYD ×24, four Krakens as one marker at the Marina labelled KRK ×4, and two clusters of calls for help read 3 calls and 2 calls. In the rail, the Hydra · quadrotor group, 24 available, collapses into a single row — 24 units with the same status, site and link: HYD-01–24, Ready · Staging A, 45 min · strong — while the Griffin · VTOL relay group, 4 available, lists GRF-01 to GRF-04 one per row, each Ready · Airfield, 6 h · strong."
+  width="1974"
+  height="686"
+  expandable
+/>
+
 ### 3. Coverage owns the fill, priority owns the chip
 
-The brief asked how to show sector priority without competing with coverage colour. The answer was to give each signal one channel.
+The brief asked how to show sector priority without competing with coverage color. The answer was to give each signal one channel.
 
 - **Coverage** fills the sector on the map and drives a thin bar on each card, with a tick at the 60% target.
-- **Priority** is a HIGH, MEDIUM or LOW chip beside the sector name, never a colour.
+- **Priority** is a HIGH, MEDIUM or LOW chip beside the sector name, never a color.
 - **Selection** is a white outline, so fill always means coverage.
-- **Colour is earned:** amber appears only where the operator should decide, and blue only on things the operator can act on.
+- **Color is earned:** amber appears only where the operator should decide, and blue only on things the operator can act on.
 
-*[Visual: Screen 2 map with coverage fills and the stat bar.]*
+<Figure
+  src="/work/drones-sar/decision-3-image.png"
+  alt="Screen 2, Review proposed tasking. A stat bar reads Overall coverage 86%, Weakest Sector D · Edisto · 82% marked HIGH, and Unassigned 0 of 36. On the map the sector fill sits behind the label Sector A, East Cooper · 92%, with a ROC · 01 marker and a group marked HYD ×6. The Proposed Tasking rail, with Clear plan and Re-propose actions, reads Expected coverage, next 2 h · tick marks the 60% target. It lists GRF-01–04 as a comms relay over every sector, then two staged sector cards, each with a priority chip, a lock, a green coverage bar past its tick, the autonomy’s one-line reason and its tasking rows: Sector A · East Cooper, HIGH, at 92%, with HYD-01–06 on rooftops: densest areas, most help calls; and Sector B · Peninsula, MEDIUM, at 83%, with KRK-01–02 added: water too deep for ground crews."
+  width="2032"
+  height="1106"
+  expandable
+/>
 
-### 4. Warnings lead with the cost, then the cause
+### 4. Warnings lead with the cost, then the cause, and never block
 
 The first Sector D warning named the cause (Hydras at max range from staging) but not what it cost. The rewrite puts the cost first, in the operator’s terms:
 
 <Figure
-  src="/work/drones-sar/sector-d-warning.png"
-  alt="The Sector D card. Its header reads Sector D · Edisto, marked HIGH, with a Stage sector button and a lock. Expected coverage, next 2 h reads 47% against a target of 60%, drawn as an amber bar stopping short of the target tick. The warning below it reads 47% coverage, 13 pts below target for a HIGH sector, then Hydras at max range from Staging A: little time on station, then two actions, See options and Stage anyway. Three tasking rows follow: ROC-04 survey flood area at Alt 8,000 ft; HYD-21–24 search rooftops until battery 50%, locked; and KRK-03–04 search streets with sonar on, marked by a teal bar reading Set by operator · moved from Sector B · 08:41."
-  width="380"
-  height="268"
-  natural
+  src="/work/drones-sar/decision-4-image.png"
+  alt="The mission header above the Sector D card. The header reads SAR-1102 · Coastal Flood Response, Charleston, SC, with Overall coverage 80%, Weakest Sector D · Edisto · 44% marked HIGH, and Unassigned 0 of 36. The Sector D · Edisto card, marked HIGH with a Stage sector button and a lock, shows an amber bar at 44% stopping short of the target tick, reading 44% · target 60%. Its warning reads 44% coverage, 16 pts below target for a HIGH sector, then Hydras at max range from Staging A: little time on station, with two actions, See options and Stage anyway. Below it, HYD-21–24 search rooftops until battery 50%, locked, and KRK-03–04 search streets with sonar on, marked by a teal bar reading Set by operator · moved from Sector B · 08:41."
+  width="2298"
+  height="746"
+  expandable
 />
-
 “Stage anyway” makes the rule visible: the warning informs, and the operator can still stage and launch without changing anything. A stat bar above the map names the weakest sector, so the operator never has to hunt for it.
 
 ### 5. Mark the exception, not the default
@@ -181,34 +228,81 @@ Most of the plan comes from the autonomy, so autonomy rows carry no marker, only
 - Purple stays reserved for the Autonomous status in the legend, so the two never blur.
 - The status badge in each row was replaced by a lock control, since lock is the action the operator takes there. Locks and priority chips align in fixed columns down every card, so the rail scans in one pass.
 
-*[Visual: tasking row, autonomy vs operator variants.]*
+<Figure
+  src="/work/drones-sar/decision-5-image.png"
+  alt="The Sector D · Edisto card, marked HIGH, with a Stage sector button and a lock, and a green coverage bar at 82% past its target tick. Under it the autonomy’s reason reads HYD-21–24 on rooftops: neighborhoods cut off by flooding. Two autonomy rows carry no marker: ROC-04, survey flood area at Alt 8,000 ft, and HYD-21–24, search rooftops until battery 50%, locked. The third row, KRK-03–04, search streets with sonar on, has a teal left bar and the line Set by operator · moved from Sector B · 08:41."
+  width="406"
+  height="308"
+  natural
+/>
 
 ### 6. Build the parts once, then assemble three screens from them
 
-Screen 2 was the key decision, so its parts became the system: a sector card with 8 variants (staged, selected, low coverage), a tasking row with 4, and priority chip, lock, status and asset-marker components, all bound to 21 colour tokens.
+Screen 2 was the key decision, so its parts became the system: a sector card with 8 variants (staged, selected, low coverage), a tasking row with 4, and priority chip, lock, status and asset-marker components, all bound to 21 color tokens.
+
+{/*
+  The system frame is exported on a transparent page with its own drop
+  shadows, so it carries a mat: without one the light theme shows warm
+  off-white between the panels. #0F1618 sits just under the console's
+  #1A2427 surface, so the shadows still read. The handoff frame below uses
+  the same mat for the same reason.
+*/}
+
+<Figure
+  src="/work/drones-sar/design-system.png"
+  alt="Three pieces of the component system, overlapping on a dimmed Screen 2. A card headed “Color tokens · rules for operators and AI agents” lists four tokens, each with a swatch, a USE WHEN line and an AVOID line: --status-needs-operator #FFB020, used when a decision is waiting and there is an action to take, avoided for amber with no action attached; --status-operator-set #2EC4B5, used when the operator set this rather than the autonomy, avoided on the map and on autonomy choices; --status-autonomous #CDB8FF, used when the system changed something on its own, avoided for operator changes and warnings; --interaction-primary #8EC5FF, used when the element is clickable, avoided for status or decoration. A smaller card headed Asset marker shows the Roc, Hydra, Griffin and Kraken marks, labelled ROC · 01, HYD · 01, GRF · 01 and KRK · 01. The third panel is a finished Sector D · Edisto card, marked HIGH with a Stage sector button and a lock: expected coverage, next 2 h reads 47% against a target of 60% as an amber bar stopping short of the target tick, and the warning beneath it reads “47% coverage, 13 pts below target for a HIGH sector” and “Hydras at max range from Staging A: little time on station,” offering See options or Stage anyway. Its three tasking rows are ROC-04 survey flood area at Alt 8,000 ft, HYD-21–24 search rooftops until battery 50% with a lock, and KRK-03–04 search streets with sonar on, marked by a teal bar reading “Set by operator · moved from Sector B · 08:41.”"
+  caption="The tokens carry the rule, not just the value, so the next person building a screen knows when amber is allowed."
+  width="1524"
+  height="984"
+  background="#0F1618"
+  expandable
+/>
 
 - **Screen 1, Area overview:** the same layout before a plan exists. The rail becomes the roster, and 24 Hydras with identical status collapse into one row, which keeps 38 assets scannable.
+
+<Figure
+  src="/work/drones-sar/decision-6-image.png"
+  alt="Screen 1, Area overview, with no coverage fill yet. The map shows the four sectors and their priority chips: Sector A East Cooper HIGH, Sector B Peninsula MEDIUM, Sector C Sea Islands MEDIUM and Sector D Edisto HIGH. Hydras wait as one marker at Staging A, HYD ×24, and Krakens as one at the Marina, KRK ×4; clusters of calls for help read 3 calls, 2 calls and 6 calls. Sector D is selected with a white outline, and its card reads Sector D · Edisto, HIGH priority · 6 calls for help. Under Can reach it lists Roc, from Airfield · 18 h; Kraken, from Marina · 30 h; and Griffin, relay covers sector, each with a green dot. Under Partial it lists Hydra, NE edge only · 15 km limit, with an amber dot."
+  width="2046"
+  height="1404"
+  expandable
+/>
+
 - **Screen 3, Tasking live:** the same cards switch to planned versus actual coverage. When a Griffin relay drops, the operator sees one incident card with the root cause first and the affected Hydras grouped under it, instead of nine separate alerts.
 
-*[Visual: component system frame (tokens and components).]*
-
+<Figure
+  src="/work/drones-sar/decision-7-image.png"
+  alt="Screen 3, Tasking live. The header reads SAR-1102 · Coastal Flood Response, Live 42 min, Behind plan: Sector B · −18 pts in amber, and In contact 36 of 36. On the map, Sector B Peninsula is labelled 18% in amber. A dashed line runs from the sector to a pair of Hydras marked HYD ×2 and tagged RETURNING · BATTERY, and the markers ROC · 02, HYD ×5 and KRK ×2 each carry a purple Autonomous status square. The Sector B · Peninsula card, marked MEDIUM and Behind, shows an amber bar at 18% short of its tick and a warning: 18 pts behind plan (36% expected by now). HYD-09 and HYD-11 returned for battery at 09:31. 5 of 7 Hydras still searching rooftops. It offers Re-propose Sector B or Keep current plan. The rows list ROC-02 surveying the flood area at Alt 8,000 ft, HYD-07–13 searching rooftops with 5 of 7 searching in amber, and KRK-01–02 searching streets with sonar on."
+  width="2586"
+  height="870"
+  expandable
+/>
 ## Engineering Handoff
 
-The brief asked for one coded interaction: drag an asset between sectors, with coverage updating live. I scoped it to a single page that proves the core behaviour, and wrote the handoff so the build could not drift from the design.
+The brief asked for one coded interaction: drag an asset between sectors, with coverage updating live. I scoped it to a single page that proves the core behavior, and wrote the handoff so the build could not drift from the design.
 
 - **One data file:** all 38 units and a simple coverage rule, tuned so the default plan reproduces the Figma screens exactly (A 92%, B 83%, C 87%, D 82%, 86% overall).
-- **Tokens as a table:** the 21 Figma colour tokens mapped to code, with visual rules (selection is white, never blue; amber only where the operator decides).
+- **Tokens as a table:** the 21 Figma color tokens mapped to code, with visual rules (selection is white, never blue; amber only where the operator decides).
 - **Two kinds of annotation:** note cards beside each frame explain the design reasoning; native Figma annotations sit on the exact layers engineering will build.
 - **A one-drag demo:** moving ROC-04 from Sector D to Sector B drops D to 44%, shows the inline warning, names D as weakest in the stat bar, and marks ROC-04 as set by operator.
+
+<Figure
+  src="/work/drones-sar/engineering-handoff.png"
+  alt="The handoff frame: four component panels laid over a dimmed Screen 2, whose header reads Overall coverage 86%, Weakest Sector D · Edisto · 82% HIGH, and Unassigned 0 of 36. Color tokens · rules for operators and AI agents lists four tokens, each with a USE WHEN and an AVOID rule: --status-needs-operator #FFB020, --status-operator-set #2EC4B5, --status-autonomous #CDB8FF and --interaction-primary #8EC5FF. Asset marker shows the Roc, Hydra, Griffin and Kraken marks. Tasking row shows four variants of ROC-01, survey flood area at Alt 8,000 ft: plain; locked; set by operator, with a teal bar and the line moved from Sector B · 08:41; and set by operator and locked. Sector card shows two variants: Sector B · Peninsula, MEDIUM and staged, with a green bar at 83% and the reason KRK-01–02 added: water too deep for ground crews; and Sector D · Edisto, HIGH, with a Stage sector button, an amber bar at 44% and the warning 44% coverage, 16 pts below target for a HIGH sector."
+  width="3212"
+  height="1630"
+  background="#0F1618"
+  expandable
+/>
 
 [TBD: link to the live Vercel build, plus a short recording of the drag.]
 
 ## Outcomes & Impact
 
 - Three screens at desktop size, dark theme: Area overview, Review proposed tasking, Tasking live.
-- A component library of 8 component sets bound to 21 colour tokens, reused across all three screens.
+- A component library of 8 component sets bound to 21 color tokens, reused across all three screens.
 - A launch summary that lists every unit before launch, so no assignment goes out unseen.
-- The brief’s open design questions answered on the canvas: priority versus coverage colour, operator versus autonomy choices, warning strength, and a 38-row roster that stays scannable.
+- The brief’s open design questions answered on the canvas: priority versus coverage color, operator versus autonomy choices, warning strength, and a 38-row roster that stays scannable.
 
 [TBD: the final count of edge-case states shipped as frames — the source doc says 8 of 8, unconfirmed — including the empty state, an unreachable sector, a supervisor veto and a lost relay link.]
 
@@ -218,14 +312,10 @@ The brief asked for one coded interaction: drag an asset between sectors, with c
 
 ## Reflection
 
-### The coverage model needs an operator before it needs polish
+### Cohesion came from taking elements away
 
-Every percentage on these screens comes from an invented rule. The 60% floor, the per-type search rates and the five-minute target all deserve a session with a real mission operator before more visual refinement. Watching one tasking run would test the assumptions faster than any frame.
+Early versions looked like three products stitched together. Color and contrast draw the eye to what needs attention. The fastest way to make decisions is to build and get it in front of a few users; from there it’s a matter of refinement.
 
-### Data and tokens should come first, in code
+### The product questions shape the design
 
-The data errors in the first draft cost time to unwind. Today I would start from the roster file and the token table, then build Figma and the coded prototype from the same source, so the design and the build can’t disagree.
-
-### The product questions shape the design, so they go first
-
-Whether the supervisor can edit or only veto, what counts as good enough to launch, and whether the autonomy may ever move a locked asset all change the screens. Stating an assumption for each at kickoff would have saved rework later.
+Whether the supervisor can edit or only veto, what counts as good enough to launch, and whether the autonomy may ever move a locked asset: each answer changes the screens. Thinking through the edge cases up front gives the design something solid to stand on.
