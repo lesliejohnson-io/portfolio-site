@@ -97,6 +97,13 @@ export type WorkItem = {
 
 export type WorkStat = {
   value: string;
+  /**
+   * A unit set beside the value at the label's size, e.g. "hours" against a
+   * value of "8". A unit carried inside `value` is set at display size, where
+   * a word outweighs the numeral it belongs to and unbalances a row against
+   * the plain figures next to it. Omit it and the value renders alone.
+   */
+  unit?: string;
   label: string;
   /** How the number was measured. Shown verbatim; never invented. */
   caption?: string;

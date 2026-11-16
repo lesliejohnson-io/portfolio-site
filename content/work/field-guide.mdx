@@ -26,7 +26,12 @@ stats:
   - value: "83%"
     label: "Survey completion rate"
     caption: "Share of tablet surveys completed in full"
-  - value: "Same day"
+  # The unit sits beside the numeral at the label's size, so the figure reads
+  # as "8 hours" with only the digit at display size. Carrying the unit inside
+  # `value` would set "Same day" or "8 hours" at the same weight as "83%",
+  # where a word at display size outweighs the number next to it.
+  - value: "8"
+    unit: "hours"
     label: "Data reaching all institutions, down from a week or more"
     caption: "8 hours to reach all institutions, down from a week or more"
 visual:
@@ -66,17 +71,25 @@ logos:
      `who`, and the meta description.
   3. Third person throughout. "Role:" lines are fine. No em dashes.
 
-  Two things still open:
+  Four slots are still outstanding, and their placeholders are left on the
+  page on purpose, so what is missing stays impossible to miss:
 
-  - The hero on disk (replaced 2026-10-15) is the participant tablet beside a
-    laptop showing one session's RESEARCHER view and audit trail. The new copy
-    asks for the tablet survey screen and the coordinator dashboard shown
-    together. The alt text describes the image that actually exists; it must
-    be rewritten when the artwork is replaced.
-  - <FatigueChart /> stands in for the copy's fatigue visual. It plots answer
-    time against the participant's own pace band and marks the check-in, but
-    it does not label the four escalation steps on the timeline the way the
-    copy describes.
+  - The six participant tablet screens as a flow, in the rebuild section.
+  - The same question at standard and simpler reading levels, side by side.
+  - The coordinator dashboard.
+  - The live demo link under "See it working".
+
+  The hero is a fifth, and it is NOT one of those placeholders: it renders a
+  real file, so nothing on the page marks it as wrong. The artwork on disk
+  (replaced 2026-10-15) is the participant tablet beside a laptop showing one
+  session's RESEARCHER view and audit trail. The copy asks for the tablet
+  survey screen and the coordinator dashboard shown together. The alt text
+  describes the image that actually exists; it must be rewritten when the
+  artwork is replaced.
+
+  <FatigueChart /> was replaced 2026-11-16 by the supplied fatigue-detection
+  export. The component still builds and is still registered in
+  caseStudyComponents.tsx, but nothing on the site renders it now.
 */}
 
 ## The assignment
@@ -97,7 +110,13 @@ Three findings, three different kinds of problem: a data pipeline, an instrument
 
 ## Who the study was asking
 
-*[Visual: three persona cards: The Householder, The Gatekeeper, The Independent.]*
+<Figure
+  src="/work/field-guide/personas.png"
+  alt="Three persona cards. The Householder, a single parent with children under 12. The Gatekeeper, an elder with limited reading who does not use handheld devices. The Independent, a teenager comfortable with technology."
+  width="3326"
+  height="1892"
+  wide
+/>
 
 The households in the study were not one audience. A parent answering with small children in the room, an elder who would answer a spoken question but would not touch a tablet, and a teenager comfortable with any device all had to complete the same instrument on the same afternoon.
 
@@ -168,11 +187,13 @@ The study needed a pedigree for every household, mapping the people living there
 
 On the tablet, participants confirmed the family members already listed, added anyone missing, and the system drew the pedigree. Onboarding went from 15 minutes per household to 1, and clinicians got that time back for checking families in.
 
-*[Visual: generated three-generation pedigree chart, household members marked.]*
-
-The rebuild keeps this flow.
-
-*[Visual: tablet screen 2, the household screen, where tapping each member builds the chart.]*
+<Figure
+  src="/work/field-guide/pedigree-chart.png"
+  alt="A three-generation family pedigree generated from tablet input, with household members marked in green."
+  width="2674"
+  height="896"
+  wide
+/>
 
 ### 4. Clearing the exam backlog
 
@@ -225,13 +246,9 @@ In the original, every prompt was recorded in one voice, at one pace, for 700 ho
 
 The rebuild generates the prompts in Appalachian-accented voices. The population this study depended on had good reason to be wary of institutions, and a survey that sounds like a neighbor asks less of a participant than one that sounds like a university. Accent is not decoration here. It is the difference between a question that gets answered and one that gets straightlined.
 
-*[Visual: tablet screen 1, setup. Headphones are checked before anything else, and the voice is introduced by name. The voice stays named in the header for the rest of the survey.]*
-
 ### Answering without reading
 
 Each answer is a large target carrying a mark that grows toward both ends of the scale. Intensity is size, not color, so the scale still reads for a participant with color vision deficiency, which affects roughly one man in twelve. The audio carries the labels for anyone who cannot read them.
-
-*[Visual: the five answer targets, marks growing from Neither to each pole.]*
 
 ### When a question doesn’t land
 
@@ -240,8 +257,6 @@ If a participant replays a question twice, the tablet offers a simpler version. 
 *[Visual: tablet screens 3 and 4 side by side. The same question at standard and simpler reading levels, with the reading level named on each screen.]*
 
 After a few questions, the tablet calls the participant to the dental chair. When they come back, the survey resumes where they stopped. People answer questions during time they would otherwise spend waiting.
-
-*[Visual: tablet screen 6, called to the dental chair.]*
 
 ### When someone gets tired
 
@@ -256,9 +271,12 @@ The response escalates rather than firing all at once:
 
 Rules run offline, and researchers can see exactly why a flag was raised.
 
-<FatigueChart />
-
-*[Visual: tablet screen 5, the break offered. The survey states plainly that answers are saved and that it will resume in the same place.]*
+<Figure
+  src="/work/field-guide/fatigue-detection.png"
+  alt="A line chart of seconds to answer across twenty questions, with a shaded personal pace band. Answer times rise above the band, two replays are marked, and a check-in is offered at question 15."
+  width="1448"
+  height="798"
+/>
 
 ### Seeing the clinic day at a glance
 

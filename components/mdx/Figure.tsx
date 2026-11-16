@@ -120,6 +120,8 @@ export function Figure({
       alt={alt}
       width={width}
       height={height}
+      loading="lazy"
+      decoding="async"
       style={{
         ...(background ? { background } : null),
         /*
@@ -201,6 +203,8 @@ export function Figure({
                 alt={alt}
                 width={width}
                 height={height}
+                loading="lazy"
+                decoding="async"
                 style={background ? { background } : undefined}
                 className="figure-dialog-img"
               />

@@ -8,6 +8,10 @@ import StatValue from "@/components/case-study/StatValue";
  * render identically and sit in the body column, so the page repeats one
  * treatment rather than two sizes of the same thing.
  *
+ * A stat carrying a `unit` sets the unit beside the value at the label's
+ * size. Both are inline, so they share a baseline and the numerals in a row
+ * sit level whether or not a unit follows them.
+ *
  * A stat with no caption renders the value and label alone rather than
  * inventing a measurement note. The row is omitted entirely when a study has
  * no verified numbers; it is never padded to fill three columns.
@@ -48,6 +52,12 @@ export default function StatRow({
           <dd className="contents">
             <span className="font-display text-4xl font-bold leading-none text-fg sm:text-5xl">
               <StatValue value={stat.value} />
+              {stat.unit && (
+                /* font-sans resets the display face inherited from the value. */
+                <span className="ml-1.5 font-sans text-sm font-semibold text-fg-secondary">
+                  {stat.unit}
+                </span>
+              )}
             </span>
             <span className="text-sm font-semibold text-fg-secondary">
               {stat.label}

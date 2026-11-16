@@ -145,11 +145,15 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
                 links down to them rather than repeating them here. The link is
                 dropped when the strip is showing `stripStats`, because those
                 figures are the study's scale, not something measured.
+
+                It spans the row's full width rather than sitting inline at the
+                left, where it lines up under the first column and reads as a
+                note on that one figure. It covers every stat in the row.
               */}
               {stripIsMeasured && (
                 <a
                   href="#how-we-measured"
-                  className="link-draw mt-5 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.06em] text-accent"
+                  className="link-draw mt-6 flex w-full items-center gap-1 font-mono text-xs uppercase tracking-[0.06em] text-accent"
                 >
                   See how we measured this
                   <span aria-hidden="true">→</span>
