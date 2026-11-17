@@ -12,12 +12,13 @@ deck: "An NIH-funded Pitt–WVU health study. The original redesign and its resu
 who: "Households in an NIH-funded Pitt–WVU health study across rural Appalachia, plus the Pitt and WVU research teams and clinicians running it"
 what: "A voice-first, offline-capable field data-collection system replacing 120+ question paper surveys, plus a redesigned clinic service flow"
 summary: "An NIH-funded Pitt–WVU health study. The original redesign and its results, now rebuilt with AI."
-hero: "/work/field-guide/Field-guide-hero.svg"
-# The artwork is a cut-out on a transparent background, so the band is
-# transparent too: no colour, and the frame still drops its border and
-# contains the image rather than cropping it.
-heroBackground: "transparent"
-heroAlt: "A laptop and a tablet side by side. The laptop shows the researcher view of one session: progress at question 37 of 120, a fatigue signal reading “response pattern looks varied, nothing to flag”, an average pace of 4.1 seconds per answer, no open flags, the active voice persona and reading level, and a timestamped audit trail of every agent decision. The tablet shows what the participant sees: question 37 in large plain language, an audio control to replay it, and five response buttons from strongly disagree to strongly agree."
+hero: "/work/field-guide/hero-image.webp"
+# A photograph rather than cut-out artwork, so there is no background colour
+# to run as a band: the hero keeps its bordered, rounded frame. The glow is
+# off too — an opaque rectangle has no alpha silhouette for it to follow, so
+# it would only ring the edges of the photo.
+heroGlow: false
+heroAlt: "A man in a plaid shirt and ball cap, wearing headphones, holds a tablet in a clinic office with a window, a filing cabinet and a brochure rack behind him. The tablet shows the Social Connectivity section of the survey: a “Read Aloud” toggle switched on at the top left, a progress bar, the question “Do you feel alone or far away from your friends and family?” in large plain language, and five response buttons reading Never, Sometimes, Often, Very Often and Always, with Sometimes highlighted. A second person stands at his shoulder."
 # The two figures the copy leads with. Captions are hidden in the strip and
 # carried by the Outcomes table, which is the one place each measurement note
 # is written. "Same day" has no leading digit, so StatValue renders it as
