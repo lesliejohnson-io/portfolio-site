@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import AboutCta from "@/components/mdx/AboutCta";
+import { AboutStats, Stat } from "@/components/mdx/AboutStats";
 
 export default function AboutPage() {
   /*
@@ -18,7 +19,7 @@ export default function AboutPage() {
   return (
     <article className="container-wide py-20 sm:py-24">
       <div className="prose-about">
-        <MDXRemote source={source} components={{ AboutCta }} />
+        <MDXRemote source={source} components={{ AboutCta, AboutStats, Stat }} />
       </div>
     </article>
   );

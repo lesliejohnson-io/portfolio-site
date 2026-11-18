@@ -462,26 +462,33 @@
 }
 
 /*
-  Lead paragraph: the one line under the h1 that frames the whole page. Styled
-  by position rather than a class so the MDX stays plain markdown — it is
-  always the paragraph immediately after the title.
-
-  Cormorant Garamond italic. It is a high-contrast display serif with a small
-  x-height, so it needs a size up from the sans it replaced to hold the same
-  optical weight under the headline. The leading is tight for prose but the
-  face carries it: its small x-height leaves real space between lines even
-  when the ratio looks low.
+  Lead: the two paragraphs under the h1, wrapped in <div className="about-lead">
+  in the MDX. Body face a step up from the story paragraphs and in full --fg,
+  so it reads as the opening argument rather than as more body copy. (The
+  earlier one-line serif italic lead was sized for a single sentence; at two
+  full paragraphs it would be a wall of display type.)
 */
-.prose-about h1 + p {
-  font-family: var(--font-display-serif);
-  font-style: italic;
-  font-size: 1.625rem;
-  line-height: 1.3;
-  /* Tracking matches the Library quotes — one face, one setting. */
-  letter-spacing: -0.02em;
+.prose-about .about-lead p {
+  font-size: 1.1875rem;
+  line-height: 1.65;
   color: var(--fg);
-  margin-bottom: 1.75rem;
   text-wrap: pretty;
+}
+
+.prose-about .about-stats {
+  margin: 3rem auto 0;
+  max-width: 680px;
+}
+
+/* The numbered principles: full-sentence claims, so balanced wrapping. */
+.prose-about h3 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-top: 2.75rem;
+  margin-bottom: 1rem;
+  text-wrap: balance;
 }
 
 /*
@@ -521,8 +528,12 @@
     font-size: 2rem;
   }
 
-  .prose-about h1 + p {
-    font-size: 1.375rem;
+  .prose-about .about-lead p {
+    font-size: 1.125rem;
+  }
+
+  .prose-about h3 {
+    font-size: 1.25rem;
   }
 
   .prose-about blockquote {
