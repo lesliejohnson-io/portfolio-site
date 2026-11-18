@@ -3,15 +3,15 @@ slug: "field-guide"
 featured: true
 order: 1
 layout: "v2"
-category: "AI Rebuild · Health Research"
+category: "Shipped work · Rural health research"
 name: "Field Guide"
-tag: "AI Rebuild · Health Research"
+tag: "Shipped work · Rural health research"
 role: "University of Pittsburgh and West Virginia University · UX designer and researcher"
-title: "Field Guide: Transforming data collection in rural Appalachia"
-deck: "An NIH-funded Pitt–WVU health study. The original redesign and its results, now rebuilt with AI."
+title: "Field Guide: a 120-question health survey, for people who couldn’t read it"
+deck: "An NIH-funded Pitt–WVU study in rural Appalachia. Participants gave up their health data in exchange for dental care, and the study was losing them."
 who: "Households in an NIH-funded Pitt–WVU health study across rural Appalachia, plus the Pitt and WVU research teams and clinicians running it"
 what: "A voice-first, offline-capable field data-collection system replacing 120+ question paper surveys, plus a redesigned clinic service flow"
-summary: "An NIH-funded Pitt–WVU health study. The original redesign and its results, now rebuilt with AI."
+summary: "An NIH-funded Pitt–WVU study in rural Appalachia. Participants gave up their health data in exchange for dental care, and the study was losing them."
 hero: "/work/field-guide/hero-image.webp"
 # A photograph rather than cut-out artwork, so there is no background colour
 # to run as a band: the hero keeps its bordered, rounded frame. The glow is
@@ -19,22 +19,21 @@ hero: "/work/field-guide/hero-image.webp"
 # it would only ring the edges of the photo.
 heroGlow: false
 heroAlt: "A man in a plaid shirt and ball cap, wearing headphones, holds a tablet in a clinic office with a window, a filing cabinet and a brochure rack behind him. The tablet shows the Social Connectivity section of the survey: a “Read Aloud” toggle switched on at the top left, a progress bar, the question “Do you feel alone or far away from your friends and family?” in large plain language, and five response buttons reading Never, Sometimes, Often, Very Often and Always, with Sometimes highlighted. A second person stands at his shoulder."
-# The two figures the copy leads with. Captions are hidden in the strip and
-# carried by the Outcomes table, which is the one place each measurement note
-# is written. "Same day" has no leading digit, so StatValue renders it as
-# written rather than counting down to it.
+# The three figures from the final copy's hero table, labels as written.
+# No captions: the copy gives none, and none are invented. "15 → 1" and
+# "23% → 0" carry an arrow, so StatValue renders them as written rather
+# than counting down. The strip's "see how we measured this" link jumps to
+# the Outcomes table, which carries each figure with its full label.
 stats:
   - value: "83%"
-    label: "Survey completion rate"
-    caption: "Share of tablet surveys completed in full"
-  # The unit sits beside the numeral at the label's size, so the figure reads
-  # as "8 hours" with only the digit at display size. Carrying the unit inside
-  # `value` would set "Same day" or "8 hours" at the same weight as "83%",
-  # where a word at display size outweighs the number next to it.
-  - value: "8"
-    unit: "hours"
-    label: "Data reaching all institutions, down from a week or more"
-    caption: "8 hours to reach all institutions, down from a week or more"
+    label: "Survey completion on the tablet instrument"
+  # The unit sits beside the figures at the label's size; carried inside
+  # `value`, "min" was set at display size and wrapped the figure onto two lines.
+  - value: "15 → 1"
+    unit: "min"
+    label: "Household onboarding"
+  - value: "23% → 0"
+    label: "Participants rescheduled without seeing a dentist"
 visual:
   type: "image"
   src: "/work/field-guide/Field-guide-hero.svg"
@@ -54,96 +53,64 @@ logos:
 ---
 
 {/*
-  Rewritten 2026-11-16 from field-guide-case-study.md, which is the source of
-  truth for wording and structure. Copy is Leslie's, used as written apart
-  from curly quotes and the bold "Role:" and "Design principle:" labels this
-  template already uses.
+  Rewritten 2026-11-18 from field-guide-case-study-final.md, which is the
+  source of truth for wording and structure. Copy is Leslie's, used as written
+  apart from curly quotes and apostrophes. Everything under that file's
+  "Production notes" heading is working notes, not page content.
 
-  Standing content rules for this page, from that rewrite:
+  Standing content rules carried by the final copy:
 
-  1. Survey completion is 83%, the share of tablet surveys completed in full.
-     There is no paper baseline, so it is never phrased as a comparison to
-     paper. The earlier 89%, and the 97% error-reduction figure, are retired:
-     the copy says hand-keying left the pipeline and the errors with it, and
-     states no numeric reduction. Data availability is "same day, down from a
-     week or more" and is never restated as a percentage.
-  2. Literacy was not the barrier. Volume and density of the questions were.
-     No "participants could not read" framing anywhere, including alt text,
-     `who`, and the meta description.
-  3. Third person throughout. "Role:" lines are fine. No em dashes.
+  1. State 83% bare. There is no paper baseline, so it is never phrased as an
+     improvement over paper.
+  2. No years anywhere on the page.
+  3. The rebuild section has no link yet. Add "Read the rebuild →" once that
+     page exists.
 
-  Four slots are still outstanding, and their placeholders are left on the
-  page on purpose, so what is missing stays impossible to miss:
+  Images, against the copy's [Image: …] markers:
 
-  - The six participant tablet screens as a flow, in the rebuild section.
-  - The same question at standard and simpler reading levels, side by side.
-  - The coordinator dashboard.
-  - The live demo link under "See it working".
+  - Hero: hero-image.webp. The alt describes the file on disk.
+  - Partner logos: rendered by the logo strip under the title (frontmatter
+    logos), not inline in Context.
+  - Approach 2 data path: data-diagram.png.
+  - Approach 3 clinic day: field-guide-journey-map.svg, the existing journey
+    map, standing in for a before-and-after picture.
+  - Rebuild screenshot: no asset yet, so it is a placeholder.
 
-  The hero is a fifth, and it is NOT one of those placeholders: it renders a
-  real file, so nothing on the page marks it as wrong. The artwork on disk
-  (replaced 2026-10-15) is the participant tablet beside a laptop showing one
-  session's RESEARCHER view and audit trail. The copy asks for the tablet
-  survey screen and the coordinator dashboard shown together. The alt text
-  describes the image that actually exists; it must be rewritten when the
-  artwork is replaced.
-
-  <FatigueChart /> was replaced 2026-11-16 by the supplied fatigue-detection
-  export. The component still builds and is still registered in
-  caseStudyComponents.tsx, but nothing on the site renders it now.
+  Retired from the page, still on disk: personas.png, pedigree-chart.png,
+  field-guide-service-map.svg, fatigue-detection.png. FatigueChart and
+  SurveyTimeline remain registered but unused.
 */}
 
-## The assignment
+## Context
 
-Open-ended. A Pitt–WVU study across rural Appalachia was losing participants faster than it could replace them, and its NIH funding depended on the data those families provided. No one had identified why. The study described its participants as illiterate and asked whether tablets would help.
+The study was an NIH-funded collaboration between Pitt and WVU, running clinic days in rural Appalachia. The arrangement was explicit: participants completed a long health survey and handed over personal health data, and in return they received a dental exam, and treatment if they needed it. Many needed a great deal.
 
-**Role:** UX designer and researcher, leading design from field research through in-clinic testing over an eight-week engagement, with updates through the following year. Worked with research teams at Pitt and WVU, clinicians, developers, and community partners.
+Two things were failing. Participants were dropping out, and the study’s funding depended on their data. The data itself moved on paper, hand-entered afterward, slowly and with errors, so no partner institution could see it for a week or more.
 
-## What was actually happening
+What I was handed wasn’t a brief. The team thought digitizing the survey might be worthwhile and didn’t know what that would mean or whether it was possible. No device decision, no data pipeline, no spec.
 
-Every survey was a paper bubble sheet. Sheets traveled between sites for a week or more before being keyed into the database by hand, collecting errors on the way, and the institutions did not receive the data at the same time.
+The study characterized its participants as illiterate. The paper sheets said something else: whole columns of identical answers, filled in by people who wanted to be done. Literacy wasn’t the barrier. Volume and density were — 120-plus questions in research language, many of them long and multi-part. Either way, the obvious move, putting the instrument on a screen, was off the table.
 
-The sheets showed a second problem. Whole columns of identical answers, filled in by people who wanted to be done. Those surveys were complete, and the study could not use them.
-
-Literacy was not the barrier. Volume and density were. The survey ran more than 120 questions, written for researchers rather than for the families answering them, many of them long and multi-part.
-
-Three findings, three different kinds of problem: a data pipeline, an instrument, and a clinic day.
-
-## Who the study was asking
-
-<Figure
-  src="/work/field-guide/personas.png"
-  alt="Three persona cards. The Householder, a single parent with children under 12. The Gatekeeper, an elder with limited reading who does not use handheld devices. The Independent, a teenager comfortable with technology."
-  width="3326"
-  height="1892"
-  wide
-/>
-
-The households in the study were not one audience. A parent answering with small children in the room, an elder who would answer a spoken question but would not touch a tablet, and a teenager comfortable with any device all had to complete the same instrument on the same afternoon.
-
-The Gatekeeper set the requirement the rest of the design followed. A survey that had to be read would lose her. A survey that could be heard would not.
+**My role.** Sole designer, through p2design. I defined the problem, rewrote the instrument with the researchers, designed the offline tablet survey and the data path behind it, and redesigned the clinic day after watching it fail in person.
 
 ## Objective
 
-Reliable data came first. Participants needed questions they could follow by ear and answer without reading or writing. They also needed their exam visit to run on time. Clinicians needed accurate records without losing hours to paperwork.
+What the design had to satisfy:
 
-All of it had to work in rural clinics with:
+- **No reading required.** Every question had to be heard, and the participant had to be able to work through it alone, since this was a self-report instrument.
+- **One design across the full range.** The same instrument served an elder who wouldn’t touch a handheld, a teenager on the youth version of the study, and parents somewhere in between.
+- **Survive the length.** A single parent completed her own survey plus a child behavior instrument for every child under 12, up to four instruments in one visit, with the children in the room.
+- **No connectivity, not poor connectivity.** Nothing could depend on reaching a network during the clinic day.
+- **Protected health data on devices that travel.** The tablets left the site each night, so the design had to meet the study’s HIPAA obligations, not just good intentions.
+- **Same-day into the study database,** reachable by Pitt, WVU and NIH.
 
-- **Reading could not be required.** Nothing in the survey could depend on reading or writing.
-- **Unreliable internet.** The tablets had to work offline and sync later.
-- **Thin trust.** A participant who had a bad visit might not come back.
+## Approach
 
-## The original work
+### 1. If it can’t be read, it has to be heard
 
-### 1. Turning 120+ questions into speech
+The researchers didn’t want the questions touched. No budget for a rewrite, and a real concern that changing the wording would change what each validated instrument measured. Rather than argue, I recorded one of the longest questions and played it aloud for the room. At the speed a participant would hear it, the question was plainly unanswerable.
 
-The research team did not want the questions rewritten. They had no time or budget for a rewrite, and they were concerned that changing the wording would change what each validated instrument measured.
-
-Rather than argue the point, one of the longest and most complex questions was recorded and played aloud for the room.
-
-The room went quiet. At the speed a participant would hear it, the question was plainly unanswerable.
-
-The team agreed to two changes: rewrite the questions for readability, and record each one as audio so participants could listen instead of read.
+The team agreed to two changes that afternoon: rewrite every question for readability, and record each one as audio. I took every rewrite back to the researchers for sign-off, so the instrument stayed scientifically valid rather than just shorter. The approved wording played through headphones, so a participant who had trouble reading could listen and answer on their own.
 
 | Original | Rewrite | Grade level |
 | --- | --- | --- |
@@ -153,18 +120,28 @@ The team agreed to two changes: rewrite the questions for readability, and recor
 
 <TableNote>Scored with the Flesch-Kincaid Grade Level formula.</TableNote>
 
-Most of the effort went into protecting each question’s meaning while the words got simpler. Researchers approved every rewrite against what the original was validated to measure. The approved versions were recorded as audio prompts and loaded onto tablets, which ran offline and uploaded to a shared database at the end of each clinic day.
+### 2. Design for no signal, not bad signal
 
-Hand-keying disappeared from the pipeline, and with it the errors it introduced.
+The clinic ran in rural locations where connectivity couldn’t be relied on, and the tablets traveled with the team. The survey ran fully offline. At checkout, each participant’s data copied to a laptop and a portable external drive, so a lost or failed tablet never cost more than the session in progress. At the end of the day, once the team reached reliable connectivity, everything went up to the study database and every tablet was wiped. Nothing carrying protected health information rode around overnight.
 
-### 2. Watching the clinic day
+The tablet was never the point: the study needed the data to land in a database Pitt, WVU and NIH could all reach, and to tell them it had landed. A successful upload did both. It wiped the tablets and sent the institutions an update notice, the same day instead of a week or more.
 
-Time spent in the clinic, watching visits unfold from arrival to exam, surfaced two problems that had nothing to do with the survey:
+<Figure
+  src="/work/field-guide/data-diagram.png"
+  alt="The data path in four phases, left to right. During the clinic day: tablet, offline. At each checkout: laptop plus external drive. End of day, on connectivity: study database. Same day, on successful upload: a message sent, branching to Pitt, WVU and NIH. A return arrow from the study database back to the tablet is labelled Tablets wiped."
+  width="4810"
+  height="828"
+  wide
+  expandable
+/>
 
-- **Onboarding.** Clinicians spent about 15 minutes with each household, collecting names and drawing three-generation pedigrees by hand.
-- **The exam queue.** Emergencies took priority, as they should, and families with routine exams waited for hours.
+### 3. The clinic day was the product
 
-Mapping the full service, from the participant’s path to staff workflows and the handoffs between them, showed how the two problems were connected.
+Participants gave up personal health data and were promised a dental exam in return, plus treatment if they needed it. Many needed a great deal. I spent clinic days on site watching the queue rather than reading reports about it, and the bottleneck turned out to be variance, not volume. When an exam becomes an hour of treatment, a block of arrivals becomes a backlog that never recovers.
+
+23% were rescheduled, and in a rural catchment that largely meant the participant was lost: the study had the data and hadn’t held up its end.
+
+Two changes, neither an interface. I staggered arrival times so the queue metered itself, and took the queue data to the study directors, who authorized an overflow dental team. Rescheduling went to zero.
 
 <Figure
   src="/work/field-guide/field-guide-journey-map.svg"
@@ -174,125 +151,49 @@ Mapping the full service, from the participant’s path to staff workflows and t
   full
 />
 
-<Figure
-  src="/work/field-guide/field-guide-service-map.svg"
-  alt="A service blueprint of the clinic day. Six journey phases run across the top: check-in and onboarding, self-report surveys, dental exam, DNA sample, remaining surveys, and departure. A participants row carries a three-generation pedigree diagram, noting that participants are whole households. Below the line of interaction, rows record participant actions, touchpoints and devices (tablet, headphones, computer, dental chart and tools, saliva tubes), and the people and environments at each phase. Below the line of visibility, rows record tablet actions and supporting processes, each phase marked with the direction data moves between tablet and server. The last two rows hold participant pain points and solution opportunities: long waits while staff interview families for onboarding, parents filling out the same 60-question survey for each child, participants not receiving dental exams because staff are behind due to emergency care, HIPAA forms for minors, difficult survey language and fatigue, and not being seen by a dentist — answered by collecting household information during the scheduling call, having the tablet format the pedigree diagram, simplifying question language, adjusting pacing and offering breaks, and adding overflow dental staff for emergencies."
-  width="2252"
-  height="1325"
-  full
-/>
+### 4. Replace the artifact, not the format
 
-### 3. Family pedigrees in a minute
+Onboarding took fifteen minutes per household because staff hand-drew a family pedigree for each participant. I replaced the drawing with on-screen confirmation. Staff confirmed or corrected relationships instead of constructing them. One minute.
 
-The study needed a pedigree for every household, mapping the people living there and their extended family. Clinicians drew each one by hand at check-in, and with most families arriving at once, everyone else waited.
+The gain wasn’t paper becoming a screen. It was changing what the staff was asked to produce: nobody needed a drawn artifact, the study needed confirmed relationships, and confirming is faster than constructing.
 
-On the tablet, participants confirmed the family members already listed, added anyone missing, and the system drew the pedigree. Onboarding went from 15 minutes per household to 1, and clinicians got that time back for checking families in.
+## Outcomes & Impact
 
-<Figure
-  src="/work/field-guide/pedigree-chart.png"
-  alt="A three-generation family pedigree generated from tablet input, with household members marked in green."
-  width="2674"
-  height="896"
-  wide
-/>
-
-### 4. Clearing the exam backlog
-
-When someone arrived with an emergency, such as an infection, clinicians treated them first. The families behind them waited, sometimes for hours, and some went home without an exam.
-
-A screen could not solve this, and staffing belonged to the directors. The case went to them in the study’s terms: each family that left was a participant, and a set of data, the study might not get back. The directors agreed to add an overflow dental team for emergencies. Urgent cases still got care, and scheduled exams started on time.
-
-## Key decisions and trade-offs
-
-| Decision | Why | Result |
-| --- | --- | --- |
-| Rewrite every question in plain spoken language; participants listen and tap | Many participants could not get through dense written questions, and the paper sheets came back straightlined | Reading level fell from grades 9–11 to 2–5, and 83% of tablet surveys were completed in full, with researchers confirming each rewrite still measured what the original did |
-| Study the whole clinic day, not just the survey | The tablets were in use, but participation was still being lost somewhere | Surfaced two problems outside the survey: 15-minute onboarding and the exam queue |
-| Participants pick household members from a list and the system draws the pedigree | Clinicians were drawing three-generation pedigrees by hand | Onboarding went from 15 minutes per household to 1 |
-| Take the emergency staffing problem to the study’s directors, outside the design scope | No screen could stop families leaving without an exam | An overflow dental team was added; urgent cases still came first and scheduled exams started on time |
-
-## Outcomes
-
-Participants completed 83% of tablet surveys in full, and data reached every institution the same day instead of a week or more later. The study recovered enough participation and data quality to keep its NIH funding.
+{/*
+  The copy gives outcomes as a four-row table rather than bullets, so it
+  stands in for StatRow, which would repeat three of these four rows. The
+  anchor keeps the strip's "see how we measured this" link landing here.
+*/}
 
 <div id="how-we-measured" />
 
-| Metric | Result | How it was measured |
-| --- | --- | --- |
-| Survey completion rate | 83% | Share of tablet surveys completed in full |
-| Data availability | Same day | 8 hours to reach all institutions, down from a week or more |
-| Onboarding per household | 15× faster | 15 minutes down to 1 minute |
+| Result | Figure |
+| --- | --- |
+| Survey completion on the tablet instrument | 83% |
+| Clinic day to data available to Pitt, WVU and NIH | 8 hours, from a week or more |
+| Household onboarding | 15 minutes → 1 minute |
+| Participants rescheduled without seeing a dentist | 23% → 0 |
 
-Once an overflow team took on emergencies, the exam queue kept moving and every participant was seen.
+The study kept its funding.
 
-## What the project taught
+**Delivered:** a plain-language instrument approved by the researchers; a voice-first tablet survey that ran offline; an end-of-day data procedure covering upload, backup and wipe; and a redesigned clinic day.
 
-**Map the whole service before designing screens.**
+## Reflection
 
-The blueprint came after the problems had already turned up in the clinic. It explained them, but drawn earlier, it would have found them sooner. That habit shaped the rebuild.
+### The screen was the smallest part of it
 
-## The rebuild: the survey and the clinic as one system
+The survey was what I was asked about. The queue, the staffing and the data path were what determined whether the study got its data, and none of them were interface problems. Starting in a design tool would have produced a good instrument delivered into a clinic day that still lost a quarter of its participants.
 
-The original solved the two problems separately, with tablets for the survey and an added team for emergencies. In the rebuild they share one set of data, so the participant’s tablet and the clinic’s dashboard describe the same day.
+### What I’d check if I ran it again
 
-**Role:** designed and coded the rebuild in React and Next.js. The ElevenLabs API generates each question’s audio ahead of time so the tablets work offline. The Anthropic API drafts plain-language versions of questions for researchers to review.
+- Completion by instrument count: did the parents working through four instruments finish at the same rate as participants doing one?
+- The time-to-dentist distribution rather than the average. The average was never the problem; the tail was.
+- Whether audio-only delivery changed response patterns compared with the paper instrument. Nobody measured that, and on a study collecting health data it matters.
 
-**Design principle:** all AI work happens before clinic day. Nothing at the clinic needs an internet connection.
+## The rebuild
 
-*[Visual: the six participant tablet screens as a flow. Setup, household, standard question, simpler question, break offered, called to the exam.]*
+Most of the constraints that shaped this work have since lifted. Offline-first is ordinary now. Speech no longer needs a recording session and a researcher’s calendar. A model can notice that someone is struggling with a question and offer a simpler wording that a researcher already approved, which at the time meant printing a second instrument.
 
-### Sounding like home
+So I rebuilt it as a working prototype, in React and Next.js, to find out what this design becomes when the constraints go away. Regional voices rather than neutral narration. Fatigue handling for the parent on her fourth instrument. A coordinator view that shows the clinic day falling behind while there is still time to do something about it.
 
-In the original, every prompt was recorded in one voice, at one pace, for 700 households.
-
-The rebuild generates the prompts in Appalachian-accented voices. The population this study depended on had good reason to be wary of institutions, and a survey that sounds like a neighbor asks less of a participant than one that sounds like a university. Accent is not decoration here. It is the difference between a question that gets answered and one that gets straightlined.
-
-### Answering without reading
-
-Each answer is a large target carrying a mark that grows toward both ends of the scale. Intensity is size, not color, so the scale still reads for a participant with color vision deficiency, which affects roughly one man in twelve. The audio carries the labels for anyone who cannot read them.
-
-### When a question doesn’t land
-
-If a participant replays a question twice, the tablet offers a simpler version. Each validated question measures one specific thing, and loose rewording can change what it measures without anyone noticing. A model drafts the alternatives, and researchers approve each one before it reaches a tablet.
-
-*[Visual: tablet screens 3 and 4 side by side. The same question at standard and simpler reading levels, with the reading level named on each screen.]*
-
-After a few questions, the tablet calls the participant to the dental chair. When they come back, the survey resumes where they stopped. People answer questions during time they would otherwise spend waiting.
-
-### When someone gets tired
-
-The tablet compares how long each answer takes against that person’s own pace, and counts replays. It also watches for the old paper problem: answers tapped before the question finishes, or the same answer chosen again and again.
-
-The response escalates rather than firing all at once:
-
-1. Slow the speech.
-2. Switch to the simpler approved wording.
-3. Offer a break.
-4. Flag the household to the dashboard so staff can check in.
-
-Rules run offline, and researchers can see exactly why a flag was raised.
-
-<Figure
-  src="/work/field-guide/fatigue-detection.png"
-  alt="A line chart of seconds to answer across twenty questions, with a shaded personal pace band. Answer times rise above the band, two replays are marked, and a check-in is offered at question 15."
-  width="1448"
-  height="798"
-/>
-
-### Seeing the clinic day at a glance
-
-The coordinator’s screen stays quiet until someone needs a person. The same escalation that slows a tablet’s speech ends, if nothing helps, as a flag on this screen.
-
-*[Visual: coordinator dashboard.]*
-
-The lead can spot a growing queue early and move staff before families start leaving.
-
-## See it working
-
-*[Demo: live link or embed.]*
-
-The demo follows one participant from the first question to the dental chair and back, including a replay, a simpler version, and a fatigue check-in. The clinic dashboard updates alongside it.
-
-## Closing
-
-On paper, participants answered questions they could not follow, and the study could not trust the answers. The original tablet and the rebuild both start from the same idea: research about a community only works when that community can take part in it.
+*[Visual: one screenshot from the rebuild, most likely the coordinator view.]*
