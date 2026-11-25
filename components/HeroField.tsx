@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic"
 import { motion, MotionConfig, type Variants } from "motion/react"
+import { sendGAEvent } from "@next/third-parties/google"
+import { CONTACT_MAILTO } from "@/lib/contact"
 
 /*
   The WebGL field is split into its own module and loaded with ssr:false: it
@@ -54,7 +56,7 @@ export default function HeroField() {
           whether scripts ran.
         */}
         <noscript>
-          <style>{`.hero-field h1,.hero-field p{opacity:1!important;filter:none!important;transform:none!important}`}</style>
+          <style>{`.hero-field-panel>*{opacity:1!important;filter:none!important;transform:none!important}`}</style>
         </noscript>
         {/*
           The field is a sibling of the text rather than a backdrop behind it,
@@ -90,21 +92,64 @@ export default function HeroField() {
             animate="visible"
             className="hero-field-panel flex flex-col gap-5"
           >
+            {/*
+              The line breaks are set by hand from md up, so the headline
+              always reads in the same three phrases. Below md they are
+              hidden and the text wraps naturally to the phone's width.
+            */}
             <motion.h1
               variants={item}
-              className="font-display text-[clamp(32px,9vw,50px)] font-bold leading-[1.02] tracking-[-0.02em] text-hero-field-label md:text-[clamp(32px,5vw,50px)]"
+              className="font-display text-[clamp(32px,8.5vw,46px)] font-bold leading-[1.05] tracking-[-0.02em] text-hero-field-label md:text-[clamp(32px,3.2vw,46px)]"
             >
-              Intelligent systems
-              <br />
-              meet human design.
+              Designing the moment <br className="hidden md:inline" />
+              an operator decides whether to <br className="hidden md:inline" />
+              trust the machine.
             </motion.h1>
-            <motion.p
+            <motion.div
               variants={item}
-              className="max-w-[480px] text-[clamp(16px,1.4vw,20px)] leading-[1.5] text-hero-field-subline"
+              className="flex max-w-[520px] flex-col gap-3 text-[clamp(16px,1.2vw,18px)] leading-[1.5] text-hero-field-subline"
             >
-              I translate what complex systems are doing into language people can read, trust,
-              and act on.
-            </motion.p>
+              <p>
+                Health research, financial services, command-and-control autonomy. IC designer
+                experienced working on teams or solo.
+              </p>
+              <p className="font-semibold text-hero-field-label">I design it, build it, and ship it.</p>
+            </motion.div>
+            {/*
+              pointer-events-auto because the text layer above the field is
+              pointer-events:none on desktop (so the field can track the
+              pointer through it); the button has to opt back in to be clicked.
+            */}
+            <motion.div variants={item} className="flex flex-wrap items-center gap-3 pt-2">
+              <a
+                href="#work"
+                className="pointer-events-auto inline-flex items-center gap-2 rounded-md border border-hero-field-cta bg-hero-field-cta px-4 py-2.5 text-[15px] font-semibold text-hero-field-cta-fg transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hero-field-label"
+              >
+                See the work
+              </a>
+              {/*
+                The secondary action: an outline in the button's fill colour,
+                the same size as "See the work" but unfilled, so it reads as
+                second to it. On hover it fills, like the outline buttons
+                further down the page. Opens a mail draft, as
+                the About page's "Get in touch" does, and fires the same
+                `email_click` event tagged location: "hero". The arrow nudges
+                right on hover; motion-safe skips that under reduced motion.
+              */}
+              <a
+                href={CONTACT_MAILTO}
+                onClick={() => sendGAEvent("event", "email_click", { location: "hero" })}
+                className="group pointer-events-auto inline-flex items-center gap-2 rounded-md border border-hero-field-cta px-4 py-2.5 text-[15px] font-semibold text-hero-field-cta transition-colors hover:bg-hero-field-cta hover:text-hero-field-cta-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hero-field-cta"
+              >
+                Let’s talk
+                <span
+                  aria-hidden="true"
+                  className="motion-safe:transition-transform motion-safe:group-hover:translate-x-0.5"
+                >
+                  →
+                </span>
+              </a>
+            </motion.div>
           </motion.div>
         </div>
         <div className="hero-field-stage">

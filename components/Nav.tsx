@@ -2,65 +2,69 @@ import Link from "next/link";
 import LogoMark from "@/components/LogoMark";
 import NavContact from "@/components/NavContact";
 import MobileNav from "@/components/MobileNav";
-import ThemeToggle from "@/components/ThemeToggle";
+import { CALIBRATE_URL } from "@/lib/calibrate";
+import { externalProps, type NavLink } from "@/lib/nav";
 
-const LINKS = [
-  { href: "/", label: "Home" },
+/*
+  No "Home" item: the mark and name on the left are the home link.
+  Contact is not in this list because it opens an email rather than a page
+  (NavContact); it renders after the links below.
+*/
+const LINKS: NavLink[] = [
   { href: "/work", label: "Work" },
   { href: "/about", label: "About" },
-  { href: "/resources", label: "Library" },
+  // The Calibrate site. External, so it opens in a new tab.
+  { href: CALIBRATE_URL, label: "Calibrate", external: true },
 ];
 
 /*
-  Glass: a translucent bar with a saturating blur, so content scrolling
-  underneath stays faintly visible and tinted rather than hidden. The blur
-  comes from Tailwind's utility — a raw `backdrop-filter` in globals.css is
-  stripped by Lightning CSS and silently does nothing.
+  A full-width bar stuck to the top of the viewport. The translucent fill and
+  blur let content scrolling underneath stay faintly visible rather than cut
+  off at a hard edge. The blur comes from Tailwind's utility — a raw
+  `backdrop-filter` in globals.css is stripped by Lightning CSS.
 
-  Every box between <body> and the mark carries `overflow-visible`. LogoMark's
-  arms tumble past their own 40px viewBox on hover, and an ancestor clipping
-  its overflow would shear them off mid-swing; stating it here keeps a later
-  `overflow-hidden` from being added by accident.
+  The bar is dark on both themes: `theme-dark` (globals.css) swaps in the
+  dark palette for everything inside it. `text-fg` gives the name in the
+  mark that palette's off-white; it inherits its colour, and would otherwise
+  take the page's dark text on the light theme. The fill is 90% opaque, not
+  75%, so the bar still reads as dark over light sections.
+
+  The bar spans the whole window, but its contents sit in container-wide, so
+  the mark lines up with the hero headline and the case study rows below.
 */
 export default function Nav() {
   return (
-    <header className="sticky top-2 z-30 mt-2 overflow-visible">
-      {/*
-        container-wide supplies the page margin; the negative inline margin
-        pushes the bar 8px past it on each side, so the pill sits just proud of
-        the content below rather than flush with it.
-      */}
-      <div className="container-wide overflow-visible">
-        <div className="-mx-2 flex items-center justify-between overflow-visible rounded-full border border-border/60 bg-bg/60 px-6 py-3 backdrop-blur-xl backdrop-saturate-150">
+    <header className="theme-dark sticky top-0 z-30 border-b border-border/60 bg-bg/90 text-fg backdrop-blur-xl backdrop-saturate-150">
+      <div className="container-wide flex h-16 items-center justify-between">
         {/*
-          LogoMark is the whole home link: it renders its own <Link>, the mark,
-          and the "Leslie Johnson" wordmark, so there is no separate logo or
-          name here to duplicate it.
+          Dimmed until hovered or focused. The opacity lives on a wrapper so
+          LogoMark itself stays a plain, reusable link. focus-within brings it
+          up for keyboard users too, not just the mouse.
         */}
-        <LogoMark size={40} />
+        <div className="opacity-65 transition-opacity duration-200 focus-within:opacity-100 hover:opacity-100">
+          <LogoMark size={32} />
+        </div>
 
-        <nav
-          aria-label="Main"
-          className="hidden items-center gap-x-6 md:flex"
-        >
+        <nav aria-label="Main" className="hidden items-center gap-x-7 md:flex">
           {LINKS.map((link) => (
             <Link
-              key={link.href}
+              key={link.label}
               href={link.href}
-              className="link-draw font-mono text-xs uppercase tracking-[0.08em] text-fg-secondary hover:text-accent"
+              {...(link.external ? externalProps : {})}
+              className="link-draw font-sans text-[13px] font-medium uppercase tracking-[0.1em] text-fg-secondary hover:text-fg"
             >
               {link.label}
+              {link.external && (
+                <span className="sr-only"> (opens in a new tab)</span>
+              )}
             </Link>
           ))}
           <NavContact />
-          <ThemeToggle />
         </nav>
 
         {/* Below md the links live in the slide-in panel. */}
         <div className="flex items-center gap-1 md:hidden">
-          <ThemeToggle />
           <MobileNav links={LINKS} />
-        </div>
         </div>
       </div>
     </header>

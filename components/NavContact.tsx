@@ -1,50 +1,19 @@
-"use client";
-
-import { CONTACT_EMAIL, useCopyEmail } from "@/lib/useCopyEmail";
+import MailtoLink from "@/components/MailtoLink";
 
 /**
- * The nav's Contact button. It copies the address rather than opening a mail
- * client, matching the footer's envelope — same copy, same 2s toast, same
- * `email_copy` event, tagged location: "nav" so the two surfaces can be told
- * apart in GA4.
+ * The nav's Contact link. It opens a new email with the site's subject line
+ * already filled in, like every other mail link on the site, and fires
+ * `email_click` tagged location: "nav" so it can be told apart in GA4.
+ *
+ * It used to copy the address and show an "Email copied!" toast instead.
  */
-export default function NavContact({
-  /*
-    Where the toast opens. The desktop bar sits at the top of the page, so its
-    toast drops below the button. In the mobile panel the button is pinned to
-    the bottom-left corner, where "below and right-aligned" lands off both the
-    bottom and the left edge of the screen.
-  */
-  toastPlacement = "below",
-}: {
-  toastPlacement?: "below" | "above";
-}) {
-  const { copied, copy } = useCopyEmail("nav");
-
-  const toastPosition =
-    toastPlacement === "above"
-      ? "bottom-full left-0 mb-2"
-      : "top-full right-0 mt-2";
-
+export default function NavContact() {
   return (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={copy}
-        aria-label={`Copy email address, ${CONTACT_EMAIL}`}
-        className="btn-edge rounded-full border border-border-strong px-4 py-1.5 font-mono text-xs uppercase tracking-[0.06em] text-fg transition-colors hover:border-accent hover:text-accent"
-      >
-        Contact
-      </button>
-
-      {copied && (
-        <div
-          role="status"
-          className={`pointer-events-none absolute z-30 whitespace-nowrap rounded-md bg-accent px-3 py-2 font-mono text-xs normal-case text-accent-fg shadow-lg ${toastPosition}`}
-        >
-          Email copied!
-        </div>
-      )}
-    </div>
+    <MailtoLink
+      location="nav"
+      className="link-draw block font-sans text-[13px] font-medium uppercase tracking-[0.1em] text-fg-secondary transition-colors hover:text-fg"
+    >
+      Contact
+    </MailtoLink>
   );
 }

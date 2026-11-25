@@ -5,8 +5,8 @@ import type { WorkItem } from "@/lib/work";
 
 /**
  * A full-width case study row: text column (5 of 12) beside its visual
- * (7 of 12), separated from its neighbours by a hairline rule, stacking to
- * one column on mobile.
+ * (7 of 12), stacking to one column on mobile. Rows are separated by space
+ * alone, with no rule between them.
  *
  * The whole row is clickable via the "stretched link" pattern — the "Case
  * study" anchor carries an absolutely positioned ::after covering the row.
@@ -34,15 +34,26 @@ function renderTitle(title: string, highlight?: string) {
   );
 }
 
-export default function WorkRow({ item }: { item: WorkItem }) {
+/*
+  `flip` puts the visual on the left and the text on the right from md up.
+  Only the visual order changes: the text stays first in the DOM, so screen
+  readers and the stacked phone layout read title before image either way.
+*/
+export default function WorkRow({
+  item,
+  flip = false,
+}: {
+  item: WorkItem;
+  flip?: boolean;
+}) {
   return (
-    <article className="group relative grid grid-cols-1 items-center gap-8 border-t border-border py-12 md:grid-cols-12 md:gap-12 md:py-16">
-      <div className="md:col-span-5">
+    <article className="group relative grid grid-cols-1 items-center gap-8 py-12 md:grid-cols-12 md:gap-12 md:py-16">
+      <div className={`md:col-span-5 ${flip ? "md:order-2" : ""}`}>
         {/*
           One eyebrow, saying what the product is. Set as a bare line of type
-          rather than inside a pill: the row already carries a hairline rule
-          and a framed visual, and a third enclosed shape above the title read
-          as chrome competing with it. The wide tracking is what makes it
+          rather than inside a pill: the row already carries a framed visual,
+          and an enclosed shape above the title read as chrome competing
+          with it. The wide tracking is what makes it
           register as a label without a box around it.
         */}
         <p className="font-mono text-xs uppercase tracking-[0.12em] text-fg-secondary">
@@ -124,7 +135,7 @@ export default function WorkRow({ item }: { item: WorkItem }) {
         </Link>
       </div>
 
-      <div className="md:col-span-7">
+      <div className={`md:col-span-7 ${flip ? "md:order-1" : ""}`}>
         <WorkRowVisual visual={item.visual} />
       </div>
     </article>

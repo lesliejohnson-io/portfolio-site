@@ -105,6 +105,36 @@
   */
   --hero-field-subline: #c4cdd6;
   /*
+    "See the work" button on the field. The field is dark in both themes, so
+    these are not redefined for dark mode: the dark-theme accent on near-black
+    text, 9.9:1.
+  */
+  --hero-field-cta: #34c3ec;
+  --hero-field-cta-fg: #0b0d10;
+  /*
+    The partner logo band under the hero: the same colour as the field, so
+    the hero and the logos read as one continuous dark band. Also fixed
+    across themes, which is what lets the white-on-transparent logo artwork
+    go in un-inverted.
+  */
+  --logo-band-bg: var(--hero-field-bg);
+  /*
+    The "Attention is the bottleneck" bar. The same near-black as the hero
+    field and the logo band (it used to be a lighter slate navy, #1e2735,
+    which read as blue), fixed across themes like the field. Its text reuses
+    --hero-field-label (13.9:1) and --hero-field-subline (10.5:1).
+  */
+  --statement-bg: var(--hero-field-bg);
+  /* The site footer shares the statement bar's background, in both themes. */
+  --footer-bg: var(--statement-bg);
+  /*
+    The dark tile behind each Calibrate pattern drawing, and the drawing's
+    ink (16.5:1 on the tile). Redefined for dark mode below so the tile still
+    reads as a step darker than the card around it.
+  */
+  --pattern-tile: #1c1c1c;
+  --pattern-ink: #f4f3ef;
+  /*
     A lit indicator lamp. Set once and NOT redefined per theme, for the same
     reason as --video-mat: a lamp that is on is brighter than whatever it
     sits on, in both themes. Deriving it from --accent-fg looked right on the
@@ -151,8 +181,14 @@
   are re-tuned for AA contrast on dark. Both themes are verified to satisfy
   WCAG AA. Applied when the (from-scratch) theme script sets data-theme="dark"
   on <html> before paint.
+
+  .theme-dark applies the same palette to one element and everything inside
+  it, whatever the page theme. The nav bar uses it to stay dark on the light
+  theme: every token below is redefined on that element, so its bg-bg, text-fg
+  and border-border utilities pick up the dark values.
 */
-:root[data-theme="dark"] {
+:root[data-theme="dark"],
+.theme-dark {
   --bg: #16181c;
   --bg-raised: #1e2126;
   --surface: #23262c;
@@ -170,6 +206,7 @@
   --wave-hero-high: #2ee6c8;
   --wave-hero-line-strong: 0.42;
   --wave-hero-line-soft: 0.15;
+  --pattern-tile: #101215;
   color-scheme: dark;
 }
 
@@ -192,6 +229,13 @@
   --color-hero-field-label: var(--hero-field-label);
   --color-hero-field-metric: var(--hero-field-metric);
   --color-hero-field-subline: var(--hero-field-subline);
+  --color-hero-field-cta: var(--hero-field-cta);
+  --color-hero-field-cta-fg: var(--hero-field-cta-fg);
+  --color-logo-band-bg: var(--logo-band-bg);
+  --color-statement-bg: var(--statement-bg);
+  --color-footer-bg: var(--footer-bg);
+  --color-pattern-tile: var(--pattern-tile);
+  --color-pattern-ink: var(--pattern-ink);
   --color-accent-soft: var(--accent-soft);
 
   /*
@@ -260,6 +304,16 @@
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+/*
+  The SAR section is a dark band in both themes. Inside it, --accent points at
+  the band’s own cyan, so the focus ring above (and anything else using the
+  accent) stays visible there in light mode too, where the site accent is a
+  dark blue that disappears on near-black.
+*/
+.featured-prototype {
+  --accent: var(--hero-field-cta);
 }
 
 /*
@@ -1867,7 +1921,7 @@
 */
 .hero-field-panel {
   box-sizing: border-box;
-  max-width: 560px;
+  max-width: 720px;
 }
 
 /*
@@ -1884,13 +1938,19 @@
   and HeroFieldCanvas re-initializes at the same width.
 */
 /*
-  The band's height. 40vh sets the proportion and the 100px is a fixed
+  The band's height. 55vh sets the proportion and the 100px is a fixed
   addition on top of it, so the field gains the same amount of room on a
   laptop and on a tall desktop display rather than growing with the viewport.
+  Defined once here and used by the three rules that need it, so the height
+  is changed in one place.
 */
+.hero-field {
+  --hero-field-height: calc(55vh + 100px);
+}
+
 .hero-field-stage {
   position: relative;
-  height: calc(40vh + 100px);
+  height: var(--hero-field-height);
   min-height: 340px;
 }
 
@@ -1913,7 +1973,7 @@
 
 @media (min-width: 768px) {
   .hero-field {
-    min-height: calc(40vh + 100px);
+    min-height: var(--hero-field-height);
   }
 
   .hero-field-stage {
@@ -1928,12 +1988,66 @@
     inset: 0;
     display: flex;
     align-items: center;
-    min-height: calc(40vh + 100px);
+    min-height: var(--hero-field-height);
     padding-block: 0;
     pointer-events: none;
   }
 
   .hero-field .hero-field-text {
     padding-inline: clamp(1.5rem, 4vw, 4rem);
+  }
+}
+
+/*
+  Site mark in the nav: plain foreground colour, so it is near-black on the
+  light theme and off-white on the dark one, matching the name beside it.
+  The coloured version lives only in the favicon and app icons.
+*/
+.logo-mark-circle,
+.logo-mark-square {
+  fill: var(--fg);
+}
+
+/*
+  Partner logo band under the hero. The band is always dark, so the white
+  artwork is shown as supplied, held back to a low opacity so the marks read
+  as context rather than competing with the headline above them.
+*/
+.logo-band img {
+  opacity: 0.6;
+}
+
+/*
+  Site footer: colophon left, copyright centred, icons right.
+
+  A 1fr / auto / 1fr grid keeps the copyright centred on the page: the two
+  outer columns always share the leftover space equally, however wide the
+  colophon or the icon row is. justify-between would centre it between the
+  other two items instead, which drifts off the page centre.
+
+  On phones the three stack, copyright first, then colophon, then icons.
+*/
+.footer-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.footer-copyright {
+  order: -1;
+}
+@media (min-width: 768px) {
+  .footer-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .footer-copyright {
+    order: 0;
+    text-align: center;
+  }
+  .footer-icons {
+    justify-self: end;
   }
 }

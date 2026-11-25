@@ -1,11 +1,11 @@
-import Link from "next/link";
 import HeroField from "@/components/HeroField";
-import WorkRow from "@/components/WorkRow";
-import { getFeaturedWorkItems } from "@/lib/work";
+import LogoBand from "@/components/LogoBand";
+import FeaturedPrototype from "@/components/FeaturedPrototype";
+import ShippedWork from "@/components/ShippedWork";
+import CalibrateSection from "@/components/CalibrateSection";
+import AboutIntro from "@/components/AboutIntro";
 
 export default function Home() {
-  const items = getFeaturedWorkItems();
-
   return (
     <>
       {/*
@@ -21,28 +21,12 @@ export default function Home() {
         nav instead, and the nav keeps the page background under it.
       */}
       <HeroField />
+      <LogoBand />
+      <FeaturedPrototype />
 
-      <div className="container-wide">
-        <section id="work" className="pb-24 pt-16 sm:pt-20">
-          <div className="flex items-baseline justify-between gap-4">
-            <h2 className="font-mono text-xs uppercase tracking-[0.08em] text-fg-muted">
-              Selected case studies
-            </h2>
-            <Link
-              href="/work"
-              className="link-draw font-mono text-xs uppercase tracking-[0.06em] text-accent"
-            >
-              All work →
-            </Link>
-          </div>
-
-          <div className="mt-2">
-            {items.map((item) => (
-              <WorkRow key={item.slug} item={item} />
-            ))}
-          </div>
-        </section>
-      </div>
+      <ShippedWork />
+      <AboutIntro />
+      <CalibrateSection />
     </>
   );
 }

@@ -1,8 +1,6 @@
 /*
-  The contact address, in a plain module rather than in useCopyEmail. That file
-  is "use client", so a server component importing from it gets a client
-  reference proxy instead of the string — fine inside a client component, but
-  it renders as a broken href on a server-rendered page.
+  The contact address, in a plain (non-"use client") module so server and
+  client components can both import it as a real string.
 */
 export const CONTACT_EMAIL = "leslie@lesliejohnson.io";
 
@@ -13,5 +11,5 @@ export const CONTACT_EMAIL = "leslie@lesliejohnson.io";
   are not reliably handled by every mail client.
 */
 export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-  "From your portfolio site",
+  "From lesliejohnson.io site",
 )}`;
