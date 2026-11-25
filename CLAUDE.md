@@ -81,7 +81,7 @@ Near-monochrome warm off-white base with one blue accent, defined as CSS custom 
 1. **Never invent, inflate, or embellish content.** No fabricated metrics, quotes, testimonials, logos, or clients. Empty slots render as designed placeholders.
 2. Every metric keeps its measurement caption exactly as written in the content files. Client Portal's outcome figures were deliberately softened to qualitative claims; don't reintroduce numbers.
 3. Naming: "Common Project" (never "Common Ground"), "Paloma AI," "Student Portal" and "Client Portal" for ECSI surfaces ("Due Notice" is retired). CMU is "Human-Computer Interaction, Carnegie Mellon,".
-4. Contact: leslie@lesliejohnson.io. Links: linkedin.com/in/lesliejohnsonn, github.com/lesliejohnson-io.
+4. Contact: leslie@lesliejohnson.io. Links: linkedin.com/in/lesliejohnson-ux, github.com/lesliejohnson-io.
 5. Accessibility: WCAG AA in both themes, visible focus states, semantic headings, reduced motion respected.
 
 ## Analytics

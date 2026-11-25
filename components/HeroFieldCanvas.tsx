@@ -57,11 +57,22 @@ const SIGNALS: Record<StateName, string[]> = {
   OFFLINE: ["No signal, last seen 12s ago", "Data is stale, don’t act on this"],
 }
 
+/*
+  The field's one point: most of what the machines report is handled on their
+  own, and only a few signals actually need a person. Those render at full
+  brightness; everything the automation is dealing with itself is dimmed.
+*/
+const needsHuman = (state: StateName) => state === "FAULT"
+
+/*
+  The routine states follow the wave. FAULT is not on this scale: whether a
+  node needs a person is decided per node when it spawns (see `escalated`),
+  so a low trough only ever reads as DEGRADED.
+*/
 function stateFor(c: number): StateName {
   if (c >= 0.75) return "OPERATIONAL"
   if (c >= 0.6) return "WARNING"
-  if (c >= 0.47) return "DEGRADED"
-  return "FAULT"
+  return "DEGRADED"
 }
 
 function shapeSVG(shape: string, color: string) {
@@ -132,6 +143,10 @@ type Label = {
   metricText: string
   opacity: number
   w: number
+  // When a needs-human label may stay up until (ms, performance.now()), and
+  // the strength it was showing at. See human_linger_ms.
+  heldUntil: number
+  held: number
 }
 
 type Screen = {
@@ -207,9 +222,14 @@ export default function HeroFieldCanvas() {
       line still paints, and these lines sit at the same depth as the ones
       going the other way, so drawing them would punch gaps in those and
       cost a few thousand vertices a frame for the privilege.
+
+      The lines running into the field are at 0 too, so the grid is gone
+      altogether and the field is read from the nodes alone. Same rule: at 0
+      the set is skipped, not drawn invisibly. Set either back above 0 (0.4
+      was the old value for these) to bring its lines back.
     */
     const horizontal_strength = 0
-    const vertical_strength = 0.4
+    const vertical_strength = 0
     const look_y = 7900 // lower number = waves reach higher up the hero
 
     // --- Node settings ---
@@ -244,8 +264,17 @@ export default function HeroFieldCanvas() {
       close to the node that owns it on a narrow screen.
     */
     const reveal_radius = mobile ? 120 : 170
-    const max_labels = mobile ? 2 : 4
+    const max_labels = mobile ? 2 : 3
+    // Opacity of a signal the automation is handling itself, against 1 for
+    // one that needs a human.
+    const automated_opacity = 0.55
     const label_gap = 6 // pixels of clearance between labels
+    /*
+      How long a "needs a human" label stays up after its node drifts out of
+      reach, before it fades. Routine labels come and go with the focus; these
+      are the ones worth reading, so they get time to be read.
+    */
+    const human_linger_ms = 2500
     const idle_ms = 3000
 
     const reduce_motion =
@@ -452,20 +481,23 @@ export default function HeroFieldCanvas() {
           )
         : null
 
-    // Softer lines running into the field
-    const vert = buildLines(
-      W * rows * 2,
-      function (put) {
-        let i = 0
-        for (let c = 0; c <= cols; c++) {
-          for (let r = 0; r < rows; r++) {
-            put(i++, c, r)
-            put(i++, c, r + 1)
-          }
-        }
-      },
-      vertical_strength,
-    )
+    // Softer lines running into the field. Off by default, see above.
+    const vert =
+      vertical_strength > 0
+        ? buildLines(
+            W * rows * 2,
+            function (put) {
+              let i = 0
+              for (let c = 0; c <= cols; c++) {
+                for (let r = 0; r < rows; r++) {
+                  put(i++, c, r)
+                  put(i++, c, r + 1)
+                }
+              }
+            },
+            vertical_strength,
+          )
+        : null
 
     function updateLines(set: LineSet) {
       for (let i = 0; i < set.count; i++) set.pos[i * 3 + 2] = H[set.idx[i]]
@@ -511,6 +543,15 @@ export default function HeroFieldCanvas() {
 
     const offline: Record<number, boolean> = {}
     /*
+      Nodes whose signal needs a person. Rolled per node at spawn rather than
+      read off the wave: tied to the wave, they only appeared in the deepest
+      troughs and almost never surfaced. About one node in six carries one.
+    */
+    const escalated_rate = 1 / 6
+    const escalated: Record<number, boolean> = {}
+    const stateOf = (n: number, confidence: number): StateName =>
+      offline[n] ? "OFFLINE" : escalated[n] ? "FAULT" : stateFor(confidence)
+    /*
       Which signal a node is carrying. Re-rolled with the lane, so a node
       coming back does not read out the same line it just left with, and two
       nodes on screen together are less likely to say the same thing.
@@ -546,6 +587,7 @@ export default function HeroFieldCanvas() {
       node_y[n] = spawn_y
       node_x[n] = (Math.random() * 2 - 1) * laneSpread()
       offline[n] = Math.random() < offline_count / node_count
+      escalated[n] = !offline[n] && Math.random() < escalated_rate
       signal_seed[n] = Math.floor(Math.random() * 97)
     }
 
@@ -687,7 +729,7 @@ export default function HeroFieldCanvas() {
       el.appendChild(msg)
       el.appendChild(metric)
       overlay.appendChild(el)
-      labels.push({ el, shape, msg, metric, state: "", msgText: "", metricText: "", opacity: 0, w: 0 })
+      labels.push({ el, shape, msg, metric, state: "", msgText: "", metricText: "", opacity: 0, w: 0, heldUntil: 0, held: 0 })
     }
 
     /*
@@ -702,6 +744,11 @@ export default function HeroFieldCanvas() {
       if (state !== label.state) {
         label.shape.innerHTML = shapeSVG(STATES[state].shape, STATES[state].color)
         label.shape.className = state === "FAULT" ? "sig-fault" : ""
+        // Bright, heavier type for a signal that needs a person; the muted
+        // metric grey for one the automation is handling.
+        const human = needsHuman(state)
+        label.msg.style.color = human ? "var(--hero-field-label)" : "var(--hero-field-metric)"
+        label.msg.style.fontWeight = human ? "600" : "500"
         label.state = state
         changed = true
       }
@@ -712,6 +759,12 @@ export default function HeroFieldCanvas() {
         label.msgText = msgText
         changed = true
       }
+      /*
+        A signal that needs a person is one the machine is unsure of, so its
+        figure is squeezed into the low band (0.22–0.45) rather than showing
+        whatever the wave under it happens to say.
+      */
+      if (state === "FAULT") confidence = 0.22 + (confidence - 0.35) * (0.23 / 0.6)
       // Confidence % and p-score, intermixed across nodes
       const metricText = offline[n]
         ? "stale"
@@ -900,8 +953,29 @@ export default function HeroFieldCanvas() {
         ranked.push(n)
       }
 
+      /*
+        Nearest first, but a node whose signal needs a human counts as half
+        as far away, so when one is anywhere near the focus it wins a slot
+        over the routine signals around it. Without the bias the bright
+        labels only turned up by luck.
+      */
+      const now_ms = performance.now()
+      const lingering = (n: number) =>
+        now_ms < labels[n].heldUntil &&
+        scr[n].fade > 0.3 &&
+        needsHuman(stateOf(n, scr[n].confidence))
+      /*
+        A lingering needs-human label goes first of all, so it keeps its place
+        and the labels around it make way for it, not the other way round.
+      */
+      const key = (n: number) =>
+        lingering(n)
+          ? -1
+          : needsHuman(stateOf(n, scr[n].confidence))
+            ? scr[n].d * 0.5
+            : scr[n].d
       ranked.sort(function (a, b) {
-        return scr[a].d - scr[b].d
+        return key(a) - key(b)
       })
 
       /*
@@ -918,7 +992,7 @@ export default function HeroFieldCanvas() {
         const n = ranked[r]
         const s = scr[n]
         const label = labels[n]
-        const state: StateName = offline[n] ? "OFFLINE" : stateFor(s.confidence)
+        const state = stateOf(n, s.confidence)
         /*
           A label is only offered to a node that is well into its run. One on
           a node about to dissolve would be read halfway and then taken away,
@@ -929,6 +1003,9 @@ export default function HeroFieldCanvas() {
           shown < max_labels && s.d < reveal_radius && s.fade > 0.6
             ? 1 - s.d / reveal_radius
             : 0
+        // Out of reach, but still inside its linger time: keep it up.
+        const live = near > 0
+        if (!live && shown < max_labels && lingering(n)) near = label.held
 
         // Only show a label if it doesn't overlap one already placed
         if (near > 0) {
@@ -966,6 +1043,12 @@ export default function HeroFieldCanvas() {
           if (near > 0) {
             placed.push({ x: bx, y: by, w: bw, h: bh })
             shown++
+            // Each frame a needs-human label is genuinely in reach restarts
+            // its linger time.
+            if (live && needsHuman(state)) {
+              label.heldUntil = now_ms + human_linger_ms
+              label.held = near
+            }
             label.el.style.transform =
               "translate(" + Math.round(bx) + "px," + Math.round(by) + "px)"
           }
@@ -973,7 +1056,10 @@ export default function HeroFieldCanvas() {
 
         paintNode(n, s.t, near, state, s.fade)
 
-        const target_opacity = near > 0 ? Math.min(1, 0.35 + near) * s.fade : 0
+        const target_opacity =
+          near > 0
+            ? Math.min(1, 0.35 + near) * s.fade * (needsHuman(state) ? 1 : automated_opacity)
+            : 0
         if (target_opacity !== label.opacity) {
           label.el.style.opacity = target_opacity.toFixed(2)
           label.opacity = target_opacity
@@ -1016,7 +1102,7 @@ export default function HeroFieldCanvas() {
         if (!reduce_motion) time += dt
         computeHeights(time)
         if (horiz) updateLines(horiz)
-        updateLines(vert)
+        if (vert) updateLines(vert)
         did_first_frame = true
       }
       updateNodes(now)
@@ -1031,7 +1117,7 @@ export default function HeroFieldCanvas() {
       renderer.setSize(size.w, size.h, false)
       computeFades()
       if (horiz) recolor(horiz)
-      recolor(vert)
+      if (vert) recolor(vert)
       placeBands()
       measurePanel()
     }
@@ -1084,8 +1170,8 @@ export default function HeroFieldCanvas() {
       window.removeEventListener("pointerdown", onPointer)
       horiz?.geo.dispose()
       horiz?.mat.dispose()
-      vert.geo.dispose()
-      vert.mat.dispose()
+      vert?.geo.dispose()
+      vert?.mat.dispose()
       node_geometry.dispose()
       node_material.dispose()
       hero_geometry.dispose()

@@ -6,6 +6,7 @@ import Link from "next/link";
 import NavContact from "@/components/NavContact";
 import MenuStatus from "@/components/MenuStatus";
 import { GitHubIcon, LinkedInIcon } from "@/components/SocialIcons";
+import { externalProps, type NavLink } from "@/lib/nav";
 
 /**
  * Small-screen menu: a full-height panel that slides in from the left.
@@ -28,7 +29,7 @@ import { GitHubIcon, LinkedInIcon } from "@/components/SocialIcons";
 export default function MobileNav({
   links,
 }: {
-  links: { href: string; label: string }[];
+  links: NavLink[];
 }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -151,10 +152,12 @@ export default function MobileNav({
                   <Link
                     key={link.href}
                     href={link.href}
+                    {...(link.external ? externalProps : {})}
                     onClick={() => setOpen(false)}
                     className="link-draw font-display rounded-md py-2 text-2xl font-bold tracking-[-0.01em] text-fg transition-colors hover:text-accent"
                   >
                     {link.label}
+                    {link.external && <span className="sr-only"> (opens in a new tab)</span>}
                   </Link>
                 ))}
               </nav>
@@ -164,7 +167,7 @@ export default function MobileNav({
               <div className="mt-auto flex flex-col items-start gap-5 pt-8">
                 <div className="flex items-center gap-1 text-fg-secondary">
                   <a
-                    href="https://linkedin.com/in/lesliejohnsonn"
+                    href="https://linkedin.com/in/lesliejohnson-ux"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="LinkedIn (opens in a new tab)"
@@ -182,7 +185,7 @@ export default function MobileNav({
                     <GitHubIcon className="h-5 w-5" />
                   </a>
                 </div>
-                <NavContact toastPlacement="above" />
+                <NavContact />
               </div>
             </div>
           </>,

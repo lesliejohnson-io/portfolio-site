@@ -10,10 +10,9 @@ import { CONTACT_MAILTO } from "@/lib/contact";
  * reads the same wherever it appears: the primary one filled in the accent,
  * the secondary one outlined.
  *
- * "Get in touch" is a plain mailto rather than the nav's copy-to-clipboard
- * affordance — at the end of a story the intent is to write, not to copy an
- * address for later. It fires `email_click`, tagged location: "about", so the
- * two kinds of contact can be told apart in GA4.
+ * "Get in touch" is a plain mailto, like every mail link on the site. It
+ * fires `email_click`, tagged location: "about", so it can be told apart
+ * from the others in GA4.
  *
  * This is a client component only for that event. The anchor is a real link
  * with a real href, so the mail client still opens if the handler never runs.

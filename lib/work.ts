@@ -28,8 +28,14 @@ export type WorkItem = {
    * where this sits under it. Omit it and nothing renders.
    */
   statLine?: string;
-  /** Shown in the "Selected case studies" set on the home page. */
+  /** Shown in the "Some of the work I’ve shipped" set on the home page. */
   featured?: boolean;
+  /**
+   * Overrides for the home page row. Each field falls back to the study's
+   * own title, summary and visual. /work also uses `title` and `summary`
+   * from here; the case study page itself is unaffected.
+   */
+  home?: WorkHome;
   /**
    * Keeps a study out of every list — the home set, /work, and the related
    * cards — without removing the file. Its own page still builds and its link
@@ -93,6 +99,22 @@ export type WorkItem = {
    * dropped when it is set, since these figures are not the measured ones.
    */
   stripStats?: WorkStat[];
+};
+
+export type WorkHome = {
+  /** The pill above the title. Falls back to `tag`. */
+  tag?: string;
+  title?: string;
+  summary?: string;
+  /** One line of outcomes under the summary. Only figures the study states. */
+  outcome?: string;
+  /** A still to show instead of `visual`, e.g. the hero photograph. */
+  image?: string;
+  /**
+   * Alt text for `image`. Optional when `image` is the study's `hero`: the
+   * row reads `heroAlt` then, so one description serves both.
+   */
+  imageAlt?: string;
 };
 
 export type WorkStat = {
