@@ -50,7 +50,18 @@ export default function StatRow({
         <div key={stat.label} className="flex flex-col gap-1.5">
           <dt className="sr-only">{stat.label}</dt>
           <dd className="contents">
-            <span className="font-display text-4xl font-bold leading-none text-fg sm:text-5xl">
+            {/*
+              A long value, e.g. "24 hours → overnight", steps down a size so
+              it wraps to two lines at the arrow instead of four. Short
+              figures keep the full display size.
+            */}
+            <span
+              className={`font-display font-bold leading-none text-fg ${
+                stat.value.length > 12
+                  ? "text-3xl sm:text-4xl"
+                  : "text-4xl sm:text-5xl"
+              }`}
+            >
               <StatValue value={stat.value} />
               {stat.unit && (
                 /* font-sans resets the display face inherited from the value. */
