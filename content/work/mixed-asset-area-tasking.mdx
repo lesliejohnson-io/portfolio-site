@@ -12,25 +12,25 @@ deck: "A search-and-rescue tasking console where the autonomy proposes, the oper
 who: "A two-person search-and-rescue team: the mission operator who makes every tasking decision, and the supervisor who watches the same view and can veto before launch"
 what: "A tasking console for a 38-unit mixed fleet, 36 of it available, where the autonomy proposes a full plan and the operator verifies it, changes it and launches it with every coverage gap visible first"
 summary: "A search-and-rescue tasking console where the autonomy proposes, the operator decides, and every coverage gap is visible up front."
-hero: "/work/drones-sar/hero.png"
-# The artwork is 1440x1035, about 1.39:1, and the hero frame is 2:1. This
+hero: "/work/drones-sar/sar-console.png"
+# sar-console.png, supplied 2026-11-25, replaced hero.png (still on disk).
+# The artwork is 2945x1860, about 1.58:1, and the hero frame is 2:1. This
 # field is what switches the frame from object-cover to object-contain, so it
-# has to be set or the crop would take roughly a quarter of the screen's
-# height off a UI shot. "transparent" keeps the contain and drops the frame's
+# has to be set or the crop would cut the top and bottom off a UI shot. "transparent" keeps the contain and drops the frame's
 # border, while painting no full-width band -- the screen sits on the page.
 heroBackground: "transparent"
-# The artwork is an opaque screenshot -- only its four rounded corners carry
-# alpha. The hero glow follows an alpha silhouette, so here it would only
-# ring the image's rectangle.
+# The artwork is a full-bleed screenshot with no cut-out silhouette. The hero
+# glow follows an alpha silhouette, so here it would only ring the image's
+# rectangle.
 heroGlow: false
-heroAlt: &screenAlt "Screen 3, Tasking live: a mission console headed SAR-1102, Coastal Flood Response, at Charleston, South Carolina. A map of the flooded coastline is divided into four sectors — A East Cooper at 42%, B Peninsula at 18%, C Sea Islands at 36% and D Edisto at 33% — with individual asset markers across it, a few collapsed into groups such as HYD ×4, and one tagged RETURNING · BATTERY. The header reads Live 42 min, Behind plan Sector B −18 pts, and In contact 36 of 36. A Sector Status rail down the right states its own key — bar: searched so far, tick: where the plan expects to be now — then gives each sector a priority chip, a coverage bar with that tick, and its tasking rows. Sectors A, C and D read On plan; Sector B carries a warning reading 18 pts behind plan (36% expected by now), HYD-09 and HYD-11 returned for battery at 09:31, 5 of 7 Hydras still searching rooftops, offering Re-propose Sector B or Keep current plan. An event feed logs timestamped changes from 09:12 to 09:31, a legend names the six asset states and adds that a ring means needs attention and dimming means the position is not current, and a Hold all units button sits at the foot of the rail."
-heroPending: "Screen 3, Tasking live: the sector map with individual asset positions, beside the Sector Status rail and its per-sector coverage bars."
+heroAlt: &screenAlt "The search-and-rescue console mid-mission: SAR-1102, Coastal Flood Response, at Charleston, South Carolina. The header reads Live 54 min, Incident: GRF-02 relay lost, and In contact 29 of 36, with counts of 1 needs operator, 1 degraded and 7 out of contact. On the map of the flooded coast, four sectors show their search coverage as shaded grids: A East Cooper at 51%, B Peninsula at 42% in amber, C Sea Islands at 44% and D Edisto at 22%. A relay drone is ringed and tagged RELAY LINK LOST, and a label reads HYD ×7 · OUT OF CONTACT · 14 MIN. A Sector Status rail on the right lists each sector with its priority, coverage bar and tasking rows; Sector B reads Relay lost, with a warning that HYD-07–13 are out of contact and holding position, expected coverage 89% → 69%, and See options or Pause Sector B. An event feed at the bottom explains the incident and offers two choices, each with its cost: move GRF-03 to Sector B, or return HYD-07–13 and re-propose Sector B, with Pause Sector B and Hold all affected units always available. A Hold all units button sits at the foot of the rail."
+heroPending: "The console mid-mission: the sector map with coverage grids and asset positions, beside the Sector Status rail and the event feed."
 # The /work row and the "Other case studies" card show the same screen as
 # the hero. `*screenAlt` is a YAML alias pointing at the `&screenAlt` anchor
 # on heroAlt above, so the one description serves both.
 visual:
   type: "image"
-  src: "/work/drones-sar/hero.png"
+  src: "/work/drones-sar/sar-console.png"
   alt: *screenAlt
 # What the strip under the hero shows: the scale of the problem, which is what
 # this study leads with. Captions are hidden in the strip, so these carry none.
@@ -57,9 +57,10 @@ stats:
 ---
 
 {/*
-  Rewritten 2026-11-25 from sar-console-case-study.md at the repo root, which
-  is the source of truth for wording and structure. Copy is Leslie's, used as
-  written apart from curly quotes and apostrophes.
+  Rewritten 2026-11-25 from Leslie's sar-console-case-study.md (removed from the repo
+  afterwards). This page is now the source of truth for wording and
+  structure. Copy is Leslie's, used as written apart from curly quotes and
+  apostrophes.
 
   The /work row used to show console-live.png through a `home.image`
   override. That override is gone so the row shows the hero, like every other
@@ -226,6 +227,22 @@ Also built: the empty state, with no sectors drawn and nothing to propose; a HIG
 The review screen was the key decision, so its parts became the system: a sector card with 8 variants (staged, selected, low coverage), a tasking row with 4, and priority chip, lock, status and asset-marker components, all bound to 21 color tokens and reused across all three screens.
 
 The tokens are named for meaning, not appearance: `--status-needs-operator`, `--status-operator-set`, `--status-autonomous`, `--interaction-primary`. A token called `--amber-500` tells the next person what it looks like. These tell them when it applies. Each one carries a USE WHEN and an AVOID rule, written so engineers and AI agents apply color the same way the operator reads it.
+
+{/*
+  Handoff · SectorCard below-target spec.png as supplied, renamed on
+  2026-11-25 to drop the spaces and the middle dot from the URL. It sits
+  after the token paragraph because it is one of those rules in use: the
+  component state on the left, the spec an engineer or AI agent reads on the
+  right. The export carries its own light grey ground, so it needs no mat.
+*/}
+
+<Figure
+  src="/work/drones-sar/sector-card-below-target-spec.png"
+  alt="Two panels joined by an amber arrow. On the left, labelled Component, state equals below-target: the Sector D · Edisto card, marked HIGH, with a Stage sector button and an amber coverage bar at 44% stopping short of its target tick. Its warning reads 44% coverage, 16 pts below target for a HIGH sector, then Hydras at max range from Staging A: little time on station, with See options and Stage anyway; below it, HYD-21–24 search rooftops until battery 50% and KRK-03–04 search streets with sonar on. Three numbered notes follow: the warning appears in place, above the tasking rows, with no modal and no blocked screen; launch stays available, and Stage anyway is always there; and the message leads with the cost, then the cause. On the right, labelled Spec the AI reads, useWhen, a code window shows sector-card.states.json from components/SectorCard. It highlights the useWhen line: use when a HIGH-priority sector’s expected coverage is below the 60% target and a plan has been proposed. A doNotUseWhen list points to the on-plan, empty and behind states, and says a MEDIUM or LOW sector shows the bar, not the warning. A decision rule reads plan is not null, priority is HIGH and coverage is under 60. The renders block sets an amber bar stopping short of the target tick, the warning shown in place above the tasking rows, the stage button enabled, and the message template. Two copy rules: lead with the cost, then the cause; and never block launch, Stage anyway is always available."
+  width="1770"
+  height="1022"
+  wide
+/>
 
 The brief asked for one coded interaction: drag an asset between sectors, with coverage updating live. I wrote the handoff so the build could not drift from the design.
 
