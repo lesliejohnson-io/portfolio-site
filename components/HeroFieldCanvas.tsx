@@ -2,11 +2,16 @@
 
 import { useEffect, useRef, useState } from "react"
 import * as THREE from "three"
+import { createMessageScheduler, type ActiveMessage } from "@/lib/messageScheduler"
 
 /*
-  Ported from reference/hero-waves.js (CodePen prototype). The field settings,
-  STATES, SIGNALS and the label behaviour are carried over unchanged; what
-  changed is ownership. The prototype owned the whole window: it mounted into
+  Ported from reference/hero-waves.js (CodePen prototype). The wave and the
+  ambient stream are carried over; the messages are not. They used to be
+  random signals revealed under the pointer; they are now emitted on a fixed,
+  seeded cycle by lib/messageScheduler.ts (notes in lib/messageScheduler.md), so the
+  "needs a person" state is guaranteed to appear early instead of by luck.
+
+  What changed in the port is ownership. The prototype owned the whole window: it mounted into
   #main, sized itself to innerWidth/innerHeight, and hung its labels and blur
   bands off document.body as position:fixed. Here everything lives inside one
   ref'd container that is sized by a ResizeObserver, so the field is a band on
@@ -18,72 +23,11 @@ import * as THREE from "three"
   on the server.
 */
 
-// ---- Machine-state kit tokens: swap in the exact values from your machine-ui repo ----
-type StateName = "OPERATIONAL" | "WARNING" | "DEGRADED" | "FAULT" | "OFFLINE"
-
-const STATES: Record<StateName, { color: string; shape: string }> = {
-  OPERATIONAL: { color: "#3ddc84", shape: "circle" },
-  WARNING: { color: "#f5c04a", shape: "triangle" },
-  DEGRADED: { color: "#f08a4b", shape: "diamond" },
-  FAULT: { color: "#f06a6a", shape: "square" },
-  OFFLINE: { color: "#7a8594", shape: "ring" },
-}
-
-// Plain-language signals for each state
-const SIGNALS: Record<StateName, string[]> = {
-  OPERATIONAL: [
-    "On route, no action needed",
-    "Picking in Aisle 4",
-    "Path clear",
-    "Delivery on schedule",
-    "Docked and ready",
-  ],
-  WARNING: [
-    "Battery low, returning to dock",
-    "Path blocked, rerouting",
-    "Running 3 min behind",
-    "Check before next shift",
-  ],
-  DEGRADED: [
-    "Running on backup sensor",
-    "Slowed down near people",
-    "Weak signal, using last known position",
-  ],
-  FAULT: [
-    "Stopped, needs your input",
-    "Arm jammed, handing off to you",
-    "Holding position, awaiting operator",
-  ],
-  OFFLINE: ["No signal, last seen 12s ago", "Data is stale, don’t act on this"],
-}
-
 /*
-  The field's one point: most of what the machines report is handled on their
-  own, and only a few signals actually need a person. Those render at full
-  brightness; everything the automation is dealing with itself is dimmed.
+  The occasional stale node in the ambient stream. These carry no message;
+  they are texture, a reminder that not every light on the field is live.
 */
-const needsHuman = (state: StateName) => state === "FAULT"
-
-/*
-  The routine states follow the wave. FAULT is not on this scale: whether a
-  node needs a person is decided per node when it spawns (see `escalated`),
-  so a low trough only ever reads as DEGRADED.
-*/
-function stateFor(c: number): StateName {
-  if (c >= 0.75) return "OPERATIONAL"
-  if (c >= 0.6) return "WARNING"
-  return "DEGRADED"
-}
-
-function shapeSVG(shape: string, color: string) {
-  let s: string
-  if (shape === "circle") s = '<circle cx="6" cy="6" r="5" fill="' + color + '"/>'
-  else if (shape === "triangle") s = '<polygon points="6,1 11.5,11 0.5,11" fill="' + color + '"/>'
-  else if (shape === "diamond") s = '<polygon points="6,0.5 11.5,6 6,11.5 0.5,6" fill="' + color + '"/>'
-  else if (shape === "square") s = '<rect x="1" y="1" width="10" height="10" fill="' + color + '"/>'
-  else s = '<circle cx="6" cy="6" r="4.5" fill="none" stroke="' + color + '" stroke-width="1.5"/>'
-  return '<svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true">' + s + "</svg>"
-}
+const OFFLINE_COLOR = "#7a8594"
 
 function smoothstep(a: number, b: number, x: number) {
   const t = Math.max(0, Math.min(1, (x - a) / (b - a)))
@@ -120,6 +64,7 @@ const readPalette = (el: HTMLElement) => {
     line: v("--hero-field-line"),
     node: v("--hero-field-node"),
     heroNode: v("--hero-field-node-hero"),
+    label: v("--hero-field-label"),
   }
 }
 
@@ -133,30 +78,24 @@ type LineSet = {
   strength: number
 }
 
-type Label = {
+/*
+  One label element per scheduler slot. The scheduler caps how many messages
+  are alive at once (maxActive), so the pool is that size and a slot is handed
+  to each new message and given back when it leaves.
+*/
+type Slot = {
+  id: number // message id, 0 when free
   el: HTMLDivElement
-  shape: HTMLSpanElement
-  msg: HTMLSpanElement
-  metric: HTMLSpanElement
-  state: string
-  msgText: string
-  metricText: string
-  opacity: number
+  dot: HTMLSpanElement
+  text: HTMLSpanElement
   w: number
-  // When a needs-human label may stay up until (ms, performance.now()), and
-  // the strength it was showing at. See human_linger_ms.
-  heldUntil: number
-  held: number
+  h: number
+  opacity: number
+  side: 0 | 1 // which candidate spot it took last frame
+  downUntil: number // ms; stood down for a collision until then
 }
 
-type Screen = {
-  sx: number
-  sy: number
-  d: number
-  confidence: number
-  t: number
-  fade: number
-}
+type Box = { x: number; y: number; w: number; h: number }
 
 const MOBILE_MAX = 768
 
@@ -257,25 +196,43 @@ export default function HeroFieldCanvas() {
     const hero_node_size = 9000
     const node_lift = 300
 
-    // --- Label settings ---
+    // --- Message settings ---
     /*
-      Mobile shows at most two signals at once: the band is short, so a third
-      label only crowds the two that matter. The tighter radius keeps a label
-      close to the node that owns it on a narrow screen.
+      When, what and how bright is decided by lib/messageScheduler.ts; this
+      file only decides where. Tune the rhythm there (see lib/messageScheduler.md), not here.
+
+      The seed makes the opening a designed thing: the same few seconds play
+      on every load, with the first "needs a person" message landing at about
+      5.4s while two dim ones are still on screen.
+
+      Phones get three lanes and three live messages instead of five and four:
+      the band is a third of the width, and a fourth message only crowds the
+      ones that matter.
     */
-    const reveal_radius = mobile ? 120 : 170
-    const max_labels = mobile ? 2 : 3
-    // Opacity of a signal the automation is handling itself, against 1 for
-    // one that needs a human.
-    const automated_opacity = 0.55
-    const label_gap = 6 // pixels of clearance between labels
+    const scheduler = createMessageScheduler({
+      seed: 7,
+      ...(mobile ? { lanes: 3, maxActive: 3 } : {}),
+    })
+    const cfg = scheduler.config
     /*
-      How long a "needs a human" label stays up after its node drifts out of
-      reach, before it fades. Routine labels come and go with the focus; these
-      are the ones worth reading, so they get time to be read.
+      The depth a message travels, in world units. It starts once the ambient
+      stream around it has come up out of the haze and ends just short of the
+      front taper, so `progress` 0..1 is the stretch of the field that is
+      actually legible. Messages ride toward the viewer like everything else
+      on the field, which is why lanes are bands across the width here rather
+      than the vertical bands in the lib/messageScheduler.md example: depth already keeps two
+      messages apart vertically, and lanes keep them apart sideways.
     */
-    const human_linger_ms = 2500
-    const idle_ms = 3000
+    const msg_y_from = 108000
+    const msg_y_to = 7000
+    // How far a message may sit off its lane centre, as a fraction of the
+    // lane width. Under half, or the lanes stop being lanes.
+    const lane_nudge = 0.4
+    const label_gap = 8 // pixels of clearance between labels
+
+    // Field speed eases toward this: 1 normally, cfg.hoverTimeScale on hover.
+    let time_scale = 1
+    let time_scale_target = 1
 
     const reduce_motion =
       window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -542,21 +499,6 @@ export default function HeroFieldCanvas() {
     const node_speed = 26000 * 0.55
 
     const offline: Record<number, boolean> = {}
-    /*
-      Nodes whose signal needs a person. Rolled per node at spawn rather than
-      read off the wave: tied to the wave, they only appeared in the deepest
-      troughs and almost never surfaced. About one node in six carries one.
-    */
-    const escalated_rate = 1 / 6
-    const escalated: Record<number, boolean> = {}
-    const stateOf = (n: number, confidence: number): StateName =>
-      offline[n] ? "OFFLINE" : escalated[n] ? "FAULT" : stateFor(confidence)
-    /*
-      Which signal a node is carrying. Re-rolled with the lane, so a node
-      coming back does not read out the same line it just left with, and two
-      nodes on screen together are less likely to say the same thing.
-    */
-    const signal_seed = new Int32Array(node_count)
 
     /*
       How wide the camera can see at a given depth. The vertical field of
@@ -587,8 +529,6 @@ export default function HeroFieldCanvas() {
       node_y[n] = spawn_y
       node_x[n] = (Math.random() * 2 - 1) * laneSpread()
       offline[n] = Math.random() < offline_count / node_count
-      escalated[n] = !offline[n] && Math.random() < escalated_rate
-      signal_seed[n] = Math.floor(Math.random() * 97)
     }
 
     for (let n = 0; n < node_count; n++) {
@@ -640,8 +580,7 @@ export default function HeroFieldCanvas() {
     field.add(hero_node)
 
     const base_color = new THREE.Color(palette.node)
-    const offline_color = new THREE.Color(STATES.OFFLINE.color)
-    const state_color = new THREE.Color()
+    const offline_color = new THREE.Color(OFFLINE_COLOR)
 
     /*
       --- Blur bands at the horizon and front edge ---
@@ -685,127 +624,137 @@ export default function HeroFieldCanvas() {
     }
 
     /*
-      --- Labels ---
-      The @keyframes the prototype injected into document.head live in
-      globals.css as .sig-fault, so nothing is appended to the head here.
-      The label divs are still built imperatively: they are written to on
-      every frame from the render loop, and routing 60 of them through React
-      state would re-render the tree at 60fps.
+      --- Message nodes ---
+      Each live message gets its own light on the field, separate from the
+      ambient stream: bright for one that needs a person, dim for one the
+      automation is handling. Two Points sets rather than one, because a
+      PointsMaterial has a single size and the two kinds glow at different
+      sizes. Both are sized to the scheduler's cap and indexed by slot; a slot
+      not in use in a set is painted black, which under additive blending is
+      nothing at all.
+
+      Both glow in --hero-field-label, the same near-white as the label text
+      and the legend dots, so the legend describes exactly what is on the
+      field. The kinds differ only in brightness and size, which is the
+      scheduler's fade peak doing its job as the contrast dial.
     */
+    const slots = cfg.maxActive
+    const label_color = new THREE.Color(palette.label)
+
+    const makeMessagePoints = (glowSize: number) => {
+      const pos = new Float32Array(slots * 3)
+      const col = new Float32Array(slots * 3)
+      const geo = new THREE.BufferGeometry()
+      geo.setAttribute("position", new THREE.BufferAttribute(pos, 3))
+      geo.setAttribute("color", new THREE.BufferAttribute(col, 3))
+      const mat = glowMaterial({ size: glowSize, vertexColors: true })
+      const points = new THREE.Points(geo, mat)
+      points.frustumCulled = false
+      field.add(points)
+      return { pos, col, geo, mat }
+    }
+    const human_points = makeMessagePoints(node_size * 1.7)
+    const auto_points = makeMessagePoints(node_size * 1.15)
+
     /*
-      The label layer runs in both modes. A touch screen has no hovering
-      pointer, so on mobile the labels ride the idle drift that already moves
-      the focus point when nothing has touched the field: the signals surface
-      on their own, two at a time, and a tap moves the focus to where it
-      landed.
+      --- Labels ---
+      Built imperatively rather than through React: they are written to on
+      every frame from the render loop, and routing that through React state
+      would re-render the tree at 60fps.
     */
     const overlay = document.createElement("div")
     overlay.style.cssText =
       "position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:2;"
     container.appendChild(overlay)
 
-    const labels: Label[] = []
-
-    for (let n = 0; n < node_count; n++) {
+    const pool: Slot[] = []
+    for (let i = 0; i < slots; i++) {
       const el = document.createElement("div")
-      el.style.cssText =
-        "position:absolute;left:0;top:0;white-space:nowrap;display:flex;align-items:center;gap:7px;" +
-        "opacity:0;transition:opacity 220ms ease;will-change:transform,opacity;"
-      const shape = document.createElement("span")
-      shape.style.cssText = "display:inline-flex;"
-      const msg = document.createElement("span")
       /*
-        DM Sans and DM Mono are not loaded on this site, so the label takes
-        the site's own faces instead: Source Sans 3 for the signal, JetBrains
-        Mono for the metric, per the type rules in CLAUDE.md.
+        Labels wrap rather than run on, so a long line stays near its light
+        instead of reaching across the neighbouring lanes. The short opacity
+        transition only smooths a label standing down for a collision; the
+        fade itself comes from the scheduler, frame by frame.
       */
-      msg.style.cssText =
-        "font:500 12px/1.2 var(--font-sans), system-ui, sans-serif;color:var(--hero-field-signal);"
-      const metric = document.createElement("span")
-      metric.style.cssText =
-        "font:500 11px/1.2 var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;" +
-        "letter-spacing:0.04em;color:var(--hero-field-metric);"
-      el.appendChild(shape)
-      el.appendChild(msg)
-      el.appendChild(metric)
+      el.style.cssText =
+        "position:absolute;left:0;top:0;display:flex;align-items:flex-start;gap:7px;" +
+        "max-width:" +
+        (mobile ? "calc(100% - 16px)" : "260px") +
+        ";opacity:0;transition:opacity 160ms linear;will-change:transform,opacity;"
+      const dot = document.createElement("span")
+      const text = document.createElement("span")
+      text.style.cssText =
+        "font:500 12px/1.35 var(--font-sans), system-ui, sans-serif;color:var(--hero-field-label);"
+      el.appendChild(dot)
+      el.appendChild(text)
       overlay.appendChild(el)
-      labels.push({ el, shape, msg, metric, state: "", msgText: "", metricText: "", opacity: 0, w: 0, heldUntil: 0, held: 0 })
+      pool.push({ id: 0, el, dot, text, w: 0, h: 0, opacity: 0, side: 0, downUntil: 0 })
     }
 
     /*
-      Write a label's contents, and cache how wide it ended up. The collision
-      test below needs a box to compare, and the only honest source for the
-      width is the laid-out element. offsetWidth forces a synchronous layout,
-      so it is read only when the text actually changed — doing it for every
-      candidate on every frame would be the most expensive thing in the loop.
+      Same marks as the legend under the CTAs: a filled dot for "needs a
+      person", a ring for "automation handling it". The label's own opacity
+      carries the kind's brightness, so a ring at the auto peak matches the
+      legend's ring.
     */
-    const fillLabel = (label: Label, n: number, state: StateName, confidence: number) => {
-      let changed = false
-      if (state !== label.state) {
-        label.shape.innerHTML = shapeSVG(STATES[state].shape, STATES[state].color)
-        label.shape.className = state === "FAULT" ? "sig-fault" : ""
-        // Bright, heavier type for a signal that needs a person; the muted
-        // metric grey for one the automation is handling.
-        const human = needsHuman(state)
-        label.msg.style.color = human ? "var(--hero-field-label)" : "var(--hero-field-metric)"
-        label.msg.style.fontWeight = human ? "600" : "500"
-        label.state = state
-        changed = true
-      }
-      const list = SIGNALS[state]
-      const msgText = list[(n + signal_seed[n]) % list.length]
-      if (msgText !== label.msgText) {
-        label.msg.textContent = msgText
-        label.msgText = msgText
-        changed = true
-      }
+    const DOT_BASE =
+      "flex:none;width:8px;height:8px;border-radius:50%;margin-top:4px;box-sizing:border-box;"
+    const fillSlot = (slot: Slot, m: ActiveMessage) => {
+      slot.id = m.id
+      slot.side = 0
+      slot.downUntil = 0
+      const human = m.kind === "human"
+      slot.dot.style.cssText =
+        DOT_BASE +
+        (human
+          ? "background:var(--hero-field-label);"
+          : "border:1.5px solid var(--hero-field-label);")
+      slot.text.style.fontWeight = human ? "600" : "500"
+      slot.text.textContent = m.text
       /*
-        A signal that needs a person is one the machine is unsure of, so its
-        figure is squeezed into the low band (0.22–0.45) rather than showing
-        whatever the wave under it happens to say.
+        offsetWidth forces a layout, so the box is measured once, when the
+        text is set, not on every frame. The collision test below reads it.
       */
-      if (state === "FAULT") confidence = 0.22 + (confidence - 0.35) * (0.23 / 0.6)
-      // Confidence % and p-score, intermixed across nodes
-      const metricText = offline[n]
-        ? "stale"
-        : n % 2 === 0
-          ? Math.round(confidence * 100) + "%"
-          : "p = " + confidence.toFixed(2)
-      if (metricText !== label.metricText) {
-        label.metric.textContent = metricText
-        label.metricText = metricText
-        changed = true
-      }
-      if (changed || !label.w) label.w = label.el.offsetWidth
+      slot.w = slot.el.offsetWidth
+      slot.h = slot.el.offsetHeight
     }
 
     /*
       --- Keep-out box for the headline ---
-      The headline used to sit on a glass card, which both separated it from
-      the field and blurred whatever drifted under it. With the card gone
-      there is nothing between the two, so a label that wandered under the
-      type would simply collide with it.
+      The headline sits directly on the field, so a label that wandered under
+      the type would collide with it. Its box (legend included) is measured in
+      container coordinates; it bounds the lanes on the left and is seeded
+      into the collision test, so a label can never land on it.
 
-      The headline's box is measured in container coordinates and seeded into
-      the collision test below, which already knows how to suppress a label
-      that overlaps something — a label is dropped for landing on the
-      headline exactly as it is for landing on another label, and the slot it
-      would have used goes to the next node instead.
-
-      Desktop only: on mobile the headline is above the field, not over it,
-      so there is nothing to keep out of. Measured on resize rather than per
-      frame because both elements move together — scrolling cannot change
-      their offset.
+      Desktop only: on mobile the headline is above the field, not over it.
+      Measured on resize rather than per frame because both move together.
     */
     const panel = container.closest(".hero-field")?.querySelector(".hero-field-panel")
-    let text_box: { x: number; y: number; w: number; h: number } | null = null
+    /*
+      The legend is pinned to the band's bottom-right corner on desktop, out
+      of the panel's flow, so the panel's box no longer covers it. It gets a
+      keep-out box of its own.
+    */
+    const legend = container.closest(".hero-field")?.querySelector(".hero-legend")
+    let text_box: Box | null = null
+    let legend_box: Box | null = null
 
     const measurePanel = () => {
       if (mobile || !panel) {
         text_box = null
+        legend_box = null
         return
       }
       const cr = container.getBoundingClientRect()
+      if (legend) {
+        const lr = legend.getBoundingClientRect()
+        legend_box = {
+          x: lr.left - cr.left - 12,
+          y: lr.top - cr.top - 12,
+          w: lr.width + 24,
+          h: lr.height + 24,
+        }
+      }
       const pr = panel.getBoundingClientRect()
       // Inflated a little so a label stops short of the type, not against it.
       text_box = {
@@ -816,260 +765,113 @@ export default function HeroFieldCanvas() {
       }
     }
 
-    // --- Focus point ---
-    const focus = { x: -9999, y: -9999 }
-    let last_pointer = -Infinity
-
     /*
-      Pointer coordinates are viewport-based and the field is not, so they are
-      rebased onto the container here — once per pointer event, where the
-      prototype read a bounding rect on every frame.
+      The horizontal stretch the lanes divide up: everything right of the
+      headline on desktop, the whole band on a phone. On a narrow desktop the
+      headline leaves too little room, so the lanes take the right half and
+      the collision test keeps labels off the type.
     */
-    const onPointer = (e: PointerEvent) => {
-      const rect = container.getBoundingClientRect()
-      focus.x = e.clientX - rect.left
-      focus.y = e.clientY - rect.top
-      last_pointer = performance.now()
+    const laneRegion = () => {
+      const right = size.w - 40
+      if (!text_box) return { left: 24, right: size.w - 24 }
+      const left = text_box.x + text_box.w + 24
+      return right - left >= 260 ? { left, right } : { left: size.w * 0.5, right }
     }
-    window.addEventListener("pointermove", onPointer)
-    window.addEventListener("pointerdown", onPointer)
 
     /*
-      The drift sweeps the right half of a wide field, clear of the headline
-      panel floating over it. On mobile the panel is above the field rather
-      than on top of it, so the whole band is fair game and the sweep is
-      centred instead — a label pinned to one side of a 390px field would
-      always be reaching for the same two nodes.
+      --- Hover ---
+      Hovering the hero slows the whole field (wave, stream and messages) so
+      a message can actually be read. Mouse and pen only: a touch has no
+      hover, and a tap would leave the field stuck slow with nothing to end
+      it. Hover never spawns a message; the cycle runs on its own whether or
+      not anyone points at it.
     */
-    const drift_x = mobile ? 0.5 : 0.68
-    const drift_amp = mobile ? 0.26 : 0.2
-
-    function updateFocus(now: number) {
-      if (now - last_pointer > idle_ms) {
-        if (reduce_motion) {
-          focus.x = size.w * drift_x
-          focus.y = size.h * 0.55
-        } else {
-          focus.x = size.w * (drift_x + Math.sin(now * 0.00017) * drift_amp)
-          focus.y = size.h * (0.55 + Math.cos(now * 0.00011) * 0.12)
-        }
+    const section = container.closest<HTMLElement>(".hero-field")
+    const onEnter = (e: PointerEvent) => {
+      if (e.pointerType === "mouse" || e.pointerType === "pen") {
+        time_scale_target = cfg.hoverTimeScale
       }
     }
-
-    const v = new THREE.Vector3()
-    const scr: Screen[] = new Array(node_count)
+    const onLeave = () => {
+      time_scale_target = 1
+    }
+    section?.addEventListener("pointerenter", onEnter)
+    section?.addEventListener("pointerleave", onLeave)
 
     /*
-      The one place a node's colour is decided, shared by both modes. Offline
-      nodes are a dim grey wherever they are; everything else glows with the
-      wave, dark in the valleys and bright at the crests, and only leans
-      toward its state colour when a label is pulling it (`near` > 0).
+      Ambient node colour. The stream glows with the wave, dark in the
+      valleys and bright at the crests, and carries no message; offline
+      nodes are a dim grey wherever they are.
     */
-    const paintNode = (
-      n: number,
-      t: number,
-      near: number,
-      state: StateName | null,
-      fade: number,
-    ) => {
+    const paintNode = (n: number, t: number, fade: number) => {
       if (offline[n]) {
         node_colors[n * 3] = offline_color.r * 0.35 * fade
         node_colors[n * 3 + 1] = offline_color.g * 0.35 * fade
         node_colors[n * 3 + 2] = offline_color.b * 0.35 * fade
         return
       }
-      const b = 0.12 + 0.88 * t * t
-      let cr = base_color.r * b
-      let cg = base_color.g * b
-      let cb = base_color.b * b
-      if (near > 0 && state) {
-        state_color.set(STATES[state].color)
-        cr += (state_color.r - cr) * near
-        cg += (state_color.g - cg) * near
-        cb += (state_color.b - cb) * near
-      }
       /*
-        The last multiply is the node's own run: full while it is out in the
-        field, tapering to nothing as it reaches the front edge and again
-        just after it rises at the horizon. With additive blending a fade to
-        zero is a fade into the background, leaving nothing behind.
+        The fade multiply is the node's own run: full while it is out in the
+        field, tapering to nothing at the front edge and just after it rises
+        at the horizon. With additive blending a fade to zero is a fade into
+        the background, leaving nothing behind.
       */
-      node_colors[n * 3] = cr * fade
-      node_colors[n * 3 + 1] = cg * fade
-      node_colors[n * 3 + 2] = cb * fade
+      const b = (0.12 + 0.88 * t * t) * fade
+      node_colors[n * 3] = base_color.r * b
+      node_colors[n * 3 + 1] = base_color.g * b
+      node_colors[n * 3 + 2] = base_color.b * b
     }
 
-    function updateNodes(now: number) {
-      updateFocus(now)
-      field.updateMatrixWorld()
+    const v = new THREE.Vector3()
 
-      const ranked: number[] = []
+    function updateNodes() {
+      field.updateMatrixWorld()
+      const step = node_speed * dt * time_scale
+
       for (let n = 0; n < node_count; n++) {
         // Nodes hold still under prefers-reduced-motion, as the wave does.
-        if (!reduce_motion) node_y[n] -= node_speed * dt
+        if (!reduce_motion) node_y[n] -= step
 
         const nx = node_x[n]
         const ny = node_y[n]
-        // Sampled from the wave directly: a node is no longer on a vertex.
+        // Sampled from the wave directly: a node is not on a vertex.
         const h = heightAt(nx, ny, time)
         const nz = h + node_lift
         node_positions[n * 3] = nx
         node_positions[n * 3 + 1] = ny
         node_positions[n * 3 + 2] = nz
 
-        const t = Math.max(0, Math.min(1, (h + wave_amp) / (2 * wave_amp)))
-        const confidence = 0.35 + 0.6 * t
-
         v.set(nx, ny, nz)
         field.localToWorld(v)
         v.project(camera)
-        const sx = ((v.x + 1) / 2) * size.w
-        const sy = ((1 - v.y) / 2) * size.h
 
         /*
           The node has run out the front of the field, so it goes back to the
-          start. Tested in world depth rather than on screen, because the
-          front edge of the field is a depth — y_near — and the fade below
-          has already taken the node to nothing by the time it gets there, so
-          the jump is never visible.
+          start. Tested in world depth, because the fade below has already
+          taken the node to nothing by the time it gets there, so the jump is
+          never visible.
         */
         const gone = v.z >= 1 || ny <= y_near || v.x < -1.3 || v.x > 1.3
         if (gone) respawn(n)
 
         /*
           A node's run: it comes up out of the distance, holds across the
-          field, then dies away over the last stretch and falls off the front
-          edge. Both ends are the same smoothstep, measured in distance
-          travelled, so nothing pops in or out at either end.
+          field, then dies away over the last stretch. Both ends are the same
+          smoothstep, so nothing pops in or out at either end.
         */
         const fade = gone
           ? 0
           : smoothstep(spawn_y, spawn_y - fade_in_span, ny) *
             smoothstep(y_near, y_near + fade_out_span, ny)
 
-        const visible = fade > 0 && v.x > -1.1 && v.x < 1.1
-        const d = visible ? Math.hypot(sx - focus.x, sy - focus.y) : Infinity
-        scr[n] = { sx, sy, d, confidence, t, fade }
-        ranked.push(n)
-      }
-
-      /*
-        Nearest first, but a node whose signal needs a human counts as half
-        as far away, so when one is anywhere near the focus it wins a slot
-        over the routine signals around it. Without the bias the bright
-        labels only turned up by luck.
-      */
-      const now_ms = performance.now()
-      const lingering = (n: number) =>
-        now_ms < labels[n].heldUntil &&
-        scr[n].fade > 0.3 &&
-        needsHuman(stateOf(n, scr[n].confidence))
-      /*
-        A lingering needs-human label goes first of all, so it keeps its place
-        and the labels around it make way for it, not the other way round.
-      */
-      const key = (n: number) =>
-        lingering(n)
-          ? -1
-          : needsHuman(stateOf(n, scr[n].confidence))
-            ? scr[n].d * 0.5
-            : scr[n].d
-      ranked.sort(function (a, b) {
-        return key(a) - key(b)
-      })
-
-      /*
-        A label is no longer shown just because its node is one of the nearest
-        few. It has to earn the space: the box is tested against everything
-        already placed this frame, and `shown` only counts the ones that made
-        it, so a label suppressed for overlapping does not use up a slot.
-      */
-      const placed: { x: number; y: number; w: number; h: number }[] = []
-      if (text_box) placed.push(text_box)
-      let shown = 0
-
-      for (let r = 0; r < ranked.length; r++) {
-        const n = ranked[r]
-        const s = scr[n]
-        const label = labels[n]
-        const state = stateOf(n, s.confidence)
-        /*
-          A label is only offered to a node that is well into its run. One on
-          a node about to dissolve would be read halfway and then taken away,
-          and one on a node still rising out of the haze would arrive before
-          the light it belongs to.
-        */
-        let near =
-          shown < max_labels && s.d < reveal_radius && s.fade > 0.6
-            ? 1 - s.d / reveal_radius
-            : 0
-        // Out of reach, but still inside its linger time: keep it up.
-        const live = near > 0
-        if (!live && shown < max_labels && lingering(n)) near = label.held
-
-        // Only show a label if it doesn't overlap one already placed
-        if (near > 0) {
-          fillLabel(label, n, state, s.confidence)
-          const bw = label.w
-          /*
-            Desktop hangs the label off the node's right shoulder, as the
-            prototype did, and flips it to the left shoulder near the right
-            edge so the text is never clipped.
-
-            On a phone a signal is nearly as wide as the field itself, so
-            there is no shoulder to hang it from. The label centres under its
-            node and is held inside the band, which reads as a caption for
-            the light above it rather than a line running off the edge.
-          */
-          const bx = mobile
-            ? Math.min(Math.max(8, s.sx - bw / 2), Math.max(8, size.w - 8 - bw))
-            : s.sx + 10 + bw > size.w - 8
-              ? Math.max(8, s.sx - 10 - bw)
-              : s.sx + 10
-          const by = mobile ? s.sy + 12 : s.sy - 18
-          const bh = 16
-          for (let p = 0; p < placed.length; p++) {
-            const q = placed[p]
-            if (
-              bx < q.x + q.w + label_gap &&
-              bx + bw + label_gap > q.x &&
-              by < q.y + q.h + label_gap &&
-              by + bh + label_gap > q.y
-            ) {
-              near = 0
-              break
-            }
-          }
-          if (near > 0) {
-            placed.push({ x: bx, y: by, w: bw, h: bh })
-            shown++
-            // Each frame a needs-human label is genuinely in reach restarts
-            // its linger time.
-            if (live && needsHuman(state)) {
-              label.heldUntil = now_ms + human_linger_ms
-              label.held = near
-            }
-            label.el.style.transform =
-              "translate(" + Math.round(bx) + "px," + Math.round(by) + "px)"
-          }
-        }
-
-        paintNode(n, s.t, near, state, s.fade)
-
-        const target_opacity =
-          near > 0
-            ? Math.min(1, 0.35 + near) * s.fade * (needsHuman(state) ? 1 : automated_opacity)
-            : 0
-        if (target_opacity !== label.opacity) {
-          label.el.style.opacity = target_opacity.toFixed(2)
-          label.opacity = target_opacity
-        }
+        const t = Math.max(0, Math.min(1, (h + wave_amp) / (2 * wave_amp)))
+        paintNode(n, t, fade)
       }
 
       node_geometry.attributes.position.needsUpdate = true
       node_geometry.attributes.color.needsUpdate = true
 
-      if (!reduce_motion) hero.y -= node_speed * dt
+      if (!reduce_motion) hero.y -= step
       hero_positions[0] = hero.x
       hero_positions[1] = hero.y
       hero_positions[2] = heightAt(hero.x, hero.y, time) + node_lift
@@ -1091,21 +893,208 @@ export default function HeroFieldCanvas() {
       }
     }
 
+    /*
+      Screen x (CSS pixels) of a point on the field. Used to solve for the
+      world x that puts a message on its lane: at a given depth, screen x is
+      linear in world x, so two projections give the line and one division
+      inverts it. Exact, unlike halfWidthAt, which ignores the camera's pitch.
+    */
+    const screenX = (x: number, y: number) => {
+      v.set(x, y, node_lift)
+      field.localToWorld(v)
+      v.project(camera)
+      return ((v.x + 1) / 2) * size.w
+    }
+
+    const overlaps = (b: Box, placed: Box[]) => {
+      for (const q of placed) {
+        if (
+          b.x < q.x + q.w + label_gap &&
+          b.x + b.w + label_gap > q.x &&
+          b.y < q.y + q.h + label_gap &&
+          b.y + b.h + label_gap > q.y
+        )
+          return true
+      }
+      return false
+    }
+
+    function updateMessages() {
+      const active = scheduler.active
+
+      // Give back the slots of messages that have left the field.
+      for (const slot of pool) {
+        if (slot.id && !active.some((m) => m.id === slot.id)) {
+          slot.id = 0
+          slot.opacity = 0
+          slot.el.style.opacity = "0"
+        }
+      }
+
+      human_points.col.fill(0)
+      auto_points.col.fill(0)
+
+      /*
+        Placement order is priority order: anything that needs a person goes
+        first, then oldest first. If two labels would collide, the one that
+        gives way is the routine one, never the one waiting on someone.
+      */
+      const ordered = active
+        .slice()
+        .sort((a, b) => (a.kind === b.kind ? a.id - b.id : a.kind === "human" ? -1 : 1))
+
+      const region = laneRegion()
+      const lane_w = (region.right - region.left) / cfg.lanes
+      const placed: Box[] = []
+      if (text_box) placed.push(text_box)
+      if (legend_box) placed.push(legend_box)
+
+      for (const m of ordered) {
+        let i = pool.findIndex((s) => s.id === m.id)
+        if (i === -1) {
+          i = pool.findIndex((s) => s.id === 0)
+          if (i === -1) continue
+          fillSlot(pool[i], m)
+        }
+        const slot = pool[i]
+
+        /*
+          Depth from progress, screen x from the lane. Progress is eased
+          before it becomes depth: perspective packs the far half of the field
+          into a thin strip under the horizon, so a linear run would spend
+          most of a message's life up there. Covering the far distance fast
+          and the near distance slowly spreads its time evenly down the band.
+        */
+        const p = 1 - (1 - m.progress) * (1 - m.progress)
+        const wy = msg_y_from + (msg_y_to - msg_y_from) * p
+        const lane_x = region.left + lane_w * (m.lane + 0.5 + m.laneOffset * lane_nudge)
+        /*
+          A slight outward drift as it comes on, so a message reads as
+          travelling toward you rather than sliding down a rail.
+        */
+        const target_x = lane_x + (lane_x - size.w / 2) * 0.12 * m.progress
+        const x0 = screenX(0, wy)
+        const x1 = screenX(10000, wy)
+        const wx = ((target_x - x0) / (x1 - x0)) * 10000
+        const wz = heightAt(wx, wy, time) + node_lift
+
+        const set = m.kind === "human" ? human_points : auto_points
+        set.pos[i * 3] = wx
+        set.pos[i * 3 + 1] = wy
+        set.pos[i * 3 + 2] = wz
+        set.col[i * 3] = label_color.r * m.opacity
+        set.col[i * 3 + 1] = label_color.g * m.opacity
+        set.col[i * 3 + 2] = label_color.b * m.opacity
+
+        v.set(wx, wy, wz)
+        field.localToWorld(v)
+        v.project(camera)
+        const sx = ((v.x + 1) / 2) * size.w
+        const sy = ((1 - v.y) / 2) * size.h
+
+        /*
+          Two candidate spots, tried in order; the first that is clear wins.
+          Desktop hangs the label off the light's shoulder with the dot level
+          with it: on the right unless that runs off the edge, else the left.
+          A phone has no shoulder to spare, so the label is a caption centred
+          under its light, or above it if under is taken.
+        */
+        const w = slot.w
+        const h = slot.h
+        const mx = Math.min(Math.max(8, sx - w / 2), Math.max(8, size.w - 8 - w))
+        const right: Box = { x: sx + 12, y: sy - 8, w, h }
+        const left: Box = { x: sx - 12 - w, y: sy - 8, w, h }
+        const candidates: Box[] = mobile
+          ? [
+              { x: mx, y: sy + 12, w, h },
+              { x: mx, y: sy - 12 - h, w, h },
+            ]
+          : sx + 12 + w <= size.w - 8
+            ? [right, left]
+            : [left, right]
+        /*
+          Hysteresis, so a crowded label does not flicker. It tries the side
+          it used last frame first, and once it has had to stand down it
+          stays down for a moment rather than blinking back the next frame.
+        */
+        const now_ms = performance.now()
+        const order = slot.side === 1 ? [1, 0] : [0, 1]
+        let spot: Box | undefined
+        if (now_ms >= slot.downUntil) {
+          for (const k of order) {
+            const b = candidates[k]
+            if (b.x >= 0 && b.x + b.w <= size.w && !overlaps(b, placed)) {
+              spot = b
+              slot.side = k as 0 | 1
+              break
+            }
+          }
+          if (!spot) slot.downUntil = now_ms + 900
+        }
+
+        if (spot) {
+          placed.push(spot)
+          slot.el.style.transform =
+            "translate(" + Math.round(spot.x) + "px," + Math.round(spot.y) + "px)"
+        }
+        const target = spot ? m.opacity : 0
+        if (Math.abs(target - slot.opacity) > 0.005) {
+          slot.el.style.opacity = target.toFixed(3)
+          slot.opacity = target
+        }
+      }
+
+      human_points.geo.attributes.position.needsUpdate = true
+      human_points.geo.attributes.color.needsUpdate = true
+      auto_points.geo.attributes.position.needsUpdate = true
+      auto_points.geo.attributes.color.needsUpdate = true
+    }
+
+    /*
+      Under reduced motion nothing travels, so the field shows one designed
+      still instead: the seeded cycle is run forward off-screen to the first
+      moment a "needs a person" message is at full strength while an
+      automated one is still visible, and held there. Both states side by
+      side, matching the legend, so the point survives without the motion.
+    */
+    if (reduce_motion) {
+      for (let k = 0; k < 60 * 30; k++) {
+        const a = scheduler.update(1 / 60)
+        if (
+          a.some((m) => m.kind === "human" && m.opacity >= cfg.fade.human.peak) &&
+          a.some((m) => m.kind === "auto" && m.opacity >= cfg.fade.auto.peak * 0.6)
+        )
+          break
+      }
+    }
+
     let time = 0
     let did_first_frame = false
     let raf = 0
+    // Timestamp of the previous frame; 0 when the loop has just (re)started.
+    let last = 0
 
-    function render() {
+    function render(now: number) {
       raf = requestAnimationFrame(render)
-      const now = performance.now()
+      /*
+        The scheduler runs on real seconds, clamped so a long gap (the loop
+        paused off-screen, a backgrounded tab) does not land as one huge step.
+      */
+      const elapsed = last ? Math.min(0.1, (now - last) / 1000) : 0
+      last = now
+      // Eased rather than switched, so hover reads as the field slowing down.
+      time_scale += (time_scale_target - time_scale) * 0.08
+
       if (!reduce_motion || !did_first_frame) {
-        if (!reduce_motion) time += dt
+        if (!reduce_motion) time += dt * time_scale
         computeHeights(time)
         if (horiz) updateLines(horiz)
         if (vert) updateLines(vert)
         did_first_frame = true
       }
-      updateNodes(now)
+      if (!reduce_motion) scheduler.update(elapsed * time_scale)
+      updateNodes()
+      updateMessages()
       renderer.render(scene, camera)
     }
 
@@ -1128,20 +1117,19 @@ export default function HeroFieldCanvas() {
     measurePanel()
 
     /*
-      The prototype ran its loop for the life of the page. Rewriting tens of
-      thousands of vertices every frame is not worth doing while the band is
-      scrolled out of sight, and on a phone it is battery burnt for nothing.
-
-      Two gates, both of which must be open: the band is on screen, and the
-      tab is in the foreground. requestAnimationFrame already stops in a
-      hidden tab in most browsers, but not in all of them and not when the
-      window is merely occluded, so the visibility gate is explicit.
+      The loop only runs while the band is on screen and the tab is in the
+      foreground. Rewriting the field every frame is not worth doing while it
+      is scrolled out of sight, and on a phone it is battery burnt for nothing.
+      requestAnimationFrame already stops in a hidden tab in most browsers,
+      but not in all of them and not when the window is merely occluded, so
+      the visibility gate is explicit.
     */
     let running = false
     let onScreen = false
     const start = () => {
       if (!running) {
         running = true
+        last = 0
         raf = requestAnimationFrame(render)
       }
     }
@@ -1166,8 +1154,8 @@ export default function HeroFieldCanvas() {
       io.disconnect()
       ro.disconnect()
       document.removeEventListener("visibilitychange", onVisibility)
-      window.removeEventListener("pointermove", onPointer)
-      window.removeEventListener("pointerdown", onPointer)
+      section?.removeEventListener("pointerenter", onEnter)
+      section?.removeEventListener("pointerleave", onLeave)
       horiz?.geo.dispose()
       horiz?.mat.dispose()
       vert?.geo.dispose()
@@ -1176,6 +1164,10 @@ export default function HeroFieldCanvas() {
       node_material.dispose()
       hero_geometry.dispose()
       hero_material.dispose()
+      human_points.geo.dispose()
+      human_points.mat.dispose()
+      auto_points.geo.dispose()
+      auto_points.mat.dispose()
       glow.dispose()
       renderer.dispose()
       overlay.remove()

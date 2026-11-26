@@ -4,6 +4,7 @@ import dynamic from "next/dynamic"
 import { motion, MotionConfig, type Variants } from "motion/react"
 import { sendGAEvent } from "@next/third-parties/google"
 import { CONTACT_MAILTO } from "@/lib/contact"
+import { DEFAULT_CONFIG } from "@/lib/messageScheduler"
 
 /*
   The WebGL field is split into its own module and loaded with ssr:false: it
@@ -27,6 +28,10 @@ import { CONTACT_MAILTO } from "@/lib/contact"
   no layout shift when the canvas arrives.
 */
 const HeroFieldCanvas = dynamic(() => import("./HeroFieldCanvas"), { ssr: false })
+
+// The field's legend (needs a person / automation handling it). Switched off
+// for now; set to true to bring it back.
+const SHOW_LEGEND = false
 
 // ---- Text entrance (Motion), carried over from WaveHero ----
 const containerVariants: Variants = {
@@ -110,8 +115,7 @@ export default function HeroField() {
               className="flex max-w-[520px] flex-col gap-3 text-[clamp(16px,1.2vw,18px)] leading-[1.5] text-hero-field-subline"
             >
               <p>
-                Health research, financial services, command-and-control autonomy. IC designer
-                experienced working on teams or solo.
+                Health research, financial services, command-and-control autonomy.
               </p>
               <p className="font-semibold text-hero-field-label">I design it, build it, and ship it.</p>
             </motion.div>
@@ -150,6 +154,58 @@ export default function HeroField() {
                 </span>
               </a>
             </motion.div>
+            {/*
+              The key to the field. Small and quiet: it should read as a
+              caption, not a component. A <dl> because each entry is a term
+              (the mark and its name) with a description.
+
+              From md up it is pinned to the bottom-right corner of the band,
+              beside the messages it explains, like the key on a map. The
+              absolute position resolves against .hero-field-text (the band),
+              and the right offset matches that container's side padding so
+              the legend lines up with the nav's right edge. Below md the
+              field sits under the text, so the legend stays in flow under
+              the CTAs. HeroFieldCanvas measures .hero-legend and keeps
+              labels off it.
+
+              The dot opacities come straight from the scheduler's fade peaks,
+              so the legend's dim ring is exactly as dim as the automated
+              messages on the field. If the two drifted apart the legend would
+              stop teaching anything.
+
+              Hidden for now behind SHOW_LEGEND (top of this file). Not
+              rendered at all rather than hidden with CSS, so screen readers
+              skip it too and the canvas finds no .hero-legend to keep out.
+            */}
+            {SHOW_LEGEND && (
+            <motion.dl
+              variants={item}
+              className="hero-legend flex flex-wrap gap-x-10 gap-y-3 pt-4 text-[13px] leading-[1.5] md:absolute md:bottom-10 md:right-[clamp(1.5rem,4vw,4rem)] md:pt-0"
+            >
+              <div>
+                <dt className="flex items-center gap-2 font-semibold text-hero-field-label">
+                  <span
+                    aria-hidden="true"
+                    className="size-2 flex-none rounded-full bg-hero-field-label"
+                    style={{ opacity: DEFAULT_CONFIG.fade.human.peak }}
+                  />
+                  needs a person
+                </dt>
+                <dd className="ml-4 text-hero-field-metric">holds until someone acts</dd>
+              </div>
+              <div>
+                <dt className="flex items-center gap-2 text-hero-field-label">
+                  <span
+                    aria-hidden="true"
+                    className="size-2 flex-none rounded-full border-[1.5px] border-hero-field-label"
+                    style={{ opacity: DEFAULT_CONFIG.fade.auto.peak }}
+                  />
+                  automation handling it
+                </dt>
+                <dd className="ml-4 text-hero-field-metric">clears on its own</dd>
+              </div>
+            </motion.dl>
+            )}
           </motion.div>
         </div>
         <div className="hero-field-stage">

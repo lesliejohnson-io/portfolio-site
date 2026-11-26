@@ -26,15 +26,19 @@ const LINKS: NavLink[] = [
   The bar is dark on both themes: `theme-dark` (globals.css) swaps in the
   dark palette for everything inside it. `text-fg` gives the name in the
   mark that palette's off-white; it inherits its colour, and would otherwise
-  take the page's dark text on the light theme. The fill is 90% opaque, not
-  75%, so the bar still reads as dark over light sections.
+  take the page's dark text on the light theme.
+
+  The fill is the hero field's own near-black (--hero-field-bg), so at the
+  top of the home page the bar and the field read as one dark surface. It
+  stays glass: 80% opaque with a heavy blur, so content scrolling under it
+  shows through faintly, while still reading as dark over light sections.
 
   The bar spans the whole window, but its contents sit in container-wide, so
   the mark lines up with the hero headline and the case study rows below.
 */
 export default function Nav() {
   return (
-    <header className="theme-dark sticky top-0 z-30 border-b border-border/60 bg-bg/90 text-fg backdrop-blur-xl backdrop-saturate-150">
+    <header className="theme-dark sticky top-0 z-30 border-b border-border/60 bg-hero-field-bg/80 text-fg backdrop-blur-xl backdrop-saturate-150">
       <div className="container-wide flex h-16 items-center justify-between">
         {/*
           Dimmed until hovered or focused. The opacity lives on a wrapper so

@@ -1758,35 +1758,6 @@
 }
 
 /*
-  The FAULT signal pulses, so a stopped machine reads as needing attention
-  rather than as another steady lamp. Lifted out of the hero prototype, which
-  injected these keyframes into document.head at runtime; the hero band is
-  part of the site now, so its one animation lives with the rest of them.
-
-  FAULT only. Every other state holds steady — a field where everything
-  blinks says nothing.
-*/
-@keyframes sigFault {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-
-.sig-fault {
-  animation: sigFault 1.2s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sig-fault {
-    animation: none;
-  }
-}
-
-/*
   The headline block. It used to be a glass card — tinted, blurred and
   bordered — floating on the field; the card is gone and the type now sits
   directly on the field, so the band reads as one surface instead of a panel
@@ -1824,6 +1795,16 @@
 */
 .hero-field {
   --hero-field-height: calc(55vh + 100px);
+  /*
+    The band runs up under the sticky nav, so the nav's glass sits over the
+    field rather than over the page background. The nav is filled with the
+    field's own colour at 80%, so over the field the two read as one dark
+    surface; over the light page they read as grey. --nav-h is the nav bar's
+    height (h-16 in Nav.tsx); the text gets the same amount of extra top
+    padding so it stays centred in the part of the band you can see.
+  */
+  --nav-h: 4rem;
+  margin-top: calc(-1 * var(--nav-h));
 }
 
 .hero-field-stage {
@@ -1835,7 +1816,7 @@
 .hero-field-text {
   position: relative;
   z-index: 3;
-  padding-block: 2.5rem 2rem;
+  padding-block: calc(2.5rem + var(--nav-h)) 2rem;
 }
 
 .hero-field .hero-field-text {
@@ -1851,7 +1832,7 @@
 
 @media (min-width: 768px) {
   .hero-field {
-    min-height: var(--hero-field-height);
+    min-height: calc(var(--hero-field-height) + var(--nav-h));
   }
 
   .hero-field-stage {
@@ -1866,8 +1847,8 @@
     inset: 0;
     display: flex;
     align-items: center;
-    min-height: var(--hero-field-height);
-    padding-block: 0;
+    min-height: calc(var(--hero-field-height) + var(--nav-h));
+    padding-block: var(--nav-h) 0;
     pointer-events: none;
   }
 
