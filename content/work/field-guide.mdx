@@ -1,42 +1,37 @@
 ---
 slug: "field-guide"
 featured: true
-# What the home page's "Some of the work I've shipped" row shows, where it
-# differs from the case study itself. Every field is optional and falls back
-# to the study's own title, summary and visual. /work uses this title and
-# summary too; the case study page keeps its own.
+# The home row and /work fall back to the study's own title, summary and
+# visual, so a title change in this file reaches every surface at once. Only
+# the outcome line is home-specific.
 home:
-  title: "Field Guide: the details said illiteracy, the paper said exhausted."
-  summary: "An NIH-funded Pitt–WVU study in rural Appalachia. Participants traded health data for dental care, and the study was losing them to a 120+ question paper survey."
   # Both figures from the study: rescheduled participants (stats, "23% → 0")
-  # and clinic day to data available (body table, "8 hours, from a week or more").
+  # and clinic day to data available (Outcomes table, "8 hours, from a week or more").
   outcome: "Rescheduled 23% → 0 · Data shared in 8 hours, not a week"
-  # The field photograph rather than the device mockup in `visual`. Its alt
-  # text is read from heroAlt, since it is the same image.
-  image: "/work/field-guide/hero-image.webp"
 order: 1
 layout: "v2"
 category: "Shipped work · Rural health research"
 name: "Field Guide"
 tag: "Shipped work · Rural health research"
 role: "University of Pittsburgh and West Virginia University · UX designer and researcher"
-title: "Field Guide: a 120-question health survey, for people who couldn’t read it"
-deck: "An NIH-funded Pitt–WVU study in rural Appalachia. Participants gave up their health data in exchange for dental care, and the study was losing them."
+title: "Field Guide: the directors blamed literacy, the paper said exhaustion."
+deck: "An NIH-funded Pitt–WVU study in rural Appalachia. Participants traded health data for dental care, and the study was losing them to a 120+ question paper survey."
 who: "Households in an NIH-funded Pitt–WVU health study across rural Appalachia, plus the Pitt and WVU research teams and clinicians running it"
 what: "A voice-first, offline-capable field data-collection system replacing 120+ question paper surveys, plus a redesigned clinic service flow"
-summary: "An NIH-funded Pitt–WVU study in rural Appalachia. Participants gave up their health data in exchange for dental care, and the study was losing them."
+summary: "An NIH-funded Pitt–WVU study in rural Appalachia. Participants traded health data for dental care, and the study was losing them to a 120+ question paper survey."
 hero: "/work/field-guide/hero-image.webp"
 # A photograph rather than cut-out artwork, so there is no background colour
 # to run as a band: the hero keeps its bordered, rounded frame. The glow is
-# off too — an opaque rectangle has no alpha silhouette for it to follow, so
-# it would only ring the edges of the photo.
+# off too — an opaque rectangle has no alpha silhouette for it to follow.
 heroGlow: false
-heroAlt: "A man in a plaid shirt and ball cap, wearing headphones, holds a tablet in a clinic office with a window, a filing cabinet and a brochure rack behind him. The tablet shows the Social Connectivity section of the survey: a “Read Aloud” toggle switched on at the top left, a progress bar, the question “Do you feel alone or far away from your friends and family?” in large plain language, and five response buttons reading Never, Sometimes, Often, Very Often and Always, with Sometimes highlighted. A second person stands at his shoulder."
-# The three figures from the final copy's hero table, labels as written.
-# No captions: the copy gives none, and none are invented. "15 → 1" and
-# "23% → 0" carry an arrow, so StatValue renders them as written rather
-# than counting down. The strip's "see how we measured this" link jumps to
-# the Outcomes table, which carries each figure with its full label.
+# `&heroAlt` is a YAML anchor. `visual.alt` below points back at it with
+# `*heroAlt`, so one description serves the hero and every row and card.
+heroAlt: &heroAlt "A man in a plaid shirt and ball cap, wearing headphones, holds a tablet in a clinic office with a window, a filing cabinet and a brochure rack behind him. The tablet shows the Social Connectivity section of the survey: a “Read Aloud” toggle switched on at the top left, a progress bar, the question “Do you feel alone or far away from your friends and family?” in large plain language, and five response buttons reading Never, Sometimes, Often, Very Often and Always, with Sometimes highlighted. A second person stands at his shoulder."
+# The three figures from the copy's hero strip, labels as written. No
+# captions: the copy gives none, and none are invented. "15 → 1" and
+# "23% → 0" carry an arrow, so StatValue renders them as written rather than
+# counting down. The strip's "see how we measured this" link jumps to the
+# Outcomes table, which carries each figure with its full label.
 stats:
   - value: "83%"
     label: "Survey completion on the tablet instrument"
@@ -47,10 +42,12 @@ stats:
     label: "Household onboarding"
   - value: "23% → 0"
     label: "Participants rescheduled without seeing a dentist"
+# The same photograph as the hero, so the home row, the /work row and the
+# "Other case studies" card all show what the page itself leads with.
 visual:
   type: "image"
-  src: "/work/field-guide/Field-guide-hero.svg"
-  alt: "A laptop and a tablet side by side. The laptop shows the researcher view of one session: progress at question 37 of 120, a fatigue signal reading “response pattern looks varied, nothing to flag”, an average pace of 4.1 seconds per answer, no open flags, the active voice persona and reading level, and a timestamped audit trail of every agent decision. The tablet shows what the participant sees: question 37 in large plain language, an audio control to replay it, and five response buttons from strongly disagree to strongly agree."
+  src: "/work/field-guide/hero-image.webp"
+  alt: *heroAlt
 logos:
   - src: "/work/field-guide/nih.png"
     alt: "National Institutes of Health"
@@ -66,35 +63,38 @@ logos:
 ---
 
 {/*
-  Rewritten 2026-11-18 from field-guide-case-study-final.md, which is the
-  source of truth for wording and structure. Copy is Leslie's, used as written
-  apart from curly quotes and apostrophes. Everything under that file's
-  "Production notes" heading is working notes, not page content.
+  Rewritten 2026-11-25 from field-guide-case-study.md at the repo root, which
+  is the source of truth for wording and structure. Copy is Leslie's, used as
+  written apart from curly quotes and apostrophes.
 
-  Standing content rules carried by the final copy:
+  Standing content rules carried by the copy:
 
   1. State 83% bare. There is no paper baseline, so it is never phrased as an
      improvement over paper.
   2. No years anywhere on the page.
-  3. The rebuild section has no link yet. Add "Read the rebuild →" once that
-     page exists.
+  3. The closing line about the rebuild has no link yet (URL TBD in the
+     copy). Add the link and its arrow once that page exists.
 
-  Images, against the copy's [Image: …] markers:
+  Images, against the copy's [IMAGE — …] markers:
 
-  - Hero: hero-image.webp. The alt describes the file on disk.
-  - Partner logos: rendered by the logo strip under the title (frontmatter
-    logos), not inline in Context.
-  - Approach 2 data path: data-diagram.png.
-  - Approach 3 clinic day: field-guide-journey-map.svg, the existing journey
-    map, standing in for a before-and-after picture.
-  - Rebuild screenshot: no asset yet, so it is a placeholder.
+  - Hero: hero-image.webp. Also the row and card visual, so every surface
+    shows the same picture.
+  - Service blueprint: the copy names Service_Blueprint_-_clinical_visit_8.png,
+    which is not on disk. service-blueprint.png is the closest export found
+    ("Service Blueprint - clinical visit (1).png" from Downloads). Its rows
+    differ from the copy's description, so swap in the _8 export when found
+    and update the alt to match.
+  - Data path: data-diagram.png.
+  - Journey map: field-guide-journey-map.svg.
+  - Pedigree: pedigree-chart.png (byte-identical to Pedigree_Chart_1.png).
 
-  Retired from the page, still on disk: personas.png, pedigree-chart.png,
-  field-guide-service-map.svg, fatigue-detection.png. FatigueChart and
-  SurveyTimeline remain registered but unused.
+  Retired from the page, still on disk: Field-guide-hero.svg, personas.png,
+  field-guide-service-map.svg, fatigue-detection.png.
 */}
 
 ## Context
+
+The study directors blamed literacy. The paper sheets said something else: whole columns of identical answers, filled in by people who wanted to be done. Reading wasn’t the barrier. Volume and density were, with 120-plus questions in research language, many of them long and multi-part. Either way, the obvious move, putting the instrument on a screen, was off the table.
 
 The study was an NIH-funded collaboration between Pitt and WVU, running clinic days in rural Appalachia. The arrangement was explicit: participants completed a long health survey and handed over personal health data, and in return they received a dental exam, and treatment if they needed it. Many needed a great deal.
 
@@ -102,24 +102,31 @@ Two things were failing. Participants were dropping out, and the study’s fundi
 
 What I was handed wasn’t a brief. The team thought digitizing the survey might be worthwhile and didn’t know what that would mean or whether it was possible. No device decision, no data pipeline, no spec.
 
-The study characterized its participants as illiterate. The paper sheets said something else: whole columns of identical answers, filled in by people who wanted to be done. Literacy wasn’t the barrier. Volume and density were — 120-plus questions in research language, many of them long and multi-part. Either way, the obvious move, putting the instrument on a screen, was off the table.
+**My role.** Sole designer. I defined the problem, rewrote the instrument with the researchers, designed the offline tablet survey and the data path behind it, and redesigned the clinic day after watching it fail in person.
 
-**My role.** Sole designer, through p2design. I defined the problem, rewrote the instrument with the researchers, designed the offline tablet survey and the data path behind it, and redesigned the clinic day after watching it fail in person.
+<Figure
+  src="/work/field-guide/service-blueprint.png"
+  alt="A service blueprint of the clinic visit in six phases: check-in and onboarding, self-report surveys, dental exam, DNA sample, more self-report surveys, and departure. A small family pedigree sits in the participants row. Below a dashed line of interaction, rows list participant actions, participant pain points and solution opportunities for each phase, among them long waits while staff interview families, parents filling out the same 60-question survey for each child, exams delayed by emergency care, difficult survey language and fatigue, and not being seen by a dentist. Below a dashed line of visibility, rows list what the tablet does at each phase and the supporting processes behind it, from checking the server for an existing participant ID to saving all data to the server and wiping the tablet at departure."
+  caption="The clinic visit, front stage and back: what the participant does, what the tablet does, and the server syncs behind both."
+  width="2213"
+  height="1092"
+  full
+/>
 
 ## Objective
 
 What the design had to satisfy:
 
-- **No reading required.** Every question had to be heard, and the participant had to be able to work through it alone, since this was a self-report instrument.
-- **One design across the full range.** The same instrument served an elder who wouldn’t touch a handheld, a teenager on the youth version of the study, and parents somewhere in between.
+- **Reading optional.** Every question and every answer could be heard instead of read, and the participant had to be able to work through the whole thing alone, since this was a self-report instrument.
+- **One design across the full range.** The same instrument served an elder who had never used a piece of technology, a teenager on the youth version of the study, and parents somewhere in between.
 - **Survive the length.** A single parent completed her own survey plus a child behavior instrument for every child under 12, up to four instruments in one visit, with the children in the room.
 - **No connectivity, not poor connectivity.** Nothing could depend on reaching a network during the clinic day.
-- **Protected health data on devices that travel.** The tablets left the site each night, so the design had to meet the study’s HIPAA obligations, not just good intentions.
+- **Protected health data, in the room and on the road.** Audio meant a participant’s answers could be overheard, so headphones weren’t a comfort choice, they were how the audio met HIPAA. The tablets also left the site each night, which the data path had to account for.
 - **Same-day into the study database,** reachable by Pitt, WVU and NIH.
 
 ## Approach
 
-### 1. If it can’t be read, it has to be heard
+### 1. Anything on the page, available as audio
 
 The researchers didn’t want the questions touched. No budget for a rewrite, and a real concern that changing the wording would change what each validated instrument measured. Rather than argue, I recorded one of the longest questions and played it aloud for the room. At the speed a participant would hear it, the question was plainly unanswerable.
 
@@ -137,7 +144,7 @@ The team agreed to two changes that afternoon: rewrite every question for readab
 
 The clinic ran in rural locations where connectivity couldn’t be relied on, and the tablets traveled with the team. The survey ran fully offline. At checkout, each participant’s data copied to a laptop and a portable external drive, so a lost or failed tablet never cost more than the session in progress. At the end of the day, once the team reached reliable connectivity, everything went up to the study database and every tablet was wiped. Nothing carrying protected health information rode around overnight.
 
-The tablet was never the point: the study needed the data to land in a database Pitt, WVU and NIH could all reach, and to tell them it had landed. A successful upload did both. It wiped the tablets and sent the institutions an update notice, the same day instead of a week or more.
+The tablet was never the point. The study needed the data to land in a database Pitt, WVU and NIH could all reach, and to tell them it had landed. A successful upload did both. It wiped the tablets and sent the institutions an update notice, the same day instead of a week or more.
 
 <Figure
   src="/work/field-guide/data-diagram.png"
@@ -145,14 +152,13 @@ The tablet was never the point: the study needed the data to land in a database 
   width="4810"
   height="828"
   wide
-  expandable
 />
 
 ### 3. The clinic day was the product
 
 Participants gave up personal health data and were promised a dental exam in return, plus treatment if they needed it. Many needed a great deal. I spent clinic days on site watching the queue rather than reading reports about it, and the bottleneck turned out to be variance, not volume. When an exam becomes an hour of treatment, a block of arrivals becomes a backlog that never recovers.
 
-23% were rescheduled, and in a rural catchment that largely meant the participant was lost: the study had the data and hadn’t held up its end.
+23% were rescheduled, and in a rural catchment that largely meant the participant was lost. The study had the data and hadn’t held up its end.
 
 Two changes, neither an interface. I staggered arrival times so the queue metered itself, and took the queue data to the study directors, who authorized an overflow dental team. Rescheduling went to zero.
 
@@ -164,11 +170,20 @@ Two changes, neither an interface. I staggered arrival times so the queue metere
   full
 />
 
-### 4. Replace the artifact, not the format
+### 4. Stop drawing, start confirming
 
-Onboarding took fifteen minutes per household because staff hand-drew a family pedigree for each participant. I replaced the drawing with on-screen confirmation. Staff confirmed or corrected relationships instead of constructing them. One minute.
+Onboarding took fifteen minutes per household because staff hand-drew a family pedigree for each participant. The study genuinely needed that pedigree, so the artifact stayed. What changed was who produced it. A computer draws a three-generation chart faster than any person can, from what the household gives at check-in. Staff confirmed the relationships on screen and added anyone who wasn’t listed. One minute.
 
-The gain wasn’t paper becoming a screen. It was changing what the staff was asked to produce: nobody needed a drawn artifact, the study needed confirmed relationships, and confirming is faster than constructing.
+The fifteen minutes weren’t going into judgment. They were going into construction, which is the part a machine does better. The human job was the part only a human could do: looking at the chart and saying yes, that’s my family, and you’re missing my stepson.
+
+<Figure
+  src="/work/field-guide/pedigree-chart.png"
+  alt="A three-generation family pedigree chart, generations labelled I, II and III, with squares for males and circles for females. Members living in the household are outlined and filled in green: MN in generation I; JL and his partner, shown as a photograph, in generation II; and their four children AL, KL, ML and VL, plus AR on the far right, in generation III. On the right, a double line between a couple in generation I marks a consanguineous marriage. A legend at the foot reads Male, Female, Living in household and Consanguineous Marriage."
+  caption="The chart the study needed, drawn from what the household gave at check-in. Staff confirmed it and added anyone missing."
+  width="2674"
+  height="896"
+  wide
+/>
 
 ## Outcomes & Impact
 
@@ -199,14 +214,10 @@ The survey was what I was asked about. The queue, the staffing and the data path
 
 ### What I’d check if I ran it again
 
-- Completion by instrument count: did the parents working through four instruments finish at the same rate as participants doing one?
-- The time-to-dentist distribution rather than the average. The average was never the problem; the tail was.
-- Whether audio-only delivery changed response patterns compared with the paper instrument. Nobody measured that, and on a study collecting health data it matters.
+- **Completion by instrument count.** Did the parents working through four instruments finish at the same rate as participants doing one?
+- **The time-to-dentist distribution rather than the average.** The average was never the problem. The tail was.
+- **Whether audio-only delivery changed response patterns** compared with the paper instrument. Nobody measured that, and on a study collecting health data it matters.
 
-## The rebuild
+{/* The copy ends this line with "→" and a link (URL TBD). Restore both once the rebuild page exists. */}
 
-Most of the constraints that shaped this work have since lifted. Offline-first is ordinary now. Speech no longer needs a recording session and a researcher’s calendar. A model can notice that someone is struggling with a question and offer a simpler wording that a researcher already approved, which at the time meant printing a second instrument.
-
-So I rebuilt it as a working prototype, in React and Next.js, to find out what this design becomes when the constraints go away. Regional voices rather than neutral narration. Fatigue handling for the parent on her fourth instrument. A coordinator view that shows the clinic day falling behind while there is still time to do something about it.
-
-*[Visual: one screenshot from the rebuild, most likely the coordinator view.]*
+**Most of the constraints that shaped this work have since lifted. I rebuilt it to find out what the design becomes when they’re gone.**
