@@ -1,6 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-<!-- Site mark on its grey tile. The nav draws the same shapes without the tile (components/LogoMark.tsx). -->
-<rect width="48" height="48" fill="#e5e5e5"/>
-<circle cx="11.5" cy="24" r="11.5" fill="#5fd068"/>
-<rect x="25" y="12.5" width="23" height="23" fill="#cdb8ff"/>
+<!-- Site mark: the circle and square on a transparent background, no tile. Black by default; white when the browser or OS is in dark mode, so it stays visible on a dark tab bar. The nav draws the same shapes in the theme's foreground colour (components/LogoMark.tsx). The PNG and ICO icons beside this file are rendered from it, but those are fixed images and stay black. -->
+<style>
+  .mark { fill: #000; }
+  @media (prefers-color-scheme: dark) {
+    .mark { fill: #fff; }
+  }
+</style>
+<circle class="mark" cx="11.5" cy="24" r="11.5"/>
+<rect class="mark" x="25" y="12.5" width="23" height="23"/>
 </svg>
